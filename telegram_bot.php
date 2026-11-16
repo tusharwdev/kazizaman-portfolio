@@ -1,33 +1,18 @@
 <?php
 /**
- * Ultra-Fast Asynchronous Telegram Bot Engine
- * Immediately acknowledges Telegram Webhook (< 0.1s)
- * Processes Gemini AI in background and delivers response to user!
+ * Smart AI & Server Automation Telegram Bot Engine
+ * Powered by Gemini 3.1 Flash AI & cPanel 24/7 Server Management
  */
 
 header('Content-Type: application/json; charset=utf-8');
-ignore_user_abort(true);
 clearstatcache();
 
 // Read incoming payload
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
-// Fast Acknowledge Telegram Webhook immediately so Telegram never times out!
-ob_start();
-echo json_encode(["status" => "ok"]);
-$size = ob_get_length();
-header("Content-Length: $size");
-header("Connection: close");
-ob_end_flush();
-@ob_flush();
-flush();
-if (function_exists('fastcgi_finish_request')) {
-    fastcgi_finish_request();
-}
-
-// Background Processing begins here!
 if (!$update || !isset($update["message"])) {
+    echo json_encode(["status" => "ok", "message" => "Smart AI Telegram Bot Active"]);
     exit;
 }
 
@@ -95,7 +80,7 @@ function askGeminiAI($prompt, $user_name) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         curl_close($ch);
 
@@ -224,7 +209,7 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process all natural text via Gemini AI in background
+    // Process all natural text via Gemini AI directly
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
