@@ -1,7 +1,7 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
- * Powered by Gemini 3.6 Flash & 3.1 Flash AI & cPanel 24/7 Server Management
+ * Powered by Gemini 3.1 Flash Lite AI & cPanel 24/7 Server Management
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -49,15 +49,15 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
     return $result;
 }
 
-// Call Gemini AI (Gemini 3.6 Flash / 3.1 Flash Engine)
+// Call Gemini AI for 100% Natural AI Chat
 function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
 
-    $models = ['gemini-3.6-flash', 'gemini-3.1-flash-lite', 'gemini-3.1-flash', 'gemini-3.8-flash'];
+    $models = ['gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash'];
     $ai_text = null;
 
-    $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master powered by Gemini 3.6 Flash for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
+    $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
         "User's name is '{$user_name}'. Respond dynamically in friendly, professional, clear Bengali (বাংলা). Never repeat fixed welcome templates unless asked /start. Format with HTML bold/italics.";
 
     foreach ($models as $model) {
@@ -78,7 +78,8 @@ function askGeminiAI($prompt, $user_name) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_UNESCAPED_UNICODE));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
         $response = curl_exec($ch);
         curl_close($ch);
 
@@ -108,7 +109,7 @@ $text_lower = mb_strtolower($text, 'UTF-8');
 // Handle Specific Button Triggers Only
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
-               "আমি আপনার <b>Gemini 3.6 Flash AI Powered 24/7 Server Assistant</b>।\n".
+               "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
                "আমি <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের সার্ভার, গিটহাব ও কোড নিয়ন্ত্রণে সার্বক্ষণিক নিয়োজিত।\n\n".
                "<b>আপনি যা যা করতে পারেন:</b>\n".
                "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমাকে বাংলায় যেকোনো প্রশ্ন করতে পারেন।\n".
@@ -207,15 +208,15 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process through Gemini AI Brain (Primary: Gemini 3.6 Flash)
+    // Process through Gemini AI Brain (IPv4 resolved)
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
     } else {
         $msg = "🤖 <b>বার্তা গ্রহণ করা হয়েছে, " . htmlspecialchars($sender_name) . "!</b>\n\n".
-               "আমি আপনার প্রজেক্টের <b>Gemini 3.6 Flash AI Assistant</b>।\n".
+               "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
                "• ২টি সাইটের স্ট্যাটাস দেখতে: <b>/status</b>\n".
-               "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
+               "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
                "• কাজি জামান প্রজেক্ট সিঙ্ক করতে: <b>/deploy_kazizaman</b>";
         sendMessage($chat_id, $msg, $keyboard);
     }
