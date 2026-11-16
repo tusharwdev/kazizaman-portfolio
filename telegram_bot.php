@@ -1,10 +1,11 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
- * Powered by Gemini 3.1 Flash Lite AI & cPanel 24/7 Server Management
+ * Powered by Gemini 3.1 Flash AI & cPanel 24/7 Server Management
  */
 
 header('Content-Type: application/json; charset=utf-8');
+clearstatcache();
 
 // Configuration (Base64 protected key)
 $BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
@@ -208,7 +209,7 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process through Gemini AI Brain (IPv4 resolved)
+    // Process through Gemini AI Brain
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
