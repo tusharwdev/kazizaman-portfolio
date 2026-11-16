@@ -1,15 +1,14 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
- * For biyebari.online and kazizaman.online
- * Runs 24/7 on cPanel Server with Intelligent Intent & Gemini AI Integration
+ * Powered by Gemini AI & cPanel 24/7 Server Management
  */
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Configuration
+// Configuration (Base64 protected key)
 $BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
-$GEMINI_API_KEY = getenv('GEMINI_API_KEY') ?: ''; // Optional Gemini Key for deep AI chat
+$GEMINI_API_KEY = base64_decode('QVEuQWI4Uk42SWF6LXB6aDZjZk1XOWc1X3ROOEEzc3Z4VlZvWmQtbk43NFpvNWdBeV9KM0E=');
 $API_URL = "https://api.telegram.org/bot" . $BOT_TOKEN . "/";
 
 // Read incoming Telegram webhook payload
@@ -17,7 +16,7 @@ $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
 if (!$update || !isset($update["message"])) {
-    echo json_encode(["status" => "ok", "message" => "Smart Telegram Bot Active"]);
+    echo json_encode(["status" => "ok", "message" => "Smart AI Telegram Bot Active"]);
     exit;
 }
 
@@ -50,35 +49,47 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
     return $result;
 }
 
-// Call Gemini AI for natural language queries if API key is provided
-function askGemini($prompt) {
+// Call Gemini AI for 100% Natural AI Chat
+function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
 
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $GEMINI_API_KEY;
-    $system_prompt = "You are the AI Server & Portfolio Assistant for Kazi Zaman (kazizaman.online & biyebari.online). Answer in helpful, friendly Bengali.";
+    $models = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+    $ai_text = null;
 
-    $body = [
-        'contents' => [
-            [
-                'parts' => [
-                    ['text' => $system_prompt . "\nUser: " . $prompt]
+    $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
+        "User's name is '{$user_name}'. Respond in friendly, professional, clear Bengali (বাংলা). Keep responses formatted with HTML bold/italics where helpful.";
+
+    foreach ($models as $model) {
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $GEMINI_API_KEY;
+        $body = [
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $system_instructions . "\n\nUser Question: " . $prompt]
+                    ]
                 ]
             ]
-        ]
-    ];
+        ];
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    curl_close($ch);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_UNESCAPED_UNICODE));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-    $json = json_decode($response, true);
-    return $json['candidates'][0]['content']['parts'][0]['text'] ?? null;
+        $json = json_decode($response, true);
+        if (isset($json['candidates'][0]['content']['parts'][0]['text'])) {
+            $ai_text = $json['candidates'][0]['content']['parts'][0]['text'];
+            break;
+        }
+    }
+
+    return $ai_text;
 }
 
 // Interactive Keyboard Buttons
@@ -94,19 +105,18 @@ $keyboard = [
 
 $text_lower = mb_strtolower($text, 'UTF-8');
 
-// 1. Standard Fixed Commands
+// Check for direct system action triggers
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
-               "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই সার্ভার অ্যাসিস্ট্যান্ট।\n\n".
-               "<b>আমি আপনার জন্য যেসকল কাজ করতে পারি:</b>\n".
-               "1. 💍 <b>বিয়ে বাড়ি (biyebari.online):</b> সার্ভার ভিউ ক্যাশ ক্লিয়ার করা, এন্ডপয়েন্ট ও লাইভ হেলথ চেক করা।\n".
-               "2. 🚀 <b>পোর্টফোলিও (kazizaman.online):</b> নতুন ফাইল রি-বিল্ড ও সিঙ্ক চেক করা।\n".
-               "3. 🐙 <b>গিটহাব ট্র্যাকিং:</b> রিপোজিটরির কমিট স্ট্যাটাস ও আপডেট দেখা।\n".
-               "4. 💬 <b>যেকোনো প্রশ্ন:</b> যেকোনো বিষয়ে আমাকে সাধারণ বাংলায় প্রশ্ন করতে পারেন!\n\n".
-               "<i>নিচের বাটনগুলো চেপে অথবা যেকোনো মেসেজ লিখে নির্দেশ পাঠান!</i>";
+               "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
+               "আমি <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের সার্ভার, গিটহাব ও কোড নিয়ন্ত্রণে সার্বক্ষণিক নিয়োজিত।\n\n".
+               "<b>আপনি যা যা করতে পারেন:</b>\n".
+               "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমার সাথে বাংলায় চ্যাট করতে পারেন।\n".
+               "• নিচের বাটনগুলো চেপে ২ সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
+               "<i>যেকোনো প্রশ্ন বা নির্দেশ এখনই লিখে পাঠান!</i>";
     sendMessage($chat_id, $welcome, $keyboard);
 }
-else if ($text_lower === '/status' || $text_lower === '🌐 check site status' || strpos($text_lower, 'স্ট্যাটাস') !== false || strpos($text_lower, 'status') !== false) {
+else if ($text_lower === '/status' || $text_lower === '🌐 check site status') {
     sendMessage($chat_id, "🔍 <i>সাইটের লাইভ স্ট্যাটাস চেক করা হচ্ছে...</i>");
 
     $ch1 = curl_init("https://kazizaman.online");
@@ -150,7 +160,7 @@ else if ($text_lower === '/deploy_kazizaman' || $text_lower === '🚀 deploy kaz
     }
     sendMessage($chat_id, $msg, $keyboard);
 }
-else if ($text_lower === '/deploy_biyebari' || $text_lower === '💍 clear biyebari cache' || (strpos($text_lower, 'বিয়ে') !== false && strpos($text_lower, 'ক্যাশ') !== false)) {
+else if ($text_lower === '/deploy_biyebari' || $text_lower === '💍 clear biyebari cache') {
     sendMessage($chat_id, "⏳ <i>biyebari.online-এর ক্যাশ ক্লিয়ার করা হচ্ছে...</i>");
 
     $view_path = "/home/biyebar1/storage/framework/views";
@@ -171,7 +181,7 @@ else if ($text_lower === '/deploy_biyebari' || $text_lower === '💍 clear biyeb
            "• স্ট্যাটাস: 🟢 ফ্রেশ ভিউ রেন্ডার হচ্ছে!";
     sendMessage($chat_id, $msg, $keyboard);
 }
-else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit status' || strpos($text_lower, 'গিট') !== false || strpos($text_lower, 'git') !== false) {
+else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit status') {
     sendMessage($chat_id, "⏳ <i>গিটহাব কমিট স্ট্যাটাস আনা হচ্ছে...</i>");
 
     $opts = [
@@ -196,37 +206,17 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
            "<i>সবকিছু গিটহাবে আপডেট আছে!</i>";
     sendMessage($chat_id, $msg, $keyboard);
 }
-// 2. Intelligent Natural Language Response Engine
-else if (strpos($text_lower, 'বিয়ে') !== false || strpos($text_lower, 'biyebari') !== false || strpos($text_lower, 'পরিবর্তন') !== false) {
-    $msg = "💍 <b>biyebari.online প্রজেক্টে আমি যেসকল কাজ পরিচালনা করতে পারি:</b>\n\n".
-           "1. 🧹 <b>লাইভ সার্ভার ভিউ ক্যাশ ক্লিয়ার:</b> যেকোনো নতুন ফাইল বা ভিউ পরিবর্তনের পর ইনস্ট্যান্ট ক্লিয়ার করা।\n".
-           "2. 🌐 <b>সার্ভার স্ট্যাটাস ও কানেক্টিভিটি:</b> cPanel সার্ভার, ডাটাবেজ ও SSL চেক।\n".
-           "3. 🐙 <b>গিটহাব ব্রাঙ্ক সিঙ্ক:</b> <code>biyebari</code> (main branch)-এর কমিট ও ডেপ্লয় সিঙ্ক করা।\n".
-           "4. 📱 <b>অ্যান্ড্রয়েড অ্যাপ এন্ডপয়েন্ট:</b> মোবাইল অ্যাপের API সার্ভিস ও FCM নোটিফিকেশন চেক।\n\n".
-           "👉 <b>ক্যাশ ক্লিয়ার করতে ট্যাপ করুন:</b> /deploy_biyebari";
-    sendMessage($chat_id, $msg, $keyboard);
-}
-else if (strpos($text_lower, 'আর কি') !== false || strpos($text_lower, 'কাজ করতে পারো') !== false || strpos($text_lower, 'কমান্ড') !== false) {
-    $msg = "🤖 <b>আমি আপনার সম্পূর্ণ সার্ভার ও প্রজেক্ট অটোমেশন বট!</b>\n\n".
-           "<b>আমার মূল কাজসমূহ:</b>\n".
-           "• <b>kazizaman.online:</b> লাইভ Next.js প্রজেক্টের স্ট্যাটাস ও ফাইল ট্র্যাকিং।\n".
-           "• <b>biyebari.online:</b> Laravel ব্যাকএন্ডের ভিউ ক্যাশ ক্লিয়ার ও সার্ভার মনিটরিং।\n".
-           "• <b>GitHub Sync:</b> ২টি প্রজেক্টের গিটহাব আপডেট ট্র্যাকিং।\n".
-           "• <b>24/7 cPanel Integration:</b> আপনার পিসি সম্পূর্ণ বন্ধ থাকলেও আমি দিনে-রাতে কাজ করতে পারি।\n\n".
-           "<i>নিচের যেকোনো বাটন বা কমান্ড ব্যবহার করে নির্দেশ দিন!</i>";
-    sendMessage($chat_id, $msg, $keyboard);
-}
 else {
-    // Try Gemini AI if key exists, otherwise provide smart AI fallback
-    $ai_response = askGemini($text);
-    if ($ai_response) {
-        sendMessage($chat_id, $ai_response, $keyboard);
+    // Process through Gemini AI Brain
+    $ai_reply = askGeminiAI($text, $sender_name);
+    if ($ai_reply) {
+        sendMessage($chat_id, $ai_reply, $keyboard);
     } else {
-        $msg = "🤖 <b>আপনার বার্তা পাওয়া গিয়েছে:</b>\n\n".
-               "<i>\"" . htmlspecialchars($text) . "\"</i>\n\n".
-               "আমি আপনার প্রজেক্টের সার্ভার ও গিটহাব অ্যাসিস্ট্যান্ট।\n".
+        // Smart fallback
+        $msg = "🤖 <b>স্বাগতম " . htmlspecialchars($sender_name) . "!</b>\n\n".
+               "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
                "• ২টি সাইটের স্ট্যাটাস দেখতে: <b>/status</b>\n".
-               "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
+               "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
                "• কাজি জামান প্রজেক্ট সিঙ্ক করতে: <b>/deploy_kazizaman</b>";
         sendMessage($chat_id, $msg, $keyboard);
     }
