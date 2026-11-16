@@ -1,0 +1,61 @@
+name: Build & Auto Deploy kazizaman.online
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🚀 Build Static Next.js Site
+        run: npm run build
+
+      - name: 🔒 Create Deployment Zip
+        run: cd out && zip -r ../kazizaman_out.zip .
+
+      - name: 🌐 Deploy to cPanel (kazizaman.online)
+        env:
+          CPANEL_AUTH: ${{ secrets.CPANEL_AUTH || 'cpanel biyebar1:7NZT747GP905RPUCP8V7LH0VN4DKJL3N' }}
+        run: |
+          echo "Uploading static export zip to cPanel..."
+          curl -X POST "https://b201.serverdiana.com:2083/execute/Fileman/upload_files" \
+            -H "Authorization: $CPANEL_AUTH" \
+            -F "dir=/home/biyebar1/public_html/kazizaman.online" \
+            -F "overwrite=1" \
+            -F "file-0=@kazizaman_out.zip"
+
+          echo "Triggering server unzip..."
+          curl -X POST "https://b201.serverdiana.com:2083/execute/Fileman/save_file_content" \
+            -H "Authorization: $CPANEL_AUTH" \
+            -d "dir=/home/biyebar1/public_html/kazizaman.online" \
+            -d "file=unzip.php" \
+            -d "content=<?php \$zip = new ZipArchive; if (\$zip->open(__DIR__ . '/kazizaman_out.zip') === TRUE) { \$zip->extractTo(__DIR__); \$zip->close(); echo 'UNZIP_SUCCESS'; } else { echo 'UNZIP_FAILED'; } ?>"
+
+          curl -s https://kazizaman.online/unzip.php
+
+          echo "Cleaning up deployment artifacts on server..."
+          curl -X POST "https://b201.serverdiana.com:2083/execute/Fileman/save_file_content" \
+            -H "Authorization: $CPANEL_AUTH" \
+            -d "dir=/home/biyebar1/public_html/kazizaman.online" \
+            -d "file=cleanup.php" \
+            -d "content=<?php @unlink(__DIR__ . '/unzip.php'); @unlink(__DIR__ . '/kazizaman_out.zip'); @unlink(__FILE__); echo 'CLEANUP_DONE'; ?>"
+
+          curl -s https://kazizaman.online/cleanup.php
+          echo "Deployment finished successfully!"

@@ -1,0 +1,66 @@
+{
+  "developer": {
+    "name": "Kazi Zaman",
+    "domain": "kazizaman.online",
+    "title": "Android Specialist & Full-Stack Web Developer",
+    "location": "Bangladesh",
+    "email": "contact@kazizaman.online",
+    "github": "https://github.com/tusharwdev",
+    "whatsapp": "https://wa.me/8801515641796",
+    "bio": "Crafting high-performance native Android applications with Kotlin & Jetpack Compose, and modern responsive web systems with Next.js, React & Laravel."
+  },
+  "stats": {
+    "experience_years": "3+",
+    "projects_completed": "15+",
+    "satisfied_clients": "100%"
+  },
+  "skills": [
+    {
+      "category": "Android & Mobile",
+      "items": [
+        { "name": "Kotlin", "level": 90 },
+        { "name": "Jetpack Compose", "level": 85 },
+        { "name": "Android SDK / XML Views", "level": 90 },
+        { "name": "Coroutines & Flow", "level": 85 },
+        { "name": "Retrofit & REST API", "level": 92 },
+        { "name": "Room DB & WorkManager", "level": 85 },
+        { "name": "Firebase (FCM, Auth)", "level": 88 }
+      ]
+    },
+    {
+      "category": "Web Development",
+      "items": [
+        { "name": "React.js & Next.js", "level": 88 },
+        { "name": "TypeScript / JavaScript", "level": 85 },
+        { "name": "Tailwind CSS & Bootstrap", "level": 92 },
+        { "name": "HTML5 & CSS3 / SASS", "level": 95 },
+        { "name": "Responsive Design", "level": 95 }
+      ]
+    },
+    {
+      "category": "Backend & Database",
+      "items": [
+        { "name": "PHP & Laravel", "level": 85 },
+        { "name": "MySQL / PostgreSQL", "level": 85 },
+        { "name": "RESTful API Development", "level": 90 },
+        { "name": "Node.js (Basics)", "level": 75 }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "biyebari",
+      "title": "Biyebari Android Application",
+      "category": "mobile",
+      "description": "A full-featured matrimony and matchmaking mobile application built natively for Android.",
+      "liveUrl": "https://biyebari.online"
+    },
+    {
+      "id": "kazizaman-portfolio",
+      "title": "Kazi Zaman Personal Portfolio Website",
+      "category": "web",
+      "description": "Modern single-page web portfolio for kazizaman.online built with Next.js 16, React, TypeScript, and Tailwind CSS.",
+      "liveUrl": "https://kazizaman.online"
+    }
+  ]
+}
