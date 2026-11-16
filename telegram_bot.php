@@ -1,14 +1,14 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
- * Powered by Gemini AI & cPanel 24/7 Server Management
+ * Powered by Gemini 3.1 Flash AI & cPanel 24/7 Server Management
  */
 
 header('Content-Type: application/json; charset=utf-8');
 
 // Configuration (Base64 protected key)
 $BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
-$GEMINI_API_KEY = base64_decode('QVEuQWI4Uk42SWF6LXB6aDZjZk1XOWc1X3ROOEEzc3Z4VlZvWmQtbk43NFpvNWdBeV9KM0E=');
+$GEMINI_API_KEY = base64_decode('QVEuQWI4Uk42SWF6LXB6aDZjZk1XOWc1X3ROOEEzcHh2WFZvWmQtbk43NFpvNWdBeV9KM0E=');
 $API_URL = "https://api.telegram.org/bot" . $BOT_TOKEN . "/";
 
 // Read incoming Telegram webhook payload
@@ -54,7 +54,7 @@ function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
 
-    $models = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+    $models = ['gemini-3.1-flash-lite', 'gemini-3.1-flash', 'gemini-3.8-flash'];
     $ai_text = null;
 
     $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
@@ -112,7 +112,7 @@ if ($text_lower === '/start' || $text_lower === '❓ help & info') {
                "আমি <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের সার্ভার, গিটহাব ও কোড নিয়ন্ত্রণে সার্বক্ষণিক নিয়োজিত।\n\n".
                "<b>আপনি যা যা করতে পারেন:</b>\n".
                "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমার সাথে বাংলায় চ্যাট করতে পারেন।\n".
-               "• নিচের বাটনগুলো চেপে ২ সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
+               "• নিচের বাটনগুলো চেপে ২টি সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
                "<i>যেকোনো প্রশ্ন বা নির্দেশ এখনই লিখে পাঠান!</i>";
     sendMessage($chat_id, $welcome, $keyboard);
 }
@@ -212,7 +212,7 @@ else {
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
     } else {
-        // Smart fallback
+        // Fallback
         $msg = "🤖 <b>স্বাগতম " . htmlspecialchars($sender_name) . "!</b>\n\n".
                "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
                "• ২টি সাইটের স্ট্যাটাস দেখতে: <b>/status</b>\n".
