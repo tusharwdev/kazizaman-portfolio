@@ -58,7 +58,7 @@ function askGeminiAI($prompt, $user_name) {
     $ai_text = null;
 
     $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
-        "User's name is '{$user_name}'. Respond in friendly, professional, clear Bengali (বাংলা). Keep responses formatted with HTML bold/italics where helpful.";
+        "User's name is '{$user_name}'. Respond dynamically in friendly, professional, clear Bengali (বাংলা). Never repeat fixed welcome templates unless asked /start. Format with HTML bold/italics.";
 
     foreach ($models as $model) {
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $GEMINI_API_KEY;
@@ -66,7 +66,7 @@ function askGeminiAI($prompt, $user_name) {
             'contents' => [
                 [
                     'parts' => [
-                        ['text' => $system_instructions . "\n\nUser Question: " . $prompt]
+                        ['text' => $system_instructions . "\n\nUser Message: " . $prompt]
                     ]
                 ]
             ]
@@ -105,15 +105,15 @@ $keyboard = [
 
 $text_lower = mb_strtolower($text, 'UTF-8');
 
-// Check for direct system action triggers
+// Handle Specific Button Triggers Only
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
                "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
                "আমি <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের সার্ভার, গিটহাব ও কোড নিয়ন্ত্রণে সার্বক্ষণিক নিয়োজিত।\n\n".
                "<b>আপনি যা যা করতে পারেন:</b>\n".
-               "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমার সাথে বাংলায় চ্যাট করতে পারেন।\n".
-               "• নিচের বাটনগুলো চেপে ২টি সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
-               "<i>যেকোনো প্রশ্ন বা নির্দেশ এখনই লিখে পাঠান!</i>";
+               "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমাকে বাংলায় যেকোনো প্রশ্ন করতে পারেন।\n".
+               "• নিচের বাটনগুলো চেপে ২ সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
+               "<i>যেকোনো নির্দেশ এখনই লিখে পাঠান!</i>";
     sendMessage($chat_id, $welcome, $keyboard);
 }
 else if ($text_lower === '/status' || $text_lower === '🌐 check site status') {
@@ -207,17 +207,13 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process through Gemini AI Brain
+    // Process all natural language text through Gemini AI Engine
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
     } else {
-        // Fallback
-        $msg = "🤖 <b>স্বাগতম " . htmlspecialchars($sender_name) . "!</b>\n\n".
-               "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
-               "• ২টি সাইটের স্ট্যাটাস দেখতে: <b>/status</b>\n".
-               "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
-               "• কাজি জামান প্রজেক্ট সিঙ্ক করতে: <b>/deploy_kazizaman</b>";
+        $msg = "🤖 <b>বার্তা গ্রহণ করা হয়েছে, " . htmlspecialchars($sender_name) . "!</b>\n\n".
+               "আপনার প্রশ্ন বা নির্দেশ প্রসেস করা হচ্ছে। যেকোনো সময় বাটন বা ডাইরেক্ট প্রশ্ন ব্যবহার করতে পারেন।";
         sendMessage($chat_id, $msg, $keyboard);
     }
 }
