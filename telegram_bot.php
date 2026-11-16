@@ -1,29 +1,44 @@
 <?php
 /**
- * Smart AI & Server Automation Telegram Bot Engine
- * Powered by Gemini 3.1 Flash AI & cPanel 24/7 Server Management
+ * Ultra-Fast Asynchronous Telegram Bot Engine
+ * Immediately acknowledges Telegram Webhook (< 0.1s)
+ * Processes Gemini AI in background and delivers response to user!
  */
 
 header('Content-Type: application/json; charset=utf-8');
+ignore_user_abort(true);
 clearstatcache();
 
-// Configuration (Base64 protected key)
-$BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
-$GEMINI_API_KEY = base64_decode('QVEuQWI4Uk42SWF6LXB6aDZjZk1XOWc1X3ROOEEzcHh2WFZvWmQtbk43NFpvNWdBeV9KM0E=');
-$API_URL = "https://api.telegram.org/bot" . $BOT_TOKEN . "/";
-
-// Read incoming Telegram webhook payload
+// Read incoming payload
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
+// Fast Acknowledge Telegram Webhook immediately so Telegram never times out!
+ob_start();
+echo json_encode(["status" => "ok"]);
+$size = ob_get_length();
+header("Content-Length: $size");
+header("Connection: close");
+ob_end_flush();
+@ob_flush();
+flush();
+if (function_exists('fastcgi_finish_request')) {
+    fastcgi_finish_request();
+}
+
+// Background Processing begins here!
 if (!$update || !isset($update["message"])) {
-    echo json_encode(["status" => "ok", "message" => "Smart AI Telegram Bot Active"]);
     exit;
 }
 
 $chat_id = $update["message"]["chat"]["id"];
 $text = trim($update["message"]["text"] ?? '');
 $sender_name = $update["message"]["from"]["first_name"] ?? 'User';
+
+// Configuration
+$BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
+$GEMINI_API_KEY = base64_decode('QVEuQWI4Uk42SWF6LXB6aDZjZk1XOWc1X3ROOEEzcHh2WFZvWmQtbk43NFpvNWdBeV9KM0E=');
+$API_URL = "https://api.telegram.org/bot" . $BOT_TOKEN . "/";
 
 // Helper function to send Telegram message
 function sendMessage($chat_id, $message_text, $reply_markup = null) {
@@ -50,12 +65,12 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
     return $result;
 }
 
-// Call Gemini AI for 100% Natural AI Chat
+// Call Gemini AI
 function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
 
-    $models = ['gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash'];
+    $models = ['gemini-3.1-flash-lite', 'gemini-3.8-flash'];
     $ai_text = null;
 
     $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
@@ -80,7 +95,7 @@ function askGeminiAI($prompt, $user_name) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         $response = curl_exec($ch);
         curl_close($ch);
 
@@ -107,7 +122,7 @@ $keyboard = [
 
 $text_lower = mb_strtolower($text, 'UTF-8');
 
-// Handle Specific Button Triggers Only
+// Handle Specific Button Triggers
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
                "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
@@ -209,7 +224,7 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process through Gemini AI Brain
+    // Process all natural text via Gemini AI in background
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
