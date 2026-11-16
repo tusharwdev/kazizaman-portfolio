@@ -4,7 +4,7 @@
  * Runs 24/7 on cPanel Server (Zero PC Dependence)
  */
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 // Configuration
 $BOT_TOKEN = '9206823148:AAEdhfpfrI2IznDnKY-OORhtj6iKmC8psIs';
@@ -23,7 +23,7 @@ $chat_id = $update["message"]["chat"]["id"];
 $text = trim($update["message"]["text"] ?? '');
 $sender_name = $update["message"]["from"]["first_name"] ?? 'User';
 
-// Helper function to send Telegram message
+// Helper function to send Telegram message in pure UTF-8 JSON
 function sendMessage($chat_id, $message_text, $reply_markup = null) {
     global $API_URL;
     $data = [
@@ -33,13 +33,14 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
         'disable_web_page_preview' => true
     ];
     if ($reply_markup) {
-        $data['reply_markup'] = json_encode($reply_markup);
+        $data['reply_markup'] = $reply_markup;
     }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $API_URL . "sendMessage");
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_UNESCAPED_UNICODE));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $result = curl_exec($ch);
@@ -59,23 +60,23 @@ $keyboard = [
 ];
 
 // Handle Commands
-switch (strtolower($text)) {
+switch (mb_strtolower($text, 'UTF-8')) {
     case '/start':
     case '❓ help & info':
-        $welcome = "👋 <b>Welcome, {$sender_name}!</b>\n\n".
-                   "I am your 24/7 AI & Server Bot for <b>kazizaman.online</b> and <b>biyebari.online</b>.\n\n".
-                   "<b>Available Commands:</b>\n".
-                   "• 🌐 <b>/status</b> - Check live websites status\n".
-                   "• 🚀 <b>/deploy_kazizaman</b> - Build & sync kazizaman.online\n".
-                   "• 💍 <b>/deploy_biyebari</b> - Clear views cache & sync biyebari.online\n".
-                   "• 🐙 <b>/git_status</b> - View latest GitHub commits\n\n".
-                   "<i>You can tap any button below to execute instantly!</i>";
+        $welcome = "👋 <b>স্বাগতম, {$sender_name}!</b>\n\n".
+                   "আমি আপনার ২৪/৭ এআই সার্ভার বট। <b>kazizaman.online</b> এবং <b>biyebari.online</b> সাইট নিয়ন্ত্রণের জন্য প্রস্তুত।\n\n".
+                   "<b>উপলব্ধ কমান্ডসমূহ:</b>\n".
+                   "• 🌐 <b>/status</b> - ২টি সাইটের লাইভ স্ট্যাটাস দেখুন\n".
+                   "• 🚀 <b>/deploy_kazizaman</b> - kazizaman.online সিঙ্ক করুন\n".
+                   "• 💍 <b>/deploy_biyebari</b> - biyebari.online ভিউ ক্যাশ ক্লিয়ার করুন\n".
+                   "• 🐙 <b>/git_status</b> - গিটহাব কমিট হিস্ট্রি দেখুন\n\n".
+                   "<i>নিচের যেকোনো বাটনে ট্যাপ করে কমান্ড পাঠাতে পারেন!</i>";
         sendMessage($chat_id, $welcome, $keyboard);
         break;
 
     case '/status':
     case '🌐 check site status':
-        sendMessage($chat_id, "🔍 <i>Checking live site status for both domains...</i>");
+        sendMessage($chat_id, "🔍 <i>সাইটের লাইভ স্ট্যাটাস চেক করা হচ্ছে...</i>");
 
         // Check kazizaman.online
         $ch1 = curl_init("https://kazizaman.online");
@@ -95,37 +96,37 @@ switch (strtolower($text)) {
         $code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
         curl_close($ch2);
 
-        $status_kazi = ($code1 == 200) ? "🟢 <b>Online (HTTP 200)</b>" : "🔴 <b>Offline (HTTP {$code1})</b>";
-        $status_biye = ($code2 == 200) ? "🟢 <b>Online (HTTP 200)</b>" : "🔴 <b>Offline (HTTP {$code2})</b>";
+        $status_kazi = ($code1 == 200) ? "🟢 <b>অনলাইন (HTTP 200)</b>" : "🔴 <b>অফলাইন (HTTP {$code1})</b>";
+        $status_biye = ($code2 == 200) ? "🟢 <b>অনলাইন (HTTP 200)</b>" : "🔴 <b>অফলাইন (HTTP {$code2})</b>";
 
-        $response = "📊 <b>Live Websites Status Report:</b>\n\n".
+        $response = "📊 <b>লাইভ ওয়েবসাইট স্ট্যাটাস রিপোর্ট:</b>\n\n".
                     "1. 🌐 <b>kazizaman.online</b>: {$status_kazi}\n".
                     "2. 💍 <b>biyebari.online</b>: {$status_biye}\n\n".
-                    "<i>Server: b201.serverdiana.com (cPanel 24/7)</i>";
+                    "<i>সার্ভার: b201.serverdiana.com (cPanel 24/7)</i>";
         sendMessage($chat_id, $response, $keyboard);
         break;
 
     case '/deploy_kazizaman':
     case '🚀 deploy kazizaman':
-        sendMessage($chat_id, "⏳ <i>Deploying kazizaman.online static build...</i>");
+        sendMessage($chat_id, "⏳ <i>kazizaman.online বিল্ড চেক করা হচ্ছে...</i>");
 
         $target_dir = "/home/biyebar1/public_html/kazizaman.online";
         $index_exists = file_exists($target_dir . "/index.html");
 
         if ($index_exists) {
-            $msg = "✅ <b>kazizaman.online Deployment Verified!</b>\n\n".
-                   "• Path: <code>{$target_dir}</code>\n".
-                   "• Live URL: https://kazizaman.online\n".
-                   "• Status: 🟢 Fully Operational & Synced!";
+            $msg = "✅ <b>kazizaman.online সফলভাবে লাইভ আছে!</b>\n\n".
+                   "• সার্ভার পাথ: <code>{$target_dir}</code>\n".
+                   "• লাইভ লিংক: https://kazizaman.online\n".
+                   "• স্ট্যাটাস: 🟢 ১০০০% অ্যাক্টিভ ও সিঙ্কড!";
         } else {
-            $msg = "⚠️ <b>kazizaman.online index file missing. Re-building...</b>";
+            $msg = "⚠️ <b>kazizaman.online ফাইল রি-বিল্ড করা প্রয়োজন।</b>";
         }
         sendMessage($chat_id, $msg, $keyboard);
         break;
 
     case '/deploy_biyebari':
     case '💍 clear biyebari cache':
-        sendMessage($chat_id, "⏳ <i>Clearing biyebari.online compiled view cache...</i>");
+        sendMessage($chat_id, "⏳ <i>biyebari.online-এর ক্যাশ ক্লিয়ার করা হচ্ছে...</i>");
 
         $view_path = "/home/biyebar1/storage/framework/views";
         $cleared_count = 0;
@@ -139,16 +140,16 @@ switch (strtolower($text)) {
             }
         }
 
-        $msg = "✅ <b>biyebari.online Cache Cleared!</b>\n\n".
-               "• Cleared Views Cache: <b>{$cleared_count} files</b>\n".
-               "• Live Site: https://biyebari.online\n".
-               "• Status: 🟢 Fresh views rendered!";
+        $msg = "✅ <b>biyebari.online ক্যাশ ক্লিয়ার সম্পন্ন!</b>\n\n".
+               "• ক্লিয়ার হওয়া ভিউ ফাইল: <b>{$cleared_count}টি</b>\n".
+               "• লাইভ সাইট: https://biyebari.online\n".
+               "• স্ট্যাটাস: 🟢 ফ্রেশ ভিউ রেন্ডার হবে!";
         sendMessage($chat_id, $msg, $keyboard);
         break;
 
     case '/git_status':
     case '🐙 git commit status':
-        sendMessage($chat_id, "⏳ <i>Fetching GitHub commit status...</i>");
+        sendMessage($chat_id, "⏳ <i>গিটহাব কমিট স্ট্যাটাস আনা হচ্ছে...</i>");
 
         $opts = [
             'http' => [
@@ -164,19 +165,19 @@ switch (strtolower($text)) {
         $biye_json = @file_get_contents("https://api.github.com/repos/tusharwdev/biyebari/commits?per_page=1", false, $context);
         $biye_commit = json_decode($biye_json, true)[0]['commit']['message'] ?? 'Unable to fetch';
 
-        $msg = "🐙 <b>GitHub Repositories Status:</b>\n\n".
+        $msg = "🐙 <b>গিটহাব রিপোজিটরি স্ট্যাটাস:</b>\n\n".
                "1. <b>kazizaman-portfolio (master):</b>\n".
-               "   • Latest Commit: <i>\"{$kazi_commit}\"</i>\n\n".
+               "   • সর্বশেষ কমিট: <i>\"{$kazi_commit}\"</i>\n\n".
                "2. <b>biyebari (main):</b>\n".
-               "   • Latest Commit: <i>\"{$biye_commit}\"</i>\n\n".
-               "<i>All repositories up to date!</i>";
+               "   • সর্বশেষ কমিট: <i>\"{$biye_commit}\"</i>\n\n".
+               "<i>সবকিছু গিটহাবে আপডেট আছে!</i>";
         sendMessage($chat_id, $msg, $keyboard);
         break;
 
     default:
-        $echo_msg = "🤖 <b>Instruction Received:</b>\n\n".
+        $echo_msg = "🤖 <b>নির্দেশনা পাওয়া গিয়েছে:</b>\n\n".
                     "<i>\"{$text}\"</i>\n\n".
-                    "I am processing your command. Tap /status or use the menu buttons below to manage your sites.";
+                    "আমি আপনার নির্দেশ প্রসেস করছি। বাটন চেপে যেকোনো কমান্ড পাঠাতে পারেন।";
         sendMessage($chat_id, $echo_msg, $keyboard);
         break;
 }
