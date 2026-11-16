@@ -1,7 +1,7 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
- * Powered by Gemini 3.1 Flash AI & cPanel 24/7 Server Management
+ * Powered by Gemini 3.1 Flash AI & Native PHP Streams
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -50,7 +50,7 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
     return $result;
 }
 
-// Call Gemini AI
+// Native PHP Stream function to call Gemini AI (Fast & Bypass cURL Timeout)
 function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
@@ -59,7 +59,7 @@ function askGeminiAI($prompt, $user_name) {
     $ai_text = null;
 
     $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
-        "User's name is '{$user_name}'. Respond dynamically in friendly, professional, clear Bengali (বাংলা). Never repeat fixed welcome templates unless asked /start. Format with HTML bold/italics.";
+        "User's name is '{$user_name}'. Respond dynamically in friendly, professional, clear Bengali (বাংলা). Never repeat fixed welcome templates unless asked /start. Format with HTML bold/italics where helpful.";
 
     foreach ($models as $model) {
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $GEMINI_API_KEY;
@@ -73,21 +73,28 @@ function askGeminiAI($prompt, $user_name) {
             ]
         ];
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_UNESCAPED_UNICODE));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $opts = [
+            'http' => [
+                'method'  => 'POST',
+                'header'  => "Content-Type: application/json; charset=utf-8\r\n",
+                'content' => json_encode($body, JSON_UNESCAPED_UNICODE),
+                'timeout' => 8
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ];
 
-        $json = json_decode($response, true);
-        if (isset($json['candidates'][0]['content']['parts'][0]['text'])) {
-            $ai_text = $json['candidates'][0]['content']['parts'][0]['text'];
-            break;
+        $context  = stream_context_create($opts);
+        $response = @file_get_contents($url, false, $context);
+
+        if ($response) {
+            $json = json_decode($response, true);
+            if (isset($json['candidates'][0]['content']['parts'][0]['text'])) {
+                $ai_text = $json['candidates'][0]['content']['parts'][0]['text'];
+                break;
+            }
         }
     }
 
@@ -107,7 +114,7 @@ $keyboard = [
 
 $text_lower = mb_strtolower($text, 'UTF-8');
 
-// Handle Specific Button Triggers
+// Handle Specific Button Triggers Only
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
                "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
@@ -209,7 +216,7 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process all natural text via Gemini AI directly
+    // Process all natural text via Gemini AI Native PHP Streams
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
