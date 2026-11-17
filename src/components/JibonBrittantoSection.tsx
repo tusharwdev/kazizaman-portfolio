@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import {
   Phone,
   MessageCircle,
@@ -24,7 +25,14 @@ export default function JibonBrittantoSection() {
   const { portfolioData } = usePortfolio();
   const { developer, jibon_brittanto: jb } = portfolioData;
 
-  const displayName = developer.name || "কাজী বদরুদ্দোজ জামান তুষার";
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const displayName = mounted
+    ? (developer.name || developer.name_en || "কাজী বদরুদ্দোজ জামান তুষার")
+    : (developer.name || "কাজী বদরুদ্দোজ জামান তুষার");
 
   const handlePrint = () => {
     if (typeof window !== "undefined") {

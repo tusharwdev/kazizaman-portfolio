@@ -64,7 +64,7 @@ export const initialPortfolioData: PortfolioData = {
       mother: "বিলকিস আক্তার",
       uncle: "কাজী শরীফ হোসেন (অবসর প্রাপ্ত ওয়ারেন্ট অফিসার, বাংলাদেশ সেনাবাহিনী)। বর্তমানে আমেরিকান সিটিজেনশিপ প্রাপ্ত এবং সপরিবারে আমেরিকায় বসবাসরত।",
       siblings: [
-        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনী)",
+        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনীর)",
         "কাজী বদরুদ্দোজ তোফায়েল (পঞ্চম শ্রেণী)",
         "কাজী ইসতিয়াক নোমান তায়িফ (তৃতীয় শ্রেণী)",
         "কাজী সাবিহা সুলতানা তুলি (বয়স-৪ বছর)",
@@ -227,6 +227,7 @@ export const initialPortfolioData: PortfolioData = {
 
 interface PortfolioContextType {
   portfolioData: PortfolioData;
+  isLoaded: boolean;
   setPortfolioData: React.Dispatch<React.SetStateAction<PortfolioData>>;
   savePortfolioData: (newData: PortfolioData) => void;
   resetPortfolioData: () => void;
@@ -321,6 +322,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <PortfolioContext.Provider
       value={{
         portfolioData,
+        isLoaded,
         setPortfolioData,
         savePortfolioData,
         resetPortfolioData,
