@@ -236,30 +236,47 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v2";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v3";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setPortfolioData({ ...initialPortfolioData, ...parsed });
+    const loadFromStorage = () => {
+      try {
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setPortfolioData({ ...initialPortfolioData, ...parsed });
+        } else {
+          setPortfolioData(initialPortfolioData);
+        }
+      } catch (e) {
+        console.error("Error reading portfolio data from localStorage:", e);
+      } finally {
+        setIsLoaded(true);
       }
-    } catch (e) {
-      console.error("Error reading portfolio data from localStorage:", e);
-    } finally {
-      setIsLoaded(true);
-    }
+    };
+
+    loadFromStorage();
+
+    window.addEventListener("storage", loadFromStorage);
+    window.addEventListener("kazizaman_portfolio_updated", loadFromStorage);
+
+    return () => {
+      window.removeEventListener("storage", loadFromStorage);
+      window.removeEventListener("kazizaman_portfolio_updated", loadFromStorage);
+    };
   }, []);
 
   const savePortfolioData = (newData: PortfolioData) => {
     setPortfolioData(newData);
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newData));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("kazizaman_portfolio_updated"));
+      }
     } catch (e) {
       console.error("Error saving portfolio data to localStorage:", e);
     }
@@ -269,6 +286,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setPortfolioData(initialPortfolioData);
     try {
       localStorage.removeItem(LOCAL_STORAGE_KEY);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("kazizaman_portfolio_updated"));
+      }
     } catch (e) {
       console.error("Error clearing localStorage:", e);
     }
