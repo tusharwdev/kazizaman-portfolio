@@ -68,6 +68,13 @@ export default function Navbar() {
         {/* CTA Actions */}
         <div className="hidden md:flex items-center gap-3">
           <a
+            href="/jibon-brittanto"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 rounded-full hover:bg-indigo-900/60 transition-all"
+          >
+            <FileText className="w-4 h-4 text-indigo-400" />
+            <span>জীবন বৃত্তান্ত</span>
+          </a>
+          <a
             href="#contact"
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-500 hover:to-purple-500 shadow-md shadow-indigo-600/20 transition-all hover:scale-105"
           >
@@ -99,6 +106,14 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
+          <a
+            href="/jibon-brittanto"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center justify-center gap-2 w-full py-3 text-base font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-800 rounded-xl"
+          >
+            <FileText className="w-5 h-5 text-indigo-400" />
+            <span>জীবন বৃত্তান্ত</span>
+          </a>
           <a
             href="#contact"
             onClick={() => setMobileMenuOpen(false)}

@@ -1,18 +1,69 @@
 {
   "developer": {
-    "name": "Kazi Zaman",
+    "name": "কাজী বদরুদ্দোজ জামান তুষার",
+    "name_en": "Kazi Zaman",
     "domain": "kazizaman.online",
     "title": "Android Specialist & Full-Stack Web Developer",
     "location": "Bangladesh",
+    "phone": "01786242046",
+    "birth_date": "22/01/1998",
+    "height": "5'6\"",
     "email": "contact@kazizaman.online",
+    "fiverr": "https://www.fiverr.com/kazitushar1",
     "github": "https://github.com/tusharwdev",
-    "whatsapp": "https://wa.me/8801515641796",
+    "whatsapp": "https://wa.me/8801786242046",
     "bio": "Crafting high-performance native Android applications with Kotlin & Jetpack Compose, and modern responsive web systems with Next.js, React & Laravel."
   },
   "stats": {
     "experience_years": "3+",
     "projects_completed": "15+",
     "satisfied_clients": "100%"
+  },
+  "jibon_brittanto": {
+    "title": "জীবন বৃত্তান্ত",
+    "url": "https://kazizaman.online/jibon-brittanto",
+    "portfolio": [
+      {
+        "title": "প্রফেশনাল ফ্রিল্যান্সার (fiverr.com)",
+        "role": "world-wide Laravel development",
+        "url": "https://www.fiverr.com/kazitushar1"
+      },
+      {
+        "title": "ওয়েব ডেভেলপার (বৈশাখি নিউজ, অনলাইন পত্রিকা)",
+        "status": "বর্তমান চাকরি"
+      }
+    ],
+    "experience": [
+      {
+        "role": "ব্যাকএন্ড ওয়েব ডেভেলপার",
+        "company": "সিনার্জি সলিউশন, উত্তরা, ঢাকা"
+      },
+      {
+        "role": "ব্যাকএন্ড ওয়েব ডেভেলপার",
+        "company": "প্রিয়েতা বাংলাদেশ লিমিটেড, পান্থপথ, ঢাকা"
+      },
+      {
+        "role": "জুনিয়র সাংবাদিক",
+        "company": "জনতার বাংলা অনলাইন পত্রিকা, বাংলামোটর, ঢাকা"
+      }
+    ],
+    "courses": [
+      "পি এইচ পি - লারাভেল লং কোর্স - ২০২০ (পিপল এন টেক, ঢাকা)",
+      "ওয়েব ডিজাইন & ডেভেলপমেন্ট স্পেশালিস্ট ২০১৮ (পিপল এন টেক, ঢাকা)",
+      "ওয়েব ডিজাইন শর্ট কোর্স ২০১৯ (ডেকোডিল ইন্টারন্যাশনাল ট্রেনিং ইনস্টিটিউট, ধানমন্ডি, ঢাকা)"
+    ],
+    "education": "বি-এস-এস অনার্স সমাজকর্ম (৩য় বর্ষ) অধ্যয়নরত, জাতীয় বিশ্ববিদ্যালয়",
+    "family": {
+      "father": "কাজী মোঃ বশীর (প্রধান শিক্ষক, ধাপুড়া সরকারি প্রাথমিক বিদ্যালয়)",
+      "mother": "বিলকিস আক্তার",
+      "uncle": "কাজী শরীফ হোসেন (অবসর প্রাপ্ত ওয়ারেন্ট অফিসার, বাংলাদেশ সেনাবাহিনী)। বর্তমানে আমেরিকান সিটিজেনশিপ প্রাপ্ত এবং সপরিবারে আমেরিকায় বসবাসরত।",
+      "siblings": [
+        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনী)",
+        "কাজী বদরুদ্দোজ তোফায়েল (পঞ্চম শ্রেণী)",
+        "কাজী ইসতিয়াক নোমান তায়িফ (তৃতীয় শ্রেণী)",
+        "কাজী সাবিহা সুলতানা তুলি (বয়স-৪ বছর)"
+      ]
+    }
   },
   "skills": [
     {

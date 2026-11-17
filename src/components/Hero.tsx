@@ -1,4 +1,4 @@
-import { ArrowRight, Mail, MessageSquare, Smartphone, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, Mail, MessageSquare, Smartphone, Globe, Sparkles, FileText } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/Icons";
 
 export default function Hero() {
@@ -47,8 +47,16 @@ export default function Hero() {
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
               <a
+                href="/jibon-brittanto"
+                className="px-6 py-3.5 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-90 text-white font-semibold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition-all hover:scale-105"
+              >
+                <FileText className="w-5 h-5" />
+                <span>জীবন বৃত্তান্ত</span>
+              </a>
+
+              <a
                 href="#projects"
-                className="px-6 py-3.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition-all hover:scale-105"
+                className="px-6 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm sm:text-base flex items-center gap-2 transition-all hover:scale-105"
               >
                 <span>View Portfolio</span>
                 <ArrowRight className="w-4 h-4" />
