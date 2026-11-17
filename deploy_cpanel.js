@@ -8,6 +8,7 @@ const BASE_TARGET_DIR = '/public_html/kazizaman.online';
 
 function uploadFile(localPath, remoteDir) {
   return new Promise((resolve) => {
+    if (!fs.existsSync(localPath)) return resolve(null);
     const boundary = '----cpanelupload' + Date.now();
     const fileName = path.basename(localPath);
     const fileData = fs.readFileSync(localPath);
@@ -53,9 +54,11 @@ function uploadFile(localPath, remoteDir) {
 }
 
 async function uploadDir(localDir, remoteDir) {
+  if (!fs.existsSync(localDir)) return;
   const entries = fs.readdirSync(localDir, { withFileTypes: true });
   for (const entry of entries) {
     const fullLocalPath = path.join(localDir, entry.name);
+    if (!fs.existsSync(fullLocalPath)) continue;
     if (entry.isDirectory()) {
       const subRemoteDir = `${remoteDir}/${entry.name}`;
       await uploadDir(fullLocalPath, subRemoteDir);

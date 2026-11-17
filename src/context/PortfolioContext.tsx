@@ -64,12 +64,42 @@ export const initialPortfolioData: PortfolioData = {
       mother: "বিলকিস আক্তার",
       uncle: "কাজী শরীফ হোসেন (অবসর প্রাপ্ত ওয়ারেন্ট অফিসার, বাংলাদেশ সেনাবাহিনী)। বর্তমানে আমেরিকান সিটিজেনশিপ প্রাপ্ত এবং সপরিবারে আমেরিকায় বসবাসরত।",
       siblings: [
-        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনীর)",
+        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনী)",
         "কাজী বদরুদ্দোজ তোফায়েল (পঞ্চম শ্রেণী)",
         "কাজী ইসতিয়াক নোমান তায়িফ (তৃতীয় শ্রেণী)",
         "কাজী সাবিহা সুলতানা তুলি (বয়স-৪ বছর)",
       ],
+      permanent_address: "গ্রাম: রাজা চাপিতলা, ডাকঘর: রাজা চাপিতলা, উপজেলা: মুরাদানগর / বাঙ্গরা বাজার, জেলা: কুমিল্লা, বাংলাদেশ।"
     },
+    certificates: [
+      {
+        id: "cert-1",
+        title: "৩য় মুরাদানগর উপজেলা স্কাউট সমাবেশ ২০১০ (সনদপত্র)",
+        category: "স্কাউটিং ও সামাজিক অর্জন",
+        issueDate: "৩০ ডিসেম্বর ২০১০",
+        issuer: "বাংলাদেশ স্কাউটস, মুরাদানগর উপজেলা, কুমিল্লা",
+        description: "হায়দরাবাদ হাজী ইয়াকুব আলী ভূঁইয়া উচ্চ বিদ্যালয়ে অনুষ্ঠিত ৩য় মুরাদানগর উপজেলা স্কাউট সমাবেশ ২০১০-এ সফলভাবে কৃতি সনদ অর্জন।",
+        imageUrl: "/certificates/scout-jamboree-2010.jpg"
+      },
+      {
+        id: "cert-2",
+        title: "ইউনিয়ন পরিষদ চারিত্রিক ও জাতীয়তা সনদপত্র",
+        category: "অফিসিয়াল নাগরিকত্ব ও চারিত্রিক সনদ",
+        issueDate: "০৯ এপ্রিল ২০১৬",
+        issuer: "৮নং চাপিতলা ইউনিয়ন পরিষদ, মুরাদানগর, কুমিল্লা",
+        description: "ইউনিয়ন পরিষদের চেয়ারম্যান কর্তৃক ইস্যুকৃত অফিসিয়াল চারিত্রিক ও চারিত্রিক সুনাম সনদপত্র।",
+        imageUrl: "/certificates/union-parishad-certificate-2016.jpg"
+      },
+      {
+        id: "cert-3",
+        title: "বিদ্যুৎ ক্যাম্প ২০১১ (সনদপত্র)",
+        category: "স্কাউটস ও সরকারি ক্যাম্প সনদ",
+        issueDate: "২১ ডিসেম্বর ২০১১",
+        issuer: "বিদ্যুৎ বিভাগ (পাওয়ার ডিভিশন) ও বাংলাদেশ স্কাউটস",
+        description: "গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের বিদ্যুৎ বিভাগ এবং বাংলাদেশ স্কাউটস কর্তৃক যৌথভাবে আয়োজিত ৪-দিনব্যাপী বিদ্যুৎ ক্যাম্প ২০১১-এ কৃতি সনদপত্র।",
+        imageUrl: "/certificates/bidduth-scout-camp-2011.jpg"
+      }
+    ]
   },
   skills: [
     {
@@ -237,7 +267,7 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v3";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v4";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);

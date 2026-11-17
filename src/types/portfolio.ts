@@ -82,6 +82,17 @@ export interface JibonBrittantoFamily {
   mother: string;
   uncle: string;
   siblings: string[];
+  permanent_address?: string;
+}
+
+export interface CertificateItem {
+  id: string;
+  title: string;
+  category: string;
+  issueDate: string;
+  issuer: string;
+  description: string;
+  imageUrl: string;
 }
 
 export interface JibonBrittantoData {
@@ -92,6 +103,7 @@ export interface JibonBrittantoData {
   courses: string[];
   education: string;
   family: JibonBrittantoFamily;
+  certificates?: CertificateItem[];
 }
 
 export interface PortfolioData {
