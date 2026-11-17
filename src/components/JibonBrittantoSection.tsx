@@ -13,11 +13,9 @@ import {
   Users,
   ShieldCheck,
   Printer,
-  Mail,
-  MapPin,
-  CheckCircle2,
   FileCheck,
   Lock,
+  CheckCircle2,
 } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
 import Link from "next/link";
@@ -26,7 +24,7 @@ export default function JibonBrittantoSection() {
   const { portfolioData } = usePortfolio();
   const { developer, jibon_brittanto: jb } = portfolioData;
 
-  const displayName = developer.name || developer.name_en || "কাজী বদরুদ্দোজ জামান তুষার";
+  const displayName = developer.name || "কাজী বদরুদ্দোজ জামান তুষার";
 
   const handlePrint = () => {
     if (typeof window !== "undefined") {
@@ -35,20 +33,37 @@ export default function JibonBrittantoSection() {
   };
 
   return (
-    <section id="bio" className="py-8 bg-slate-50 text-slate-900 font-bengali min-h-screen">
+    <section id="bio" className="py-12 bg-slate-100 text-slate-900 font-bengali min-h-screen">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-        {/* Action Toolbar (Print / Admin Edit / Contact) */}
-        <div className="no-print bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+        {/* SECTION HEADER TITLE */}
+        <div className="text-center max-w-4xl mx-auto space-y-3">
+          <span className="text-xs sm:text-sm font-mono font-bold uppercase tracking-widest text-indigo-800 bg-indigo-100 px-4 py-1.5 rounded-full border border-indigo-200 inline-block shadow-sm">
+            জীবন বৃত্তান্ত (Bengali Bio &amp; Credentials)
+          </span>
+
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-slate-900">
+            <span className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-900 bg-clip-text text-transparent inline-block py-1">
+              {displayName}
+            </span>
+          </h2>
+
+          <p className="text-slate-600 font-semibold text-base sm:text-lg max-w-2xl mx-auto">
+            পেশাগত অভিজ্ঞতা, পোর্টফোলিও, শিক্ষাগত যোগ্যতা ও পারিবারিক পরিচিতি বিবরণী।
+          </p>
+        </div>
+
+        {/* ACTION TOOLBAR (PRINT / ADMIN EDIT) */}
+        <div className="no-print bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-700">
             <FileCheck className="w-4 h-4 text-emerald-600" />
-            <span>প্রফেশনাল জীবন বৃত্তান্ত বায়োডাটা নথি</span>
+            <span>প্রফেশনাল জীবন বৃত্তান্ত বায়োডাটা নথি (kazizaman.online)</span>
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs sm:text-sm shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm shadow-sm transition-all"
             >
               <Printer className="w-4 h-4 text-indigo-400" />
               <span>পিডিএফ / প্রিন্ট নামান</span>
@@ -56,7 +71,7 @@ export default function JibonBrittantoSection() {
 
             <Link
               href="/admin"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 hover:bg-indigo-100 font-medium text-xs sm:text-sm transition-all"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 hover:bg-indigo-100 font-semibold text-xs sm:text-sm transition-all"
             >
               <Lock className="w-3.5 h-3.5 text-indigo-600" />
               <span>তথ্য এডিট করুন</span>
@@ -64,20 +79,22 @@ export default function JibonBrittantoSection() {
           </div>
         </div>
 
-        {/* MAIN CV DOCUMENT CONTAINER */}
+        {/* MAIN CV WHITE DOCUMENT CONTAINER */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-12 shadow-xl shadow-slate-200/60 space-y-10">
 
           {/* 1. HERO HEADER CARD */}
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-6 sm:p-10 shadow-lg space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div className="space-y-2 max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-medium">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span>জীবন বৃত্তান্ত ও বায়োডাটা</span>
+                  <span>ব্যক্তিগত ও পেশাগত তথ্য</span>
                 </div>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight pt-1">
-                  {displayName}
+                  <span className="bg-gradient-to-r from-white via-slate-100 to-indigo-200 bg-clip-text text-transparent">
+                    {displayName}
+                  </span>
                 </h1>
 
                 <p className="text-indigo-200 font-semibold text-base sm:text-lg">
@@ -110,22 +127,22 @@ export default function JibonBrittantoSection() {
             {/* Quick Specs Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-indigo-800/60 text-xs">
               <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-                <span className="text-indigo-200 block text-[11px]">জন্ম তারিখ</span>
+                <span className="text-indigo-200 block text-[11px] font-semibold">জন্ম তারিখ</span>
                 <span className="font-bold text-white text-sm">{developer.birth_date || "২২/০১/১৯৯৮"}</span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-                <span className="text-indigo-200 block text-[11px]">উচ্চতা</span>
+                <span className="text-indigo-200 block text-[11px] font-semibold">উচ্চতা</span>
                 <span className="font-bold text-white text-sm">{developer.height || "5'6\""}</span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-                <span className="text-indigo-200 block text-[11px]">অবস্থান</span>
+                <span className="text-indigo-200 block text-[11px] font-semibold">অবস্থান</span>
                 <span className="font-bold text-white text-sm">{developer.location || "বাংলাদেশ"}</span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10">
-                <span className="text-indigo-200 block text-[11px]">ওয়েবসাইট ডোমেইন</span>
+                <span className="text-indigo-200 block text-[11px] font-semibold">ওয়েবসাইট ডোমেইন</span>
                 <span className="font-bold text-indigo-300 text-sm font-mono">{developer.domain || "kazizaman.online"}</span>
               </div>
             </div>
@@ -137,7 +154,7 @@ export default function JibonBrittantoSection() {
               <ShieldCheck className="w-4 h-4 text-indigo-600" />
               <span>সংক্ষিপ্ত সারসংক্ষেপ (Professional Summary)</span>
             </h2>
-            <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-medium">
               {developer.bio}
             </p>
           </div>
@@ -163,7 +180,7 @@ export default function JibonBrittantoSection() {
                     >
                       <div className="space-y-0.5">
                         <div className="font-bold text-slate-900 text-sm sm:text-base">{item.title}</div>
-                        {item.role && <div className="text-xs font-medium text-indigo-800">{item.role}</div>}
+                        {item.role && <div className="text-xs font-semibold text-indigo-800">{item.role}</div>}
                         {item.status && <div className="text-xs font-semibold text-emerald-700">{item.status}</div>}
                       </div>
 
@@ -229,7 +246,7 @@ export default function JibonBrittantoSection() {
                       {jb.courses.map((course, idx) => (
                         <div
                           key={idx}
-                          className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 flex items-start gap-2.5 font-medium"
+                          className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 flex items-start gap-2.5 font-semibold"
                         >
                           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                           <span>{course}</span>
@@ -265,7 +282,7 @@ export default function JibonBrittantoSection() {
 
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                     <span className="text-xs font-bold text-slate-500 block">ভাই ও বোনসমূহ:</span>
-                    <ul className="space-y-1.5 text-xs sm:text-sm text-slate-800 font-medium">
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-slate-800 font-semibold">
                       {jb.family.siblings.map((s, idx) => (
                         <li key={idx} className="flex items-start gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2 shrink-0" />
@@ -283,7 +300,7 @@ export default function JibonBrittantoSection() {
 
           {/* DECLARATION FOOTER */}
           <div className="pt-8 border-t-2 border-slate-200 space-y-6 text-slate-700">
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-xs sm:text-sm text-center font-medium italic">
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-xs sm:text-sm text-center font-semibold italic">
               &quot;উপরে উল্লেখিত সমস্ত তথ্য আমার জ্ঞান ও বিশ্বাস মতে সম্পূর্ণ সত্য এবং সঠিক।&quot;
             </div>
 
@@ -291,7 +308,7 @@ export default function JibonBrittantoSection() {
               <div className="space-y-1 text-xs">
                 <span className="font-bold text-slate-900 block">অফিশিয়াল ওয়েবসাইট ডোমেইন:</span>
                 <span className="font-mono text-indigo-700 font-bold text-sm block">{developer.domain || "kazizaman.online"}</span>
-                <span className="text-slate-500 block">ইমেইল: {developer.email || "contact@kazizaman.online"}</span>
+                <span className="text-slate-500 font-medium block">ইমেইল: {developer.email || "contact@kazizaman.online"}</span>
               </div>
 
               <div className="text-right space-y-1">
