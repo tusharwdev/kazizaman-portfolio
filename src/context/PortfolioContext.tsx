@@ -1,7 +1,73 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { PortfolioData } from "@/types/portfolio";
+import { PortfolioData, PhotoGalleryItem } from "@/types/portfolio";
+
+export const initialPhotoGalleryList: PhotoGalleryItem[] = [
+  {
+    id: "gal-1",
+    title: "Official Executive Headshot",
+    category: "formal",
+    description: "Professional formal headshot portrait for official documents and executive portfolio.",
+    imageUrl: "/gallery/photo-3.jpg"
+  },
+  {
+    id: "gal-2",
+    title: "Corporate Executive Attire",
+    category: "formal",
+    description: "Professional formal shirt and trousers pose in front of corporate real estate premises.",
+    imageUrl: "/gallery/photo-9.jpg"
+  },
+  {
+    id: "gal-3",
+    title: "Outdoor Lifestyle with Bike",
+    category: "casual",
+    description: "Casual portrait leaning on red sports motorcycle in green natural surroundings.",
+    imageUrl: "/gallery/photo-1.jpg"
+  },
+  {
+    id: "gal-4",
+    title: "Outdoor Stroll Portrait",
+    category: "casual",
+    description: "Casual walking pose on village asphalt road in afternoon sunlight.",
+    imageUrl: "/gallery/photo-2.jpg"
+  },
+  {
+    id: "gal-5",
+    title: "Outdoor Portrait with Watch",
+    category: "casual",
+    description: "Casual standing portrait checking smartwatch on scenic rural road.",
+    imageUrl: "/gallery/photo-4.jpg"
+  },
+  {
+    id: "gal-6",
+    title: "Roadside Scenic Pose",
+    category: "casual",
+    description: "Casual portrait pose next to road sign pole amidst lush greenery.",
+    imageUrl: "/gallery/photo-5.jpg"
+  },
+  {
+    id: "gal-7",
+    title: "Motorcycle Riding Action",
+    category: "casual",
+    description: "Riding red sports bike on village highway road.",
+    imageUrl: "/gallery/photo-6.jpg"
+  },
+  {
+    id: "gal-8",
+    title: "Motorcycle Pose",
+    category: "casual",
+    description: "Casual sitting pose on sports bike in natural background.",
+    imageUrl: "/gallery/photo-7.jpg"
+  },
+  {
+    id: "gal-9",
+    title: "Casual Hoodie & Bike Pose",
+    category: "casual",
+    description: "Casual black hoodie look with red sports bike in nature.",
+    imageUrl: "/gallery/photo-8.jpg"
+  }
+];
 
 export const initialPortfolioData: PortfolioData = {
   developer: {
@@ -253,6 +319,7 @@ export const initialPortfolioData: PortfolioData = {
       color: "from-blue-500 to-indigo-600",
     },
   ],
+  photo_gallery: initialPhotoGalleryList
 };
 
 interface PortfolioContextType {
@@ -267,7 +334,7 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v5";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v6";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);

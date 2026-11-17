@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePortfolio } from "@/context/PortfolioContext";
-import { PortfolioData, ProjectItem, SkillCategory, WorkExperienceItem, ServiceItem } from "@/types/portfolio";
+import { PortfolioData, ProjectItem, SkillCategory, WorkExperienceItem, ServiceItem, PhotoGalleryItem } from "@/types/portfolio";
 import {
   Lock,
   LogOut,
@@ -26,6 +26,8 @@ import {
   EyeOff,
   Mail,
   Key,
+  Camera,
+  Image as ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -47,7 +49,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [activeTab, setActiveTab] = useState<
-    "developer" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "raw"
+    "developer" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "gallery" | "raw"
   >("developer");
 
   const [formData, setFormData] = useState<PortfolioData>(portfolioData);
@@ -275,6 +277,7 @@ export default function AdminPage() {
               { id: "projects", label: "💻 প্রজেক্টস (Projects)", icon: FolderGit2 },
               { id: "experience", label: "💼 কাজের অভিজ্ঞতা", icon: Briefcase },
               { id: "services", label: "⚡ সেবা (Services)", icon: Zap },
+              { id: "gallery", label: "📸 ফটো গ্যালারি (Gallery)", icon: Camera },
               { id: "raw", label: "💾 Raw JSON এডিটর", icon: Code2 },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -1232,7 +1235,111 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 8: RAW JSON EDITOR & BACKUP */}
+          {/* TAB 8: PHOTO GALLERY MANAGER */}
+          {activeTab === "gallery" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-white">📸 ফটো গ্যালারি ম্যানেজমেন্ট (Photo Gallery)</h2>
+                  <p className="text-xs text-slate-400">Formal & Casual photo gallery items</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const newPhoto: PhotoGalleryItem = {
+                        id: "gal-" + Date.now(),
+                        title: "New Photo Title",
+                        category: "formal",
+                        description: "Photo description...",
+                        imageUrl: "/gallery/photo-1.jpg",
+                      };
+                      setFormData({
+                        ...formData,
+                        photo_gallery: [newPhoto, ...(formData.photo_gallery || [])],
+                      });
+                    }}
+                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> নতুন ছবি যোগ
+                  </button>
+                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
+                    <Save className="w-3.5 h-3.5" /> সেভ
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {(formData.photo_gallery || []).map((photo, gIdx) => (
+                  <div key={photo.id || gIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                      <input
+                        type="text"
+                        value={photo.title}
+                        onChange={(e) => {
+                          const newGallery = [...(formData.photo_gallery || [])];
+                          newGallery[gIdx].title = e.target.value;
+                          setFormData({ ...formData, photo_gallery: newGallery });
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white flex-1"
+                      />
+                      <select
+                        value={photo.category}
+                        onChange={(e) => {
+                          const newGallery = [...(formData.photo_gallery || [])];
+                          newGallery[gIdx].category = e.target.value as "formal" | "casual";
+                          setFormData({ ...formData, photo_gallery: newGallery });
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-indigo-400 capitalize"
+                      >
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newGallery = (formData.photo_gallery || []).filter((_, i) => i !== gIdx);
+                          setFormData({ ...formData, photo_gallery: newGallery });
+                        }}
+                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-slate-400">Image Path / URL</label>
+                      <input
+                        type="text"
+                        value={photo.imageUrl}
+                        onChange={(e) => {
+                          const newGallery = [...(formData.photo_gallery || [])];
+                          newGallery[gIdx].imageUrl = e.target.value;
+                          setFormData({ ...formData, photo_gallery: newGallery });
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-purple-300"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-slate-400">Description (Optional)</label>
+                      <input
+                        type="text"
+                        value={photo.description || ""}
+                        onChange={(e) => {
+                          const newGallery = [...(formData.photo_gallery || [])];
+                          newGallery[gIdx].description = e.target.value;
+                          setFormData({ ...formData, photo_gallery: newGallery });
+                        }}
+                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 9: RAW JSON EDITOR & BACKUP */}
           {activeTab === "raw" && (
             <div className="space-y-6">
               <div className="border-b border-slate-800 pb-4 flex items-center justify-between">

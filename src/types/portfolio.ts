@@ -95,6 +95,14 @@ export interface CertificateItem {
   imageUrl: string;
 }
 
+export interface PhotoGalleryItem {
+  id: string;
+  title: string;
+  category: "casual" | "formal";
+  description?: string;
+  imageUrl: string;
+}
+
 export interface JibonBrittantoData {
   title: string;
   url: string;
@@ -115,4 +123,5 @@ export interface PortfolioData {
   work_experiences: WorkExperienceItem[];
   education_list: EducationItem[];
   services: ServiceItem[];
+  photo_gallery?: PhotoGalleryItem[];
 }

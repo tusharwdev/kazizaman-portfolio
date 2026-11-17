@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Code2, ArrowUp, Lock } from "lucide-react";
+import { Code2, ArrowUp, Lock, Camera, FileText } from "lucide-react";
 import Link from "next/link";
 import { usePortfolio } from "@/context/PortfolioContext";
 
@@ -33,11 +33,19 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Copyright */}
+          {/* Copyright & Quick Links */}
           <div className="text-xs text-slate-500 text-center font-mono flex items-center gap-4 flex-wrap justify-center">
             <span>&copy; {year} {displayName}. All rights reserved.</span>
-            <Link href="/admin" className="text-indigo-400 hover:underline inline-flex items-center gap-1">
-              <Lock className="w-3 h-3" />
+            <Link href="/photo-gallery" className="text-purple-400 hover:underline inline-flex items-center gap-1">
+              <Camera className="w-3.5 h-3.5" />
+              <span>Photo Gallery</span>
+            </Link>
+            <Link href="/jibon-brittanto" className="text-indigo-400 hover:underline inline-flex items-center gap-1">
+              <FileText className="w-3.5 h-3.5" />
+              <span>জীবন বৃত্তান্ত</span>
+            </Link>
+            <Link href="/admin" className="text-slate-400 hover:text-white inline-flex items-center gap-1">
+              <Lock className="w-3 h-3 text-indigo-400" />
               <span>এডমিন প্যানেল</span>
             </Link>
           </div>
