@@ -11,14 +11,14 @@ export default function JibonBrittantoPage() {
     <main className="min-h-screen bg-slate-100 text-slate-900 font-bengali flex flex-col selection:bg-indigo-600 selection:text-white">
       <Navbar />
 
-      <div className="pt-28 pb-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-6">
+      <div className="pt-28 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-6">
         {/* Back Link Button */}
         <div className="no-print">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 transition-all text-xs sm:text-sm font-semibold shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-800 hover:text-indigo-700 hover:border-indigo-300 transition-all text-sm font-bold shadow-sm"
           >
-            <ArrowLeft className="w-4 h-4 text-indigo-600" />
+            <ArrowLeft className="w-5 h-5 text-indigo-600" />
             <span>হোম পেইজে ফিরে যান (kazizaman.online)</span>
           </Link>
         </div>
