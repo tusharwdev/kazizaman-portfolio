@@ -1,10 +1,16 @@
-import { Code2, Smartphone, Cpu, CheckCircle2, Award, Users, Rocket } from "lucide-react";
+"use client";
+
+import { Cpu, CheckCircle2, Award, Users, Rocket } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function About() {
-  const stats = [
-    { label: "Years Experience", value: "3+", icon: Award },
-    { label: "Projects Completed", value: "15+", icon: Rocket },
-    { label: "Satisfied Clients", value: "100%", icon: Users },
+  const { portfolioData } = usePortfolio();
+  const { developer, stats: dataStats } = portfolioData;
+
+  const statsList = [
+    { label: "Years Experience", value: dataStats.experience_years || "3+", icon: Award },
+    { label: "Projects Completed", value: dataStats.projects_completed || "15+", icon: Rocket },
+    { label: "Satisfied Clients", value: dataStats.satisfied_clients || "100%", icon: Users },
   ];
 
   return (
@@ -29,7 +35,7 @@ export default function About() {
           {/* Stats & Cards Grid */}
           <div className="lg:col-span-5 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {stats.map((stat, idx) => {
+              {statsList.map((stat, idx) => {
                 const Icon = stat.icon;
                 return (
                   <div
@@ -70,21 +76,17 @@ export default function About() {
           {/* Description Text */}
           <div className="lg:col-span-7 space-y-6">
             <h3 className="text-2xl font-bold text-white">
-              Hello! I&apos;m Kazi Zaman, a Software Developer based in Bangladesh.
+              Hello! I&apos;m {developer.name_en || developer.name}, a Software Developer based in {developer.location}.
             </h3>
 
             <p className="text-slate-300 leading-relaxed">
-              I specialize in developing high-quality **Android Applications** and **Full-Stack Web Systems**. Over the years, I have built production-grade apps like <strong>Biyebari</strong> (a full matrimonial application with real-time messaging, notification service, and payment integration) as well as modern websites for various clients.
-            </p>
-
-            <p className="text-slate-400 leading-relaxed">
-              Whether building native Android apps with <strong>Kotlin, Jetpack Compose, Coroutines, Retrofit, Room</strong>, or designing full-stack web solutions with <strong>Next.js, React, Tailwind CSS, and Laravel</strong>, I ensure high performance, security, and exceptional user experience.
+              {developer.bio}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800">
               <div>
                 <span className="text-xs text-slate-500 font-mono block">Domain:</span>
-                <span className="text-sm font-semibold text-indigo-300">kazizaman.online</span>
+                <span className="text-sm font-semibold text-indigo-300">{developer.domain}</span>
               </div>
               <div>
                 <span className="text-xs text-slate-500 font-mono block">Primary Stack:</span>

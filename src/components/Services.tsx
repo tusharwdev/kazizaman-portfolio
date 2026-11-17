@@ -1,35 +1,18 @@
-import { Smartphone, Globe, Code, Layers, Zap, ShieldCheck } from "lucide-react";
+"use client";
+
+import { Smartphone, Globe, Code, Layers, Zap } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Services() {
-  const services = [
-    {
-      icon: Smartphone,
-      title: "Native Android App Development",
-      description:
-        "Building custom Android apps using Kotlin, Jetpack Compose, Material 3, and Clean Architecture. Complete with offline storage, FCM push notifications, and payment gateways.",
-      color: "from-emerald-500 to-teal-600",
-    },
-    {
-      icon: Globe,
-      title: "Full-Stack Web Development",
-      description:
-        "Designing responsive, fast-loading SPA websites and web applications using Next.js, React, TypeScript, Tailwind CSS, and PHP/Laravel backends.",
-      color: "from-indigo-500 to-purple-600",
-    },
-    {
-      icon: Code,
-      title: "RESTful API Engineering",
-      description:
-        "Designing secure, scalable REST APIs, authentication endpoints (JWT/OAuth), database schemas, and webhooks for seamless mobile-to-cloud communication.",
-      color: "from-purple-500 to-pink-600",
-    },
-    {
-      icon: Layers,
-      title: "UI/UX & App Modernization",
-      description:
-        "Refactoring legacy Android XML views to modern Jetpack Compose code, fixing UI jank, optimizing app performance, and enhancing user experience.",
-      color: "from-blue-500 to-indigo-600",
-    },
+  const { portfolioData } = usePortfolio();
+  const { services } = portfolioData;
+
+  const defaultIcons = [Smartphone, Globe, Code, Layers];
+  const defaultColors = [
+    "from-emerald-500 to-teal-600",
+    "from-indigo-500 to-purple-600",
+    "from-purple-500 to-pink-600",
+    "from-blue-500 to-indigo-600",
   ];
 
   return (
@@ -52,14 +35,15 @@ export default function Services() {
         {/* Services Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, idx) => {
-            const Icon = service.icon;
+            const Icon = defaultIcons[idx % defaultIcons.length];
+            const colorClass = service.color || defaultColors[idx % defaultColors.length];
             return (
               <div
                 key={idx}
                 className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/50 transition-all hover:-translate-y-1 shadow-xl flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${service.color} flex items-center justify-center text-white shadow-md`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${colorClass} flex items-center justify-center text-white shadow-md`}>
                     <Icon className="w-6 h-6" />
                   </div>
 

@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Send, MessageSquare, CheckCircle } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Contact() {
+  const { portfolioData } = usePortfolio();
+  const { developer } = portfolioData;
+
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -49,7 +53,7 @@ export default function Contact() {
 
               <div className="space-y-4 text-sm">
                 <a
-                  href="mailto:contact@kazizaman.online"
+                  href={`mailto:${developer.email}`}
                   className="flex items-center gap-4 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-indigo-500/50 transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center text-indigo-400 shrink-0">
@@ -58,7 +62,7 @@ export default function Contact() {
                   <div>
                     <span className="text-xs text-slate-500 font-mono block">Email Me</span>
                     <span className="font-semibold text-slate-200 group-hover:text-indigo-400">
-                      contact@kazizaman.online
+                      {developer.email}
                     </span>
                   </div>
                 </a>
@@ -68,13 +72,14 @@ export default function Contact() {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-xs text-slate-500 font-mono block">Location</span>
-                    <span className="font-semibold text-slate-200">Bangladesh</span>
+                    <span className="text-xs text-slate-500 font-mono block">Location & Phone</span>
+                    <span className="font-semibold text-slate-200 block">{developer.location}</span>
+                    <span className="text-xs font-mono text-slate-400">{developer.phone}</span>
                   </div>
                 </div>
 
                 <a
-                  href="https://wa.me/8801700000000"
+                  href={developer.whatsapp || "https://wa.me/8801786242046"}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-900/60 hover:border-emerald-500/50 transition-colors group"
@@ -85,14 +90,14 @@ export default function Contact() {
                   <div>
                     <span className="text-xs text-emerald-400 font-mono block">WhatsApp Direct</span>
                     <span className="font-semibold text-white group-hover:underline">
-                      Chat on WhatsApp
+                      Chat on WhatsApp ({developer.phone})
                     </span>
                   </div>
                 </a>
               </div>
 
               <div className="pt-4 border-t border-slate-800 text-xs text-slate-500">
-                Official Website Domain: <strong className="text-indigo-400">kazizaman.online</strong>
+                Official Website Domain: <strong className="text-indigo-400">{developer.domain}</strong>
               </div>
             </div>
           </div>
@@ -157,7 +162,7 @@ export default function Contact() {
                     <textarea
                       required
                       rows={5}
-                      placeholder="Hi Kazi Zaman, I would like to discuss..."
+                      placeholder={`Hi ${developer.name_en}, I would like to discuss...`}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors text-sm resize-none"

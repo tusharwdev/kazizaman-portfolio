@@ -1,55 +1,24 @@
+"use client";
+
 import { Smartphone, Globe, Database, Wrench } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Skills() {
-  const skillCategories = [
-    {
-      title: "Android & Mobile",
-      icon: Smartphone,
-      color: "from-emerald-500 to-teal-600",
-      skills: [
-        { name: "Kotlin", level: 90 },
-        { name: "Jetpack Compose", level: 85 },
-        { name: "Android SDK / XML Views", level: 90 },
-        { name: "Coroutines & Flow", level: 85 },
-        { name: "Retrofit & REST API", level: 92 },
-        { name: "Room DB & WorkManager", level: 85 },
-        { name: "Firebase (FCM, Auth)", level: 88 },
-      ],
-    },
-    {
-      title: "Web Development",
-      icon: Globe,
-      color: "from-indigo-500 to-purple-600",
-      skills: [
-        { name: "React.js & Next.js", level: 88 },
-        { name: "TypeScript / JavaScript", level: 85 },
-        { name: "Tailwind CSS & Bootstrap", level: 92 },
-        { name: "HTML5 & CSS3 / SASS", level: 95 },
-        { name: "Responsive Design", level: 95 },
-      ],
-    },
-    {
-      title: "Backend & Database",
-      icon: Database,
-      color: "from-purple-500 to-pink-600",
-      skills: [
-        { name: "PHP & Laravel", level: 85 },
-        { name: "MySQL / PostgreSQL", level: 85 },
-        { name: "RESTful API Development", level: 90 },
-        { name: "Node.js (Basics)", level: 75 },
-      ],
-    },
-    {
-      title: "Tools & Architecture",
-      icon: Wrench,
-      color: "from-blue-500 to-indigo-600",
-      skills: [
-        { name: "Git & GitHub", level: 90 },
-        { name: "Android Studio & VS Code", level: 95 },
-        { name: "Clean Architecture & MVVM", level: 88 },
-        { name: "Laragon / Local Servers", level: 90 },
-      ],
-    },
+  const { portfolioData } = usePortfolio();
+  const { skills: skillCategories } = portfolioData;
+
+  const categoryIcons: Record<string, typeof Smartphone> = {
+    "Android & Mobile": Smartphone,
+    "Web Development": Globe,
+    "Backend & Database": Database,
+    "Tools & Architecture": Wrench,
+  };
+
+  const categoryColors = [
+    "from-emerald-500 to-teal-600",
+    "from-indigo-500 to-purple-600",
+    "from-purple-500 to-pink-600",
+    "from-blue-500 to-indigo-600",
   ];
 
   return (
@@ -72,7 +41,8 @@ export default function Skills() {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {skillCategories.map((cat, idx) => {
-            const Icon = cat.icon;
+            const Icon = categoryIcons[cat.category] || Wrench;
+            const colorClass = categoryColors[idx % categoryColors.length];
             return (
               <div
                 key={idx}
@@ -80,15 +50,15 @@ export default function Skills() {
               >
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${cat.color} flex items-center justify-center text-white shadow-md`}>
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${colorClass} flex items-center justify-center text-white shadow-md`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">{cat.title}</h3>
+                  <h3 className="text-xl font-bold text-white">{cat.category}</h3>
                 </div>
 
                 {/* Progress bars */}
                 <div className="space-y-4">
-                  {cat.skills.map((skill, sIdx) => (
+                  {cat.items.map((skill, sIdx) => (
                     <div key={sIdx} className="space-y-1.5">
                       <div className="flex justify-between items-center text-sm font-medium">
                         <span className="text-slate-200">{skill.name}</span>
@@ -96,7 +66,7 @@ export default function Skills() {
                       </div>
                       <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                         <div
-                          className={`h-full bg-gradient-to-r ${cat.color} rounded-full transition-all duration-1000`}
+                          className={`h-full bg-gradient-to-r ${colorClass} rounded-full transition-all duration-1000`}
                           style={{ width: `${skill.level}%` }}
                         />
                       </div>

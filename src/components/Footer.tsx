@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Code2, ArrowUp } from "lucide-react";
+import { Code2, ArrowUp, Lock } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   const [year, setYear] = useState(2025);
@@ -27,8 +28,12 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="text-xs text-slate-500 text-center font-mono">
-            &copy; {year} Kazi Zaman. All rights reserved. Crafted with Next.js & Tailwind CSS.
+          <div className="text-xs text-slate-500 text-center font-mono flex items-center gap-4 flex-wrap justify-center">
+            <span>&copy; {year} Kazi Zaman. All rights reserved.</span>
+            <Link href="/admin" className="text-indigo-400 hover:underline inline-flex items-center gap-1">
+              <Lock className="w-3 h-3" />
+              <span>এডমিন প্যানেল</span>
+            </Link>
           </div>
 
           {/* Scroll to Top */}

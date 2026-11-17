@@ -1,45 +1,11 @@
-import { Briefcase, GraduationCap, Calendar, MapPin } from "lucide-react";
+"use client";
+
+import { Briefcase, GraduationCap, MapPin } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Experience() {
-  const experiences = [
-    {
-      role: "Lead Android & Full-Stack Developer",
-      company: "Biyebari Platform",
-      period: "2023 - Present",
-      location: "Bangladesh",
-      description:
-        "Architected and developed the native Android app using Kotlin, Coroutines, and REST APIs. Implemented real-time FCM push notifications, custom WebView payment gateways, and profile management systems.",
-      highlights: [
-        "Native Android app architecture with MVVM & Retrofit",
-        "Backend API integration and database synchronization",
-        "Push notification pipeline with Firebase Cloud Messaging",
-      ],
-    },
-    {
-      role: "Freelance Software Engineer",
-      company: "Self-Employed / Remote",
-      period: "2021 - Present",
-      location: "Global / Remote",
-      description:
-        "Delivering custom Android mobile applications and web solutions for clients. Handling end-to-end design, API integration, testing, and cloud deployment.",
-      highlights: [
-        "Developed custom Kotlin & React applications",
-        "Created responsive landing pages and web apps",
-        "Performance auditing & Compose UI migration",
-      ],
-    },
-  ];
-
-  const education = [
-    {
-      degree: "Bachelor of Science in Computer Science & Engineering",
-      institution: "University",
-      period: "2019 - 2023",
-      location: "Bangladesh",
-      description:
-        "Specialized in Software Engineering, Mobile Computing, Data Structures, Algorithms, and Database Management Systems.",
-    },
-  ];
+  const { portfolioData } = usePortfolio();
+  const { work_experiences: experiences, education_list: education } = portfolioData;
 
   return (
     <section id="experience" className="py-20 relative">
@@ -91,14 +57,16 @@ export default function Experience() {
 
                     <p className="text-sm text-slate-300">{exp.description}</p>
 
-                    <ul className="space-y-1 text-xs text-slate-400 pt-2 border-t border-slate-800">
-                      {exp.highlights.map((h, hIdx) => (
-                        <li key={hIdx} className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {exp.highlights && exp.highlights.length > 0 && (
+                      <ul className="space-y-1 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        {exp.highlights.map((h, hIdx) => (
+                          <li key={hIdx} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               ))}

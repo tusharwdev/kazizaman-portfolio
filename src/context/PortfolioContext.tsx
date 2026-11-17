@@ -1,0 +1,322 @@
+"use client";
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { PortfolioData } from "@/types/portfolio";
+
+export const initialPortfolioData: PortfolioData = {
+  developer: {
+    name: "কাজী বদরুদ্দোজ জামান তুষার",
+    name_en: "Kazi Zaman",
+    domain: "kazizaman.online",
+    title: "Android Specialist & Full-Stack Web Developer",
+    location: "Bangladesh",
+    phone: "01786242046",
+    birth_date: "২২/০১/১৯৯৮",
+    height: "5'6\"",
+    email: "contact@kazizaman.online",
+    fiverr: "https://www.fiverr.com/kazitushar1",
+    github: "https://github.com/tusharwdev",
+    whatsapp: "https://wa.me/8801786242046",
+    bio: "Crafting high-performance native Android applications with Kotlin & Jetpack Compose, and modern responsive web systems with Next.js, React & Laravel. Passionate about clean code and user experience.",
+    statusBadge: "Available for Freelance & Android Projects",
+  },
+  stats: {
+    experience_years: "3+",
+    projects_completed: "15+",
+    satisfied_clients: "100%",
+  },
+  jibon_brittanto: {
+    title: "জীবন বৃত্তান্ত",
+    url: "https://kazizaman.online/jibon-brittanto",
+    portfolio: [
+      {
+        title: "প্রফেশনাল ফ্রিল্যান্সার (fiverr.com)",
+        role: "world-wide Laravel development",
+        url: "https://www.fiverr.com/kazitushar1",
+      },
+      {
+        title: "ওয়েব ডেভেলপার (বৈশাখি নিউজ, অনলাইন পত্রিকা)",
+        status: "বর্তমান চাকরি",
+      },
+    ],
+    experience: [
+      {
+        role: "ব্যাকএন্ড ওয়েব ডেভেলপার",
+        company: "সিনার্জি সলিউশন, উত্তরা, ঢাকা",
+      },
+      {
+        role: "ব্যাকএন্ড ওয়েব ডেভেলপার",
+        company: "প্রিয়েতা বাংলাদেশ লিমিটেড, পান্থপথ, ঢাকা",
+      },
+      {
+        role: "জুনিয়র সাংবাদিক",
+        company: "জনতার বাংলা অনলাইন পত্রিকা, বাংলামোটর, ঢাকা",
+      },
+    ],
+    courses: [
+      "পি এইচ পি - লারাভেল লং কোর্স - ২০২০ (পিপল এন টেক, ঢাকা)",
+      "ওয়েব ডিজাইন & ডেভেলপমেন্ট স্পেশালিস্ট ২০১৮ (পিপল এন টেক, ঢাকা)",
+      "ওয়েব ডিজাইন শর্ট কোর্স ২০১৯ (ডেকোডিল ইন্টারন্যাশনাল ট্রেনিং ইনস্টিটিউট, ধানমন্ডি, ঢাকা)",
+    ],
+    education: "বি-এস-এস অনার্স সমাজকর্ম (৩য় বর্ষ) অধ্যয়নরত, জাতীয় বিশ্ববিদ্যালয়",
+    family: {
+      father: "কাজী মোঃ বশীর (প্রধান শিক্ষক, ধাপুড়া সরকারি প্রাথমিক বিদ্যালয়)",
+      mother: "বিলকিস আক্তার",
+      uncle: "কাজী শরীফ হোসেন (অবসর প্রাপ্ত ওয়ারেন্ট অফিসার, বাংলাদেশ সেনাবাহিনী)। বর্তমানে আমেরিকান সিটিজেনশিপ প্রাপ্ত এবং সপরিবারে আমেরিকায় বসবাসরত।",
+      siblings: [
+        "কাজী ইমতিয়াজ আরমান (অফিসার ক্যাডেট জিডি পাইলট প্রশিক্ষণরত, বাংলাদেশ বিমান বাহিনী)",
+        "কাজী বদরুদ্দোজ তোফায়েল (পঞ্চম শ্রেণী)",
+        "কাজী ইসতিয়াক নোমান তায়িফ (তৃতীয় শ্রেণী)",
+        "কাজী সাবিহা সুলতানা তুলি (বয়স-৪ বছর)",
+      ],
+    },
+  },
+  skills: [
+    {
+      category: "Android & Mobile",
+      items: [
+        { name: "Kotlin", level: 90 },
+        { name: "Jetpack Compose", level: 85 },
+        { name: "Android SDK / XML Views", level: 90 },
+        { name: "Coroutines & Flow", level: 85 },
+        { name: "Retrofit & REST API", level: 92 },
+        { name: "Room DB & WorkManager", level: 85 },
+        { name: "Firebase (FCM, Auth)", level: 88 },
+      ],
+    },
+    {
+      category: "Web Development",
+      items: [
+        { name: "React.js & Next.js", level: 88 },
+        { name: "TypeScript / JavaScript", level: 85 },
+        { name: "Tailwind CSS & Bootstrap", level: 92 },
+        { name: "HTML5 & CSS3 / SASS", level: 95 },
+        { name: "Responsive Design", level: 95 },
+      ],
+    },
+    {
+      category: "Backend & Database",
+      items: [
+        { name: "PHP & Laravel", level: 85 },
+        { name: "MySQL / PostgreSQL", level: 85 },
+        { name: "RESTful API Development", level: 90 },
+        { name: "Node.js (Basics)", level: 75 },
+      ],
+    },
+    {
+      category: "Tools & Architecture",
+      items: [
+        { name: "Git & GitHub", level: 90 },
+        { name: "Android Studio & VS Code", level: 95 },
+        { name: "Clean Architecture & MVVM", level: 88 },
+        { name: "Laragon / Local Servers", level: 90 },
+      ],
+    },
+  ],
+  projects: [
+    {
+      id: "biyebari",
+      title: "Biyebari Android Application",
+      category: "mobile",
+      description:
+        "A full-featured matrimony and matchmaking mobile application built natively for Android. Features real-time profile search, secure auth, push notifications (FCM), custom webview payment gateway integration, and bottom sheet navigation.",
+      image: "📱",
+      tags: ["Kotlin", "Android SDK", "Jetpack Compose", "Retrofit", "REST API", "FCM"],
+      liveUrl: "https://biyebari.online",
+      githubUrl: "https://github.com",
+    },
+    {
+      id: "kazizaman-portfolio",
+      title: "Kazi Zaman Personal Portfolio Website",
+      category: "web",
+      description:
+        "Modern single-page web portfolio for kazizaman.online crafted with Next.js 16 (App Router), React, TypeScript, and Tailwind CSS. Features sleek dark glassmorphism design, responsive layouts, and smooth section scrolling.",
+      image: "💻",
+      tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Lucide Icons"],
+      liveUrl: "https://kazizaman.online",
+      githubUrl: "https://github.com/tusharwdev",
+    },
+    {
+      id: "matrimonial-web-api",
+      title: "Matrimonial Backend & API Service",
+      category: "web",
+      description:
+        "Robust RESTful API backend handling user profiles, match algorithms, notification triggers, image processing, and payment status callbacks for mobile applications.",
+      image: "🌐",
+      tags: ["Laravel", "PHP", "MySQL", "REST API", "JWT Auth"],
+      liveUrl: "#",
+      githubUrl: "https://github.com",
+    },
+    {
+      id: "task-manager-app",
+      title: "Smart Task & Habit Tracker (Android)",
+      category: "mobile",
+      description:
+        "Native Android app using Room Database and WorkManager for offline task tracking, local notifications, custom reminder scheduling, and progress charts.",
+      image: "⚡",
+      tags: ["Kotlin", "Room DB", "WorkManager", "LiveData", "Material 3"],
+      liveUrl: "#",
+      githubUrl: "https://github.com",
+    },
+  ],
+  work_experiences: [
+    {
+      role: "Lead Android & Full-Stack Developer",
+      company: "Biyebari Platform",
+      period: "2023 - Present",
+      location: "Bangladesh",
+      description:
+        "Architected and developed the native Android app using Kotlin, Coroutines, and REST APIs. Implemented real-time FCM push notifications, custom WebView payment gateways, and profile management systems.",
+      highlights: [
+        "Native Android app architecture with MVVM & Retrofit",
+        "Backend API integration and database synchronization",
+        "Push notification pipeline with Firebase Cloud Messaging",
+      ],
+    },
+    {
+      role: "Freelance Software Engineer",
+      company: "Self-Employed / Remote",
+      period: "2021 - Present",
+      location: "Global / Remote",
+      description:
+        "Delivering custom Android mobile applications and web solutions for clients. Handling end-to-end design, API integration, testing, and cloud deployment.",
+      highlights: [
+        "Developed custom Kotlin & React applications",
+        "Created responsive landing pages and web apps",
+        "Performance auditing & Compose UI migration",
+      ],
+    },
+  ],
+  education_list: [
+    {
+      degree: "Bachelor of Science in Computer Science & Engineering",
+      institution: "National University",
+      period: "2019 - Present",
+      location: "Bangladesh",
+      description:
+        "Specialized in Software Engineering, Mobile Computing, Data Structures, Algorithms, and Database Management Systems.",
+    },
+  ],
+  services: [
+    {
+      title: "Native Android App Development",
+      description:
+        "Building custom Android apps using Kotlin, Jetpack Compose, Material 3, and Clean Architecture. Complete with offline storage, FCM push notifications, and payment gateways.",
+      color: "from-emerald-500 to-teal-600",
+    },
+    {
+      title: "Full-Stack Web Development",
+      description:
+        "Designing responsive, fast-loading SPA websites and web applications using Next.js, React, TypeScript, Tailwind CSS, and PHP/Laravel backends.",
+      color: "from-indigo-500 to-purple-600",
+    },
+    {
+      title: "RESTful API Engineering",
+      description:
+        "Designing secure, scalable REST APIs, authentication endpoints (JWT/OAuth), database schemas, and webhooks for seamless mobile-to-cloud communication.",
+      color: "from-purple-500 to-pink-600",
+    },
+    {
+      title: "UI/UX & App Modernization",
+      description:
+        "Refactoring legacy Android XML views to modern Jetpack Compose code, fixing UI jank, optimizing app performance, and enhancing user experience.",
+      color: "from-blue-500 to-indigo-600",
+    },
+  ],
+};
+
+interface PortfolioContextType {
+  portfolioData: PortfolioData;
+  setPortfolioData: React.Dispatch<React.SetStateAction<PortfolioData>>;
+  savePortfolioData: (newData: PortfolioData) => void;
+  resetPortfolioData: () => void;
+  exportPortfolioJson: () => void;
+  importPortfolioJson: (jsonString: string) => boolean;
+}
+
+const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
+
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v1";
+
+export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setPortfolioData({ ...initialPortfolioData, ...parsed });
+      }
+    } catch (e) {
+      console.error("Error reading portfolio data from localStorage:", e);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  const savePortfolioData = (newData: PortfolioData) => {
+    setPortfolioData(newData);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newData));
+    } catch (e) {
+      console.error("Error saving portfolio data to localStorage:", e);
+    }
+  };
+
+  const resetPortfolioData = () => {
+    setPortfolioData(initialPortfolioData);
+    try {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    } catch (e) {
+      console.error("Error clearing localStorage:", e);
+    }
+  };
+
+  const exportPortfolioJson = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(portfolioData, null, 2));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "portfolio_data.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  const importPortfolioJson = (jsonString: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      if (parsed.developer && parsed.skills && parsed.projects) {
+        savePortfolioData(parsed);
+        return true;
+      }
+    } catch (e) {
+      console.error("Invalid JSON:", e);
+    }
+    return false;
+  };
+
+  return (
+    <PortfolioContext.Provider
+      value={{
+        portfolioData,
+        setPortfolioData,
+        savePortfolioData,
+        resetPortfolioData,
+        exportPortfolioJson,
+        importPortfolioJson,
+      }}
+    >
+      {children}
+    </PortfolioContext.Provider>
+  );
+};
+
+export const usePortfolio = () => {
+  const context = useContext(PortfolioContext);
+  if (!context) {
+    throw new Error("usePortfolio must be used within a PortfolioProvider");
+  }
+  return context;
+};

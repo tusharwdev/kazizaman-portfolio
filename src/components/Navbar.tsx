@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Code2, PhoneCall, FileText } from "lucide-react";
+import { Menu, X, Code2, PhoneCall, FileText, Lock } from "lucide-react";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,12 +21,12 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Projects", href: "#projects" },
-    { name: "Experience", href: "#experience" },
-    { name: "Services", href: "#services" },
-    { name: "Contact", href: "#contact" },
+    { name: "About", href: "/#about" },
+    { name: "Skills", href: "/#skills" },
+    { name: "Projects", href: "/#projects" },
+    { name: "Experience", href: "/#experience" },
+    { name: "Services", href: "/#services" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -38,7 +39,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
             <Code2 className="w-5 h-5" />
           </div>
@@ -50,7 +51,7 @@ export default function Navbar() {
               kazizaman.online
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800/80 backdrop-blur-sm">
@@ -67,20 +68,28 @@ export default function Navbar() {
 
         {/* CTA Actions */}
         <div className="hidden md:flex items-center gap-3">
-          <a
+          <Link
             href="/jibon-brittanto"
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 rounded-full hover:bg-indigo-900/60 transition-all"
           >
             <FileText className="w-4 h-4 text-indigo-400" />
             <span>জীবন বৃত্তান্ত</span>
-          </a>
+          </Link>
           <a
-            href="#contact"
+            href="/#contact"
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-500 hover:to-purple-500 shadow-md shadow-indigo-600/20 transition-all hover:scale-105"
           >
             <PhoneCall className="w-4 h-4" />
-            <span>Contact Me</span>
+            <span>Contact</span>
           </a>
+          <Link
+            href="/admin"
+            className="p-2.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-indigo-500/50 transition-all"
+            title="Admin Panel"
+            aria-label="Admin Panel"
+          >
+            <Lock className="w-4 h-4 text-indigo-400" />
+          </Link>
         </div>
 
         {/* Mobile Hamburger Menu */}
@@ -106,22 +115,22 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
-          <a
+          <Link
             href="/jibon-brittanto"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center justify-center gap-2 w-full py-3 text-base font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-800 rounded-xl"
           >
             <FileText className="w-5 h-5 text-indigo-400" />
             <span>জীবন বৃত্তান্ত</span>
-          </a>
-          <a
-            href="#contact"
+          </Link>
+          <Link
+            href="/admin"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-center gap-2 w-full py-3 text-base font-semibold text-white bg-indigo-600 rounded-xl"
+            className="flex items-center justify-center gap-2 w-full py-3 text-base font-semibold text-white bg-slate-900 border border-indigo-500/50 rounded-xl"
           >
-            <PhoneCall className="w-5 h-5" />
-            <span>Contact Me</span>
-          </a>
+            <Lock className="w-5 h-5 text-indigo-400" />
+            <span>এডমিন প্যানেল (Admin Panel)</span>
+          </Link>
         </div>
       )}
     </header>

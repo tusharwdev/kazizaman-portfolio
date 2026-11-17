@@ -6,13 +6,14 @@
     "title": "Android Specialist & Full-Stack Web Developer",
     "location": "Bangladesh",
     "phone": "01786242046",
-    "birth_date": "22/01/1998",
+    "birth_date": "২২/০১/১৯৯৮",
     "height": "5'6\"",
     "email": "contact@kazizaman.online",
     "fiverr": "https://www.fiverr.com/kazitushar1",
     "github": "https://github.com/tusharwdev",
     "whatsapp": "https://wa.me/8801786242046",
-    "bio": "Crafting high-performance native Android applications with Kotlin & Jetpack Compose, and modern responsive web systems with Next.js, React & Laravel."
+    "bio": "Crafting high-performance native Android applications with Kotlin & Jetpack Compose, and modern responsive web systems with Next.js, React & Laravel. Passionate about clean code and user experience.",
+    "statusBadge": "Available for Freelance & Android Projects"
   },
   "stats": {
     "experience_years": "3+",
@@ -96,6 +97,15 @@
         { "name": "RESTful API Development", "level": 90 },
         { "name": "Node.js (Basics)", "level": 75 }
       ]
+    },
+    {
+      "category": "Tools & Architecture",
+      "items": [
+        { "name": "Git & GitHub", "level": 90 },
+        { "name": "Android Studio & VS Code", "level": 95 },
+        { "name": "Clean Architecture & MVVM", "level": 88 },
+        { "name": "Laragon / Local Servers", "level": 90 }
+      ]
     }
   ],
   "projects": [
@@ -103,15 +113,98 @@
       "id": "biyebari",
       "title": "Biyebari Android Application",
       "category": "mobile",
-      "description": "A full-featured matrimony and matchmaking mobile application built natively for Android.",
-      "liveUrl": "https://biyebari.online"
+      "description": "A full-featured matrimony and matchmaking mobile application built natively for Android. Features real-time profile search, secure auth, push notifications (FCM), custom webview payment gateway integration, and bottom sheet navigation.",
+      "image": "📱",
+      "tags": ["Kotlin", "Android SDK", "Jetpack Compose", "Retrofit", "REST API", "FCM"],
+      "liveUrl": "https://biyebari.online",
+      "githubUrl": "https://github.com"
     },
     {
       "id": "kazizaman-portfolio",
       "title": "Kazi Zaman Personal Portfolio Website",
       "category": "web",
-      "description": "Modern single-page web portfolio for kazizaman.online built with Next.js 16, React, TypeScript, and Tailwind CSS.",
-      "liveUrl": "https://kazizaman.online"
+      "description": "Modern single-page web portfolio for kazizaman.online crafted with Next.js 16 (App Router), React, TypeScript, and Tailwind CSS. Features sleek dark glassmorphism design, responsive layouts, and smooth section scrolling.",
+      "image": "💻",
+      "tags": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Lucide Icons"],
+      "liveUrl": "https://kazizaman.online",
+      "githubUrl": "https://github.com/tusharwdev"
+    },
+    {
+      "id": "matrimonial-web-api",
+      "title": "Matrimonial Backend & API Service",
+      "category": "web",
+      "description": "Robust RESTful API backend handling user profiles, match algorithms, notification triggers, image processing, and payment status callbacks for mobile applications.",
+      "image": "🌐",
+      "tags": ["Laravel", "PHP", "MySQL", "REST API", "JWT Auth"],
+      "liveUrl": "#",
+      "githubUrl": "https://github.com"
+    },
+    {
+      "id": "task-manager-app",
+      "title": "Smart Task & Habit Tracker (Android)",
+      "category": "mobile",
+      "description": "Native Android app using Room Database and WorkManager for offline task tracking, local notifications, custom reminder scheduling, and progress charts.",
+      "image": "⚡",
+      "tags": ["Kotlin", "Room DB", "WorkManager", "LiveData", "Material 3"],
+      "liveUrl": "#",
+      "githubUrl": "https://github.com"
+    }
+  ],
+  "work_experiences": [
+    {
+      "role": "Lead Android & Full-Stack Developer",
+      "company": "Biyebari Platform",
+      "period": "2023 - Present",
+      "location": "Bangladesh",
+      "description": "Architected and developed the native Android app using Kotlin, Coroutines, and REST APIs. Implemented real-time FCM push notifications, custom WebView payment gateways, and profile management systems.",
+      "highlights": [
+        "Native Android app architecture with MVVM & Retrofit",
+        "Backend API integration and database synchronization",
+        "Push notification pipeline with Firebase Cloud Messaging"
+      ]
+    },
+    {
+      "role": "Freelance Software Engineer",
+      "company": "Self-Employed / Remote",
+      "period": "2021 - Present",
+      "location": "Global / Remote",
+      "description": "Delivering custom Android mobile applications and web solutions for clients. Handling end-to-end design, API integration, testing, and cloud deployment.",
+      "highlights": [
+        "Developed custom Kotlin & React applications",
+        "Created responsive landing pages and web apps",
+        "Performance auditing & Compose UI migration"
+      ]
+    }
+  ],
+  "education_list": [
+    {
+      "degree": "Bachelor of Science in Computer Science & Engineering",
+      "institution": "National University",
+      "period": "2019 - Present",
+      "location": "Bangladesh",
+      "description": "Specialized in Software Engineering, Mobile Computing, Data Structures, Algorithms, and Database Management Systems."
+    }
+  ],
+  "services": [
+    {
+      "title": "Native Android App Development",
+      "description": "Building custom Android apps using Kotlin, Jetpack Compose, Material 3, and Clean Architecture. Complete with offline storage, FCM push notifications, and payment gateways.",
+      "color": "from-emerald-500 to-teal-600"
+    },
+    {
+      "title": "Full-Stack Web Development",
+      "description": "Designing responsive, fast-loading SPA websites and web applications using Next.js, React, TypeScript, Tailwind CSS, and PHP/Laravel backends.",
+      "color": "from-indigo-500 to-purple-600"
+    },
+    {
+      "title": "RESTful API Engineering",
+      "description": "Designing secure, scalable REST APIs, authentication endpoints (JWT/OAuth), database schemas, and webhooks for seamless mobile-to-cloud communication.",
+      "color": "from-purple-500 to-pink-600"
+    },
+    {
+      "title": "UI/UX & App Modernization",
+      "description": "Refactoring legacy Android XML views to modern Jetpack Compose code, fixing UI jank, optimizing app performance, and enhancing user experience.",
+      "color": "from-blue-500 to-indigo-600"
     }
   ]
 }
