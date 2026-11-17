@@ -5,7 +5,7 @@ import { PortfolioData } from "@/types/portfolio";
 
 export const initialPortfolioData: PortfolioData = {
   developer: {
-    name: "কাজী বদরুদ্দোজ জামান তুষার",
+    name: "কাজী বদরুজ জামান",
     name_en: "Kazi Zaman",
     domain: "kazizaman.online",
     title: "Android Specialist & Full-Stack Web Developer",
@@ -267,7 +267,7 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v4";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v5";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);

@@ -33,8 +33,8 @@ export default function JibonBrittantoSection() {
   }, []);
 
   const displayName = mounted
-    ? (developer.name || developer.name_en || "কাজী বদরুদ্দোজ জামান তুষার")
-    : (developer.name || "কাজী বদরুদ্দোজ জামান তুষার");
+    ? (developer.name || developer.name_en || "কাজী বদরুজ জামান")
+    : (developer.name || "কাজী বদরুজ জামান");
 
   const handlePrint = () => {
     if (typeof window !== "undefined") {
@@ -57,10 +57,6 @@ export default function JibonBrittantoSection() {
               {displayName}
             </span>
           </h2>
-
-          <p className="text-slate-700 font-bold text-lg sm:text-2xl max-w-3xl mx-auto">
-            পেশাগত অভিজ্ঞতা, পোর্টফোলিও, শিক্ষাগত যোগ্যতা ও পারিবারিক পরিচিতি বিবরণী।
-          </p>
         </div>
 
         {/* ACTION TOOLBAR (PRINT / ADMIN EDIT) */}
@@ -107,8 +103,8 @@ export default function JibonBrittantoSection() {
                   </span>
                 </h1>
 
-                <p className="text-indigo-200 font-bold text-lg sm:text-2xl">
-                  {developer.title || "প্রফেশনাল ফ্রিল্যান্সার ও ফুল-স্ট্যাক ওয়েব ডেভেলপার"}
+                <p className="text-indigo-200 font-bold text-lg sm:text-2xl leading-relaxed">
+                  পেশাগত অভিজ্ঞতা, পোর্টফোলিও, শিক্ষাগত যোগ্যতা ও পারিবারিক পরিচিতি বিবরণী।
                 </p>
               </div>
 

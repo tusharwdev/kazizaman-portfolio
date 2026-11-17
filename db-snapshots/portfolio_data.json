@@ -1,6 +1,6 @@
 {
   "developer": {
-    "name": "কাজী বদরুদ্দোজ জামান তুষার",
+    "name": "কাজী বদরুজ জামান",
     "name_en": "Kazi Zaman",
     "domain": "kazizaman.online",
     "title": "Android Specialist & Full-Stack Web Developer",
@@ -106,7 +106,7 @@
         { "name": "Coroutines & Flow", "level": 85 },
         { "name": "Retrofit & REST API", "level": 92 },
         { "name": "Room DB & WorkManager", "level": 85 },
-        { "name": "Firebase (FCM, Auth)", level: 88 }
+        { "name": "Firebase (FCM, Auth)", "level": 88 }
       ]
     },
     {
