@@ -22,12 +22,15 @@ import {
   FileText,
   Check,
   AlertCircle,
-  Copy,
-  Upload,
+  Eye,
+  EyeOff,
+  Mail,
+  Key,
 } from "lucide-react";
 import Link from "next/link";
 
-const DEFAULT_PIN = "123456";
+const ADMIN_EMAIL = "tusharwdev@gmail.com";
+const ADMIN_PASSWORD = "Tuu9900--";
 
 export default function AdminPage() {
   const {
@@ -38,9 +41,11 @@ export default function AdminPage() {
     importPortfolioJson,
   } = usePortfolio();
 
-  const [pinInput, setPinInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [pinError, setPinError] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [activeTab, setActiveTab] = useState<
     "developer" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "raw"
   >("developer");
@@ -63,12 +68,15 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === DEFAULT_PIN) {
+    if (
+      emailInput.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() &&
+      passwordInput === ADMIN_PASSWORD
+    ) {
       setIsAuthenticated(true);
       sessionStorage.setItem("kazizaman_admin_auth", "true");
-      setPinError("");
+      setLoginError("");
     } else {
-      setPinError("পিন ভুল হয়েছে! সঠিক পাসকোড দিন। (ডিফল্ট: 123456)");
+      setLoginError("ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে! সঠিক ইমেইল ও পাসওয়ার্ড দিন।");
     }
   };
 
@@ -113,28 +121,52 @@ export default function AdminPage() {
             </div>
             <h1 className="text-2xl font-extrabold text-white">kazizaman.online এডমিন প্যানেল</h1>
             <p className="text-xs text-slate-400 font-mono">
-              সাইটের তথ্য ক্রিয়েট, এডিট ও আপডেটের জন্য পাসকোড দিন।
+              এডমিন হিসেবে লগইন করার জন্য আপনার ইমেইল ও পাসওয়ার্ড দিন।
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">সিকিউরিটি পিন (Security PIN)</label>
-              <input
-                type="password"
-                required
-                placeholder="******"
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 text-center font-mono text-lg focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-              <p className="text-[11px] text-slate-500 text-center">ডিফল্ট অ্যাডমিন পিন: <strong className="text-indigo-400">123456</strong></p>
+              <label className="text-xs font-semibold text-slate-300 block">এডমিন ইমেইল (Email Address)</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  placeholder="admin@example.com"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                />
+                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+              </div>
             </div>
 
-            {pinError && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300 block">এডমিন পাসওয়ার্ড (Password)</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                />
+                <Key className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-3.5 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {loginError && (
               <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{pinError}</span>
+                <span>{loginError}</span>
               </div>
             )}
 
@@ -176,7 +208,7 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="font-bold text-white text-lg">kazizaman.online এডমিন প্যানেল</h1>
-              <span className="text-xs text-indigo-400 font-mono">Content Management System v2.0</span>
+              <span className="text-xs text-indigo-400 font-mono">Logged in as: {ADMIN_EMAIL}</span>
             </div>
           </div>
 
