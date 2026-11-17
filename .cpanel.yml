@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/kazizaman/public_html
+    - export DEPLOYPATH=/home/biyebar1/public_html/kazizaman.online
     - /bin/cp -R out/* $DEPLOYPATH
