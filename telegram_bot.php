@@ -1,6 +1,7 @@
 <?php
 /**
  * Smart AI & Server Automation Telegram Bot Engine
+ * Dedicated EXCLUSIVELY for kazizaman.online
  * Powered by Gemini AI & cPanel 24/7 Server Management
  */
 
@@ -12,7 +13,7 @@ $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
 if (!$update || !isset($update["message"])) {
-    echo json_encode(["status" => "ok", "message" => "Smart AI Telegram Bot Active"]);
+    echo json_encode(["status" => "ok", "message" => "kazizaman.online AI Bot Active"]);
     exit;
 }
 
@@ -50,7 +51,7 @@ function sendMessage($chat_id, $message_text, $reply_markup = null) {
     return $result;
 }
 
-// Call Gemini AI
+// Call Gemini AI for kazizaman.online
 function askGeminiAI($prompt, $user_name) {
     global $GEMINI_API_KEY;
     if (empty($GEMINI_API_KEY)) return null;
@@ -59,7 +60,7 @@ function askGeminiAI($prompt, $user_name) {
     $ai_text = null;
     $is_rate_limited = false;
 
-    $system_instructions = "You are Kazi Zaman's 24/7 AI Assistant & Server Master for 'kazizaman.online' (Next.js Portfolio) and 'biyebari.online' (Laravel Matrimony & Android App). ".
+    $system_instructions = "You are Kazi Zaman's 24/7 Personal AI Assistant & Web Engineer dedicated EXCLUSIVELY to 'kazizaman.online' (Next.js Portfolio Website). ".
         "User's name is '{$user_name}'. Respond dynamically in friendly, professional, clear Bengali (বাংলা). Format with HTML bold/italics where helpful.";
 
     foreach ($models as $model) {
@@ -110,12 +111,11 @@ function askGeminiAI($prompt, $user_name) {
     return null;
 }
 
-// Interactive Keyboard Buttons
+// Interactive Keyboard Buttons for kazizaman.online ONLY
 $keyboard = [
     'keyboard' => [
-        [['text' => '🌐 Check Site Status'], ['text' => '🚀 Deploy Kazizaman']],
-        [['text' => '💍 Clear Biyebari Cache'], ['text' => '🐙 Git Commit Status']],
-        [['text' => '❓ Help & Info']]
+        [['text' => '🌐 Check Site Status'], ['text' => '🚀 Deploy & Sync']],
+        [['text' => '🐙 Git Commit Status'], ['text' => '❓ Help & Info']]
     ],
     'resize_keyboard' => true,
     'one_time_keyboard' => false
@@ -126,44 +126,37 @@ $text_lower = mb_strtolower($text, 'UTF-8');
 // Handle Specific Button Triggers
 if ($text_lower === '/start' || $text_lower === '❓ help & info') {
     $welcome = "👋 <b>স্বাগতম, " . htmlspecialchars($sender_name) . "!</b>\n\n".
-               "আমি আপনার <b>Gemini AI Powered 24/7 Server Assistant</b>।\n".
-               "আমি <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের সার্ভার, গিটহাব ও কোড নিয়ন্ত্রণে সার্বক্ষণিক নিয়োজিত।\n\n".
-               "<b>আপনি যা যা করতে পারেন:</b>\n".
-               "• যেকোনো সাধারণ বা জটিল বিষয় নিয়ে আমাকে বাংলায় যেকোনো প্রশ্ন করতে পারেন।\n".
-               "• নিচের বাটনগুলো চেপে ২টি সাইটের লাইভ স্ট্যাটাস, ক্যাশ ক্লিয়ার ও গিটহাব আপডেট নিয়ন্ত্রণ করতে পারেন!\n\n".
-               "<i>যেকোনো নির্দেশ এখনই লিখে পাঠান!</i>";
+               "আমি আপনার <b>kazizaman.online</b> প্রজেক্টের নিবেদিত ২৪/৭ এআই সার্ভার অ্যাসিস্ট্যান্ট।\n\n".
+               "<b>আমি আপনার জন্য যা যা করতে পারি:</b>\n".
+               "1. 🌐 <b>/status</b> - kazizaman.online লাইভ সার্ভার ও ডোমেইন স্ট্যাটাস মনিটর করা।\n".
+               "2. 🚀 <b>/deploy</b> - ওয়েবসাইট বিল্ড, ফাইল ডিরেক্টরি এবং সার্ভার সিঙ্ক চেক করা।\n".
+               "3. 🐙 <b>/git_status</b> - গিটহাব রিপোজিটরির (kazizaman-portfolio) কমিট ট্র্যাকিং।\n".
+               "4. 💬 <b>যেকোনো প্রশ্ন:</b> পোর্টফোলিও বা কোড সম্পর্কিত যেকোনো প্রশ্ন বাংলায় করতে পারেন!\n\n".
+               "<i>নিচের যেকোনো বাটন বা মেসেজ ব্যবহার করে নির্দেশ দিন!</i>";
     sendMessage($chat_id, $welcome, $keyboard);
 }
-else if ($text_lower === '/status' || $text_lower === '🌐 check site status') {
-    sendMessage($chat_id, "🔍 <i>সাইটের লাইভ স্ট্যাটাস চেক করা হচ্ছে...</i>");
+else if ($text_lower === '/status' || $text_lower === '🌐 check site status' || strpos($text_lower, 'স্ট্যাটাস') !== false || strpos($text_lower, 'status') !== false) {
+    sendMessage($chat_id, "🔍 <i>kazizaman.online লাইভ স্ট্যাটাস চেক করা হচ্ছে...</i>");
 
-    $ch1 = curl_init("https://kazizaman.online");
-    curl_setopt($ch1, CURLOPT_NOBODY, true);
-    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch1, CURLOPT_TIMEOUT, 10);
-    curl_exec($ch1);
-    $code1 = curl_getinfo($ch1, CURLINFO_HTTP_CODE);
-    curl_close($ch1);
+    $ch = curl_init("https://kazizaman.online");
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    $ch2 = curl_init("https://biyebari.online");
-    curl_setopt($ch2, CURLOPT_NOBODY, true);
-    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch2, CURLOPT_TIMEOUT, 10);
-    curl_exec($ch2);
-    $code2 = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-    curl_close($ch2);
+    $status_kazi = ($code == 200) ? "🟢 <b>অনলাইন (HTTP 200)</b>" : "🔴 <b>অফলাইন (HTTP {$code})</b>";
 
-    $status_kazi = ($code1 == 200) ? "🟢 <b>অনলাইন (HTTP 200)</b>" : "🔴 <b>অফলাইন (HTTP {$code1})</b>";
-    $status_biye = ($code2 == 200) ? "🟢 <b>অনলাইন (HTTP 200)</b>" : "🔴 <b>অফলাইন (HTTP {$code2})</b>";
-
-    $response = "📊 <b>লাইভ ওয়েবসাইট স্ট্যাটাস রিপোর্ট:</b>\n\n".
-                "1. 🌐 <b>kazizaman.online</b>: {$status_kazi}\n".
-                "2. 💍 <b>biyebari.online</b>: {$status_biye}\n\n".
-                "<i>সার্ভার: b201.serverdiana.com (cPanel 24/7 Active)</i>";
+    $response = "📊 <b>kazizaman.online ওয়েবসাইট স্ট্যাটাস রিপোর্ট:</b>\n\n".
+                "🌐 <b>Domain:</b> kazizaman.online\n".
+                "🟢 <b>Status:</b> {$status_kazi}\n".
+                "📁 <b>Document Root:</b> <code>/home/biyebar1/public_html/kazizaman.online</code>\n".
+                "🖥️ <b>Server:</b> b201.serverdiana.com (cPanel 24/7 Active)";
     sendMessage($chat_id, $response, $keyboard);
 }
-else if ($text_lower === '/deploy_kazizaman' || $text_lower === '🚀 deploy kazizaman') {
-    sendMessage($chat_id, "⏳ <i>kazizaman.online বিল্ড চেক করা হচ্ছে...</i>");
+else if ($text_lower === '/deploy' || $text_lower === '/deploy_kazizaman' || $text_lower === '🚀 deploy & sync' || strpos($text_lower, 'deploy') !== false) {
+    sendMessage($chat_id, "⏳ <i>kazizaman.online বিল্ড ও ফাইলস চেক করা হচ্ছে...</i>");
 
     $target_dir = "/home/biyebar1/public_html/kazizaman.online";
     $index_exists = file_exists($target_dir . "/index.html");
@@ -171,36 +164,15 @@ else if ($text_lower === '/deploy_kazizaman' || $text_lower === '🚀 deploy kaz
     if ($index_exists) {
         $msg = "✅ <b>kazizaman.online সফলভাবে লাইভ আছে!</b>\n\n".
                "• সার্ভার পাথ: <code>{$target_dir}</code>\n".
-               "• লাইভ লিংক: https://kazizaman.online\n".
+               "• লাইভ ইউআরএল: https://kazizaman.online\n".
                "• স্ট্যাটাস: 🟢 ১০০% অ্যাক্টিভ ও সিঙ্কড!";
     } else {
         $msg = "⚠️ <b>kazizaman.online ফাইল রি-বিল্ড করা প্রয়োজন।</b>";
     }
     sendMessage($chat_id, $msg, $keyboard);
 }
-else if ($text_lower === '/deploy_biyebari' || $text_lower === '💍 clear biyebari cache') {
-    sendMessage($chat_id, "⏳ <i>biyebari.online-এর ক্যাশ ক্লিয়ার করা হচ্ছে...</i>");
-
-    $view_path = "/home/biyebar1/storage/framework/views";
-    $cleared_count = 0;
-    if (is_dir($view_path)) {
-        $files = glob($view_path . '/*');
-        foreach ($files as $file) {
-            if (is_file($file) && basename($file) !== '.gitignore') {
-                @unlink($file);
-                $cleared_count++;
-            }
-        }
-    }
-
-    $msg = "✅ <b>biyebari.online ক্যাশ ক্লিয়ার সম্পন্ন!</b>\n\n".
-           "• ক্লিয়ার হওয়া ভিউ ফাইল: <b>{$cleared_count}টি</b>\n".
-           "• লাইভ সাইট: https://biyebari.online\n".
-           "• স্ট্যাটাস: 🟢 ফ্রেশ ভিউ রেন্ডার হচ্ছে!";
-    sendMessage($chat_id, $msg, $keyboard);
-}
-else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit status') {
-    sendMessage($chat_id, "⏳ <i>গিটহাব কমিট স্ট্যাটাস আনা হচ্ছে...</i>");
+else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit status' || strpos($text_lower, 'গিট') !== false || strpos($text_lower, 'git') !== false) {
+    sendMessage($chat_id, "⏳ <i>kazizaman-portfolio গিটহাব কমিট স্ট্যাটাস আনা হচ্ছে...</i>");
 
     $opts = [
         'http' => [
@@ -213,38 +185,34 @@ else if ($text_lower === '/git_status' || $text_lower === '🐙 git commit statu
     $kazi_json = @file_get_contents("https://api.github.com/repos/tusharwdev/kazizaman-portfolio/commits?per_page=1", false, $context);
     $kazi_commit = json_decode($kazi_json, true)[0]['commit']['message'] ?? 'Unable to fetch';
 
-    $biye_json = @file_get_contents("https://api.github.com/repos/tusharwdev/biyebari/commits?per_page=1", false, $context);
-    $biye_commit = json_decode($biye_json, true)[0]['commit']['message'] ?? 'Unable to fetch';
-
-    $msg = "🐙 <b>গিটহাব রিপোজিটরি স্ট্যাটাস:</b>\n\n".
-           "1. <b>kazizaman-portfolio (master):</b>\n".
-           "   • সর্বশেষ কমিট: <i>\"{$kazi_commit}\"</i>\n\n".
-           "2. <b>biyebari (main):</b>\n".
-           "   • সর্বশেষ কমিট: <i>\"{$biye_commit}\"</i>\n\n".
-           "<i>সবকিছু গিটহাবে আপডেট আছে!</i>";
+    $msg = "🐙 <b>kazizaman-portfolio গিটহাব স্ট্যাটাস:</b>\n\n".
+           "• <b>Repository:</b> tusharwdev/kazizaman-portfolio\n".
+           "• <b>Branch:</b> master\n".
+           "• <b>সর্বশেষ কমিট:</b> <i>\"{$kazi_commit}\"</i>\n\n".
+           "<i>প্রজেক্ট গিটহাবে শতভাগ আপডেট আছে!</i>";
     sendMessage($chat_id, $msg, $keyboard);
 }
 else {
-    // Process all natural text via Gemini AI
+    // Process natural language text via Gemini AI for kazizaman.online ONLY
     $ai_reply = askGeminiAI($text, $sender_name);
     if ($ai_reply) {
         sendMessage($chat_id, $ai_reply, $keyboard);
     } else {
-        // Natural intent fallback
-        if (strpos($text_lower, 'বিয়ে') !== false || strpos($text_lower, 'biyebari') !== false || strpos($text_lower, 'পরিবর্তন') !== false) {
-            $msg = "💍 <b>biyebari.online প্রজেক্টে যেসকল কাজ পরিচালিত করা যায়:</b>\n\n".
-                   "1. 🧹 <b>লাইভ সার্ভার ভিউ ক্যাশ ক্লিয়ার:</b> যেকোনো নতুন ফাইল বা ভিউ পরিবর্তনের পর ক্লিয়ার করা।\n".
-                   "2. 🌐 <b>সার্ভার স্ট্যাটাস ও কানেক্টিভিটি:</b> cPanel সার্ভার, ডাটাবেজ ও SSL চেক।\n".
-                   "3. 🐙 <b>গিটহাব সিঙ্ক:</b> <code>biyebari</code> (main branch)-এর কমিট ও ডেপ্লয় সিঙ্ক করা।\n".
-                   "4. 📱 <b>অ্যান্ড্রয়েড অ্যাপ এন্ডপয়েন্ট:</b> মোবাইল অ্যাপের API সার্ভিস ও FCM নোটিফিকেশন চেক।\n\n".
-                   "👉 <b>ক্যাশ ক্লিয়ার করতে চাপুন:</b> /deploy_biyebari";
+        // Dynamic intent fallback for kazizaman.online
+        if (strpos($text_lower, 'পরিবর্তন') !== false || strpos($text_lower, 'কাজ') !== false || strpos($text_lower, 'করতে পারবে') !== false) {
+            $msg = "🌐 <b>kazizaman.online প্রজেক্টে আমি যেসকল কাজ পরিচালনা করতে পারি:</b>\n\n".
+                   "1. 🚀 <b>লাইভ ওয়েবসাইট মনিটরিং ও টেস্ট:</b> ডোমেইন ও সার্ভার কানেক্টিভিটি হেলথ চেক।\n".
+                   "2. 🐙 <b>গিটহাব ট্র্যাকিং:</b> <code>kazizaman-portfolio</code> প্রজেক্টের গিটহাব আপডেট ট্র্যাকিং।\n".
+                   "3. 📝 <b>পোর্টফোলিও কনটেন্ট সহায়তা:</b> স্কিল, প্রজেক্ট, অভিজ্ঞতা ও বায়ো আপডেট প্ল্যানিং।\n".
+                   "4. 🖥️ <b>২৪/৭ সার্ভার অ্যাক্টিভিটি:</b> cPanel হোস্ট ও ডিপ্লয়মেন্ট ট্র্যাকিং।\n\n".
+                   "👉 <b>স্ট্যাটাস চেক করতে ট্যাপ করুন:</b> /status";
             sendMessage($chat_id, $msg, $keyboard);
         } else {
             $msg = "🤖 <b>বার্তা রিসিভ হয়েছে, " . htmlspecialchars($sender_name) . "!</b>\n\n".
-                   "আমি আপনার <b>kazizaman.online</b> এবং <b>biyebari.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
-                   "• ২টি সাইটের স্ট্যাটাস দেখতে: <b>/status</b>\n".
-                   "• বিয়ে বাড়ি ক্যাশ ক্লিয়ার করতে: <b>/deploy_biyebari</b>\n".
-                   "• কাজি জামান প্রজেক্ট সিঙ্ক করতে: <b>/deploy_kazizaman</b>";
+                   "আমি আপনার <b>kazizaman.online</b> প্রজেক্টের এআই অ্যাসিস্ট্যান্ট।\n\n".
+                   "• লাইভ স্ট্যাটাস দেখতে: <b>/status</b>\n".
+                   "• প্রজেক্ট সিঙ্ক দেখতে: <b>/deploy</b>\n".
+                   "• গিটহাব আপডেট দেখতে: <b>/git_status</b>";
             sendMessage($chat_id, $msg, $keyboard);
         }
     }
