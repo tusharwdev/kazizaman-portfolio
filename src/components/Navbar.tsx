@@ -31,6 +31,7 @@ export default function Navbar() {
     { name: "Skills", href: "/#skills" },
     { name: "Projects", href: "/#projects" },
     { name: "Experience", href: "/#experience" },
+    { name: "Education", href: "/#education" },
     { name: "Services", href: "/#services" },
     { name: "Contact", href: "/#contact" },
   ];
@@ -65,7 +66,7 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-full transition-colors"
+              className="px-3.5 py-1.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-full transition-colors"
             >
               {link.name}
             </a>
