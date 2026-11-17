@@ -7,6 +7,8 @@ export default function About() {
   const { portfolioData } = usePortfolio();
   const { developer, stats: dataStats } = portfolioData;
 
+  const displayName = developer.name_en || developer.name || "Kazi Zaman";
+
   const statsList = [
     { label: "Years Experience", value: dataStats.experience_years || "3+", icon: Award },
     { label: "Projects Completed", value: dataStats.projects_completed || "15+", icon: Rocket },
@@ -75,18 +77,22 @@ export default function About() {
 
           {/* Description Text */}
           <div className="lg:col-span-7 space-y-6">
-            <h3 className="text-2xl font-bold text-white">
-              Hello! I&apos;m {developer.name_en || developer.name}, a Software Developer based in {developer.location}.
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+              Hello! I&apos;m{" "}
+              <span className="bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+                {displayName}
+              </span>
+              , a Software Developer based in {developer.location || "Bangladesh"}.
             </h3>
 
-            <p className="text-slate-300 leading-relaxed">
+            <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
               {developer.bio}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800">
               <div>
                 <span className="text-xs text-slate-500 font-mono block">Domain:</span>
-                <span className="text-sm font-semibold text-indigo-300">{developer.domain}</span>
+                <span className="text-sm font-semibold text-indigo-300">{developer.domain || "kazizaman.online"}</span>
               </div>
               <div>
                 <span className="text-xs text-slate-500 font-mono block">Primary Stack:</span>

@@ -1,12 +1,14 @@
 "use client";
 
 import { ArrowRight, Mail, MessageSquare, Smartphone, Globe, Sparkles, FileText } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/Icons";
+import { GithubIcon } from "@/components/Icons";
 import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Hero() {
   const { portfolioData } = usePortfolio();
   const { developer } = portfolioData;
+
+  const displayName = developer.name_en || developer.name || "Kazi Zaman";
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
@@ -29,19 +31,19 @@ export default function Hero() {
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
               Hi, I&apos;m{" "}
-              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {developer.name_en}
+              <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block py-1">
+                {displayName}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-xl sm:text-2xl font-semibold text-slate-300 flex items-center justify-center lg:justify-start gap-3 flex-wrap">
               <span className="flex items-center gap-1.5 text-indigo-400">
-                <Smartphone className="w-6 h-6" /> {developer.title.split("&")[0] || "Android Specialist"}
+                <Smartphone className="w-6 h-6" /> {developer.title ? developer.title.split("&")[0] : "Android Specialist"}
               </span>
               <span className="text-slate-600">•</span>
               <span className="flex items-center gap-1.5 text-purple-400">
-                <Globe className="w-6 h-6" /> {developer.title.split("&")[1] || "Full-Stack Web"}
+                <Globe className="w-6 h-6" /> {developer.title && developer.title.includes("&") ? developer.title.split("&")[1] : "Full-Stack Web"}
               </span>
             </p>
 
@@ -86,7 +88,7 @@ export default function Hero() {
               <a href={developer.fiverr || "https://fiverr.com"} target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="Fiverr">
                 <Globe className="w-5 h-5 text-emerald-400" />
               </a>
-              <a href={`mailto:${developer.email}`} className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="Email">
+              <a href={`mailto:${developer.email || "contact@kazizaman.online"}`} className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="Email">
                 <Mail className="w-5 h-5" />
               </a>
             </div>
@@ -106,7 +108,7 @@ export default function Hero() {
                     <span className="w-3 h-3 rounded-full bg-amber-500" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-xs font-mono text-slate-500">{developer.domain}</span>
+                  <span className="text-xs font-mono text-slate-500">{developer.domain || "kazizaman.online"}</span>
                 </div>
 
                 <div className="space-y-4 py-4">
@@ -115,8 +117,8 @@ export default function Hero() {
                       KZ
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg">{developer.name_en}</h3>
-                      <p className="text-xs text-indigo-400 font-mono">{developer.title}</p>
+                      <h3 className="font-bold text-white text-lg">{displayName}</h3>
+                      <p className="text-xs text-indigo-400 font-mono">{developer.title || "Software Engineer"}</p>
                       <span className="inline-block mt-1 text-[11px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
                         ● Online
                       </span>
@@ -133,7 +135,7 @@ export default function Hero() {
                 </div>
 
                 <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>Based in {developer.location}</span>
+                  <span>Based in {developer.location || "Bangladesh"}</span>
                   <span className="text-indigo-400 font-mono">v2.0</span>
                 </div>
               </div>

@@ -3,8 +3,14 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Code2, PhoneCall, FileText, Lock } from "lucide-react";
 import Link from "next/link";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Navbar() {
+  const { portfolioData } = usePortfolio();
+  const { developer } = portfolioData;
+
+  const displayName = developer.name_en || developer.name || "Kazi Zaman";
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -44,11 +50,11 @@ export default function Navbar() {
             <Code2 className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
-              Kazi Zaman
+            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+              {displayName}
             </span>
             <span className="text-[10px] text-indigo-400 font-mono -mt-1 tracking-widest uppercase">
-              kazizaman.online
+              {developer.domain || "kazizaman.online"}
             </span>
           </div>
         </Link>
