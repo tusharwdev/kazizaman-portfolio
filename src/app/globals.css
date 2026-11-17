@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -9,6 +10,10 @@ body {
   background-color: #020617;
   color: #f8fafc;
   overflow-x: hidden;
+}
+
+.font-bengali {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -34,4 +39,15 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 8s infinite ease-in-out;
+}
+
+/* Print styling for Jibon Brittanto / Resume */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+  header, footer, nav, button, .no-print {
+    display: none !important;
+  }
 }
