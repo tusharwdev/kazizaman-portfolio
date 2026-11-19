@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Mail, MessageSquare, Smartphone, Globe, Sparkles, FileText } from "lucide-react";
+import { ArrowRight, Mail, MessageSquare, Globe, Sparkles, FileText, CheckCircle2, ShieldCheck, Award } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 import { usePortfolio } from "@/context/PortfolioContext";
 
@@ -10,22 +10,34 @@ export default function Hero() {
 
   const displayName = developer.name_en || developer.name || "Kazi Zaman";
 
+  const corePillars = [
+    { title: "Website Specialist", color: "from-blue-500 to-indigo-500" },
+    { title: "Full-Stack Software Developer", color: "from-emerald-500 to-teal-500" },
+    { title: "Journalist", color: "from-amber-500 to-orange-500" },
+    { title: "Video Creator", color: "from-purple-500 to-pink-500" },
+    { title: "Creative Ideation", color: "from-yellow-400 to-amber-500" },
+    { title: "Keen Observation", color: "from-cyan-400 to-blue-500" },
+    { title: "Critical Thinking", color: "from-pink-500 to-rose-500" },
+    { title: "Investigative Research", color: "from-indigo-500 to-purple-500" },
+    { title: "High-Focus Execution", color: "from-emerald-400 to-cyan-500" },
+  ];
+
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+    <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-slate-950">
       {/* Glow Effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
-      <div className="absolute top-1/3 left-1/4 w-[400px] h-[250px] bg-purple-600/15 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-indigo-600/20 blur-[130px] rounded-full pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-1/3 left-1/4 w-[450px] h-[300px] bg-purple-600/15 blur-[110px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-          {/* Main Info */}
+          {/* Main Info Left Column */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             {/* Status Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-800/50 text-indigo-300 text-xs sm:text-sm font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 text-xs sm:text-sm font-semibold shadow-md">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
               <Sparkles className="w-4 h-4 text-indigo-400" />
-              <span>{developer.statusBadge || "Available for Freelance & Android Projects"}</span>
+              <span>Multidisciplinary Professional &amp; Specialist</span>
             </div>
 
             {/* Main Headline */}
@@ -36,21 +48,38 @@ export default function Hero() {
               </span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-xl sm:text-2xl font-semibold text-slate-300 flex items-center justify-center lg:justify-start gap-3 flex-wrap">
-              <span className="flex items-center gap-1.5 text-indigo-400">
-                <Smartphone className="w-6 h-6" /> {developer.title ? developer.title.split("&")[0] : "Android Specialist"}
-              </span>
+            {/* Role Title */}
+            <p className="text-lg sm:text-xl font-bold text-slate-200 flex items-center justify-center lg:justify-start gap-2 flex-wrap">
+              <span className="text-indigo-400">Website &amp; Software Specialist</span>
               <span className="text-slate-600">•</span>
-              <span className="flex items-center gap-1.5 text-purple-400">
-                <Globe className="w-6 h-6" /> {developer.title && developer.title.includes("&") ? developer.title.split("&")[1] : "Full-Stack Web"}
-              </span>
+              <span className="text-purple-400">Journalist &amp; Video Creator</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-pink-400">Strategic Researcher</span>
             </p>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed mx-auto lg:mx-0">
-              {developer.bio}
+            {/* Bio Description */}
+            <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-bengali">
+              প্রযুক্তিগত দক্ষতা, সাংবাদিকতা, সৃজনশীল ধারণা, গবেষণা এবং সম-গুরুত্ব সম্পন্ন ৯টি মূল যোগ্যতায় সমৃদ্ধ পেশাদার প্রোফাইল। সরকারি ও বেসরকারি চাকরি, সিভি এবং সোশ্যাল মিডিয়া উপস্থাপনার জন্য তৈরি।
             </p>
+
+            {/* 9 Pillars Badges Showcase */}
+            <div className="space-y-2 pt-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5 justify-center lg:justify-start">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>৯টি সম-গুরুত্বসম্পন্ন মূল স্তম্ভ (9 Equal Core Competencies):</span>
+              </div>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
+                {corePillars.map((pillar, pIdx) => (
+                  <span
+                    key={pIdx}
+                    className="px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-200 text-xs font-semibold hover:border-indigo-500/50 hover:text-white transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{pillar.title}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
@@ -58,15 +87,15 @@ export default function Hero() {
                 href="/jibon-brittanto"
                 className="px-6 py-3.5 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-90 text-white font-semibold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition-all hover:scale-105"
               >
-                <FileText className="w-5 h-5" />
-                <span>জীবন বৃত্তান্ত</span>
+                <FileText className="w-5 h-5 text-white" />
+                <span>অফিসিয়াল জীবন বৃত্তান্ত (CV)</span>
               </a>
 
               <a
-                href="#projects"
-                className="px-6 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm sm:text-base flex items-center gap-2 transition-all hover:scale-105"
+                href="#competencies"
+                className="px-6 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-indigo-500/50 text-indigo-300 font-semibold text-sm sm:text-base flex items-center gap-2 transition-all hover:scale-105"
               >
-                <span>View Portfolio</span>
+                <span>৯টি প্রধান যোগ্যতা দেখুন</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
@@ -81,8 +110,8 @@ export default function Hero() {
 
             {/* Social Links */}
             <div className="flex items-center justify-center lg:justify-start gap-4 pt-4 text-slate-400">
-              <span className="text-xs uppercase tracking-wider text-slate-500 font-mono">Connect:</span>
-              <a href={developer.github || "https://github.com"} target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="GitHub">
+              <span className="text-xs uppercase tracking-wider text-slate-400 font-mono font-semibold">Connect:</span>
+              <a href={developer.github || "https://github.com/tusharwdev"} target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="GitHub">
                 <GithubIcon className="w-5 h-5" />
               </a>
               <a href={developer.fiverr || "https://fiverr.com"} target="_blank" rel="noreferrer" className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:text-white hover:border-slate-700 transition-colors" aria-label="Fiverr">
@@ -94,7 +123,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Graphic / Photo Avatar Card */}
+          {/* Right Column Visual Card */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-sm sm:max-w-md">
               {/* Outer Glow Ring */}
@@ -122,29 +151,37 @@ export default function Hero() {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-950/90 text-emerald-400 border border-emerald-800/80 font-bold backdrop-blur-sm">
-                      ● Online
+                      ● Official Portfolio
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 text-indigo-300 border border-slate-700 font-bold backdrop-blur-sm">
-                      Android &amp; Web
+                      9 Core Pillars
                     </span>
                   </div>
                 </div>
 
                 {/* User Info Footer */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src="/gallery/hero-bike.jpg?v=20261119"
-                      alt={displayName}
-                      className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
-                    />
-                    <div>
-                      <h3 className="font-bold text-white text-sm leading-tight">{displayName}</h3>
-                      <p className="text-[11px] text-indigo-400 font-mono">{developer.title || "Software Developer"}</p>
+                <div className="pt-2 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="/gallery/hero-bike.jpg?v=20261119"
+                        alt={displayName}
+                        className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
+                      />
+                      <div>
+                        <h3 className="font-bold text-white text-sm leading-tight">{displayName}</h3>
+                        <p className="text-[11px] text-indigo-400 font-mono">Multidisciplinary Professional</p>
+                      </div>
                     </div>
+
+                    <span className="text-xs text-slate-400 font-mono">Bangladesh</span>
                   </div>
 
-                  <span className="text-xs text-slate-400 font-mono">Based in {developer.location || "Bangladesh"}</span>
+                  {/* Verification Seal for Job Applications */}
+                  <div className="bg-indigo-950/60 border border-indigo-800/50 p-2.5 rounded-xl flex items-center gap-2 text-xs text-indigo-300 font-bengali">
+                    <Award className="w-4 h-4 text-yellow-400 shrink-0" />
+                    <span>সরকারী ও বেসরকারি চাকরির আবেদন এবং সিভি-সংযুক্ত অফিসিয়াল ওয়েবসাইট।</span>
+                  </div>
                 </div>
               </div>
             </div>

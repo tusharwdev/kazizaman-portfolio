@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, CheckCircle2, Award, Users, Rocket } from "lucide-react";
+import { Cpu, CheckCircle2, Award, Users, Rocket, Sparkles, BookOpen, Newspaper } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function About() {
@@ -22,13 +22,13 @@ export default function About() {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-xs font-mono uppercase tracking-widest text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800/50">
-            About Me
+            About Me &amp; Core Philosophy
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Passionate Developer Driven by Innovation
+            Multidisciplinary Specialist Driven by Analytical &amp; Technical Excellence
           </h2>
-          <p className="text-slate-400 text-base sm:text-lg">
-            Bridging the gap between robust backend APIs, native mobile experiences, and modern web applications.
+          <p className="text-slate-300 text-base sm:text-lg font-bengali">
+            সফটওয়্যার ইঞ্জিনিয়ারিং, অনলাইন সাংবাদিকতা, ভিডিও কন্টেন্ট ক্রিয়েশন ও গবেষণা সক্ষমতার এক অনন্য মেলবন্ধন।
           </p>
         </div>
 
@@ -52,24 +52,24 @@ export default function About() {
               })}
             </div>
 
-            {/* Core Focus Card */}
+            {/* Core Pillars Overview Card */}
             <div className="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-900/40 p-6 rounded-2xl space-y-4">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <Cpu className="w-5 h-5 text-indigo-400" />
-                <span>My Core Engineering Philosophy</span>
+                <span>Multidisciplinary Expertise</span>
               </h3>
               <ul className="space-y-2.5 text-sm text-slate-300">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <span><strong>Clean Architecture & MVVM:</strong> Scalable, maintainable Kotlin & React codebases.</span>
+                  <span><strong>Website &amp; Full-Stack Dev:</strong> Scalable Next.js, React, Kotlin Android &amp; Laravel.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <span><strong>User-Centric UI/UX:</strong> Fluid animations with Jetpack Compose & Tailwind CSS.</span>
+                  <span><strong>Journalism &amp; Video Production:</strong> News reporting, editorial writing &amp; video creation.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <span><strong>Performance Optimization:</strong> Fast load times, memory safety, and minimal latency.</span>
+                  <span><strong>Strategic &amp; Cognitive Skills:</strong> Ideation, Observation, Critical Thinking &amp; Execution.</span>
                 </li>
               </ul>
             </div>
@@ -82,21 +82,28 @@ export default function About() {
               <span className="bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
                 {displayName}
               </span>
-              , a Software Developer based in {developer.location || "Bangladesh"}.
             </h3>
 
-            <p className="text-slate-300 leading-relaxed text-base sm:text-lg">
-              {developer.bio}
+            <p className="text-slate-300 leading-relaxed text-base sm:text-lg font-bengali">
+              আমি ওয়েবসাইট স্পেশালিস্ট, ফুল-স্ট্যাক সফটওয়্যার ডেভেলপার, সাংবাদিক, ভিডিও ক্রিয়েটর এবং অনুসন্ধানী গবেষক। আমার কাজের মূল শক্তি হলো যেকোনো জটিল সমস্যাকে ক্রিটিক্যাল থিংকিং ও সূক্ষ্ম পর্যবেক্ষণের মাধ্যমে বিশ্লেষণ করা এবং তা শতভাগ মনোযোগ দিয়ে বাস্তবায়ন করা।
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+            <p className="text-slate-400 leading-relaxed text-sm sm:text-base">
+              Whether architecting robust Android/web applications, conducting investigative reporting for news media, producing visual video stories, or executing strategic organizational initiatives — I apply the highest standards of analytical rigor, ethical integrity, and technical perfection.
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
               <div>
-                <span className="text-xs text-slate-500 font-mono block">Domain:</span>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Official Domain:</span>
                 <span className="text-sm font-semibold text-indigo-300">{developer.domain || "kazizaman.online"}</span>
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-mono block">Primary Stack:</span>
-                <span className="text-sm font-semibold text-purple-300">Android (Kotlin) + Next.js</span>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Tech &amp; Media Scope:</span>
+                <span className="text-sm font-semibold text-purple-300">Software + Journalism</span>
+              </div>
+              <div>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Profile Purpose:</span>
+                <span className="text-sm font-semibold text-emerald-300">Govt/Private Job &amp; CV</span>
               </div>
             </div>
           </div>

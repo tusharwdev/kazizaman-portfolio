@@ -285,12 +285,12 @@ export const initialPortfolioData: PortfolioData = {
   ],
   education_list: [
     {
-      degree: "Bachelor of Science in Computer Science & Engineering",
-      institution: "National University",
-      period: "2019 - Present",
+      degree: "B.S.S. Honours in Social Work (বি-এস-এস অনার্স সমাজকর্ম - ৩য় বর্ষ)",
+      institution: "National University (জাতীয় বিশ্ববিদ্যালয়)",
+      period: "2021 - Present (অধ্যয়নরত)",
       location: "Bangladesh",
       description:
-        "Specialized in Software Engineering, Mobile Computing, Data Structures, Algorithms, and Database Management Systems.",
+        "Specializing in Social Research Methodology, Human Behavior, Social Welfare, Community Development, Analytical Inquiry, and Investigative Social Field Work.",
     },
   ],
   services: [

@@ -114,10 +114,23 @@ export interface JibonBrittantoData {
   certificates?: CertificateItem[];
 }
 
+export interface CoreCompetencyItem {
+  id: string;
+  title: string;
+  title_bn: string;
+  category: "tech" | "media" | "cognitive" | "execution";
+  description: string;
+  description_bn: string;
+  iconName: string;
+  highlights: string[];
+  importance: string;
+}
+
 export interface PortfolioData {
   developer: DeveloperInfo;
   stats: Stats;
   jibon_brittanto: JibonBrittantoData;
+  competencies?: CoreCompetencyItem[];
   skills: SkillCategory[];
   projects: ProjectItem[];
   work_experiences: WorkExperienceItem[];

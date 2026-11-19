@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Competencies from "@/components/Competencies";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
@@ -14,6 +15,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
       <Navbar />
       <Hero />
+      <Competencies />
       <About />
       <Skills />
       <Projects />
