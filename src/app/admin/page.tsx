@@ -736,6 +736,59 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              {/* Live Card Preview Box */}
+              <div className="bg-slate-950 p-6 rounded-3xl border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-emerald-400" />
+                    <span>লাইভ হিরো ফটো প্রিভিউ (Live Card Preview)</span>
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    স্লাইডার সরালে সরাসরি এখানে রেসপন্স করবে
+                  </span>
+                </div>
+
+                <div className="relative mx-auto max-w-sm w-full rounded-3xl overflow-hidden border-2 border-indigo-500/50 shadow-2xl bg-slate-900">
+                  <div
+                    style={{ height: `${formData.developer.heroPhoto?.frameHeight ?? 320}px` }}
+                    className="relative w-full overflow-hidden flex items-center justify-center bg-slate-950"
+                  >
+                    <img
+                      src={formData.developer.heroPhoto?.url || "/gallery/hero-bike.jpg"}
+                      alt="Hero Preview"
+                      style={{
+                        objectPosition: `${formData.developer.heroPhoto?.positionX ?? 50}% ${formData.developer.heroPhoto?.positionY ?? 20}%`,
+                        transform: `scale(${formData.developer.heroPhoto?.scale ?? 1.05})`,
+                      }}
+                      className="w-full h-full object-cover transition-all duration-100 ease-out"
+                    />
+
+                    {/* Badges Overlay */}
+                    <div className="absolute top-3 left-3 px-3 py-1 bg-slate-950/80 backdrop-blur-md rounded-full border border-slate-700 text-[10px] font-semibold text-emerald-400 shadow-md">
+                      {formData.developer.heroPhoto?.badgeLeftText || "● Official Portfolio"}
+                    </div>
+
+                    <div className="absolute top-3 right-3 px-3 py-1 bg-indigo-950/80 backdrop-blur-md rounded-full border border-indigo-700 text-[10px] font-semibold text-indigo-300 shadow-md">
+                      {formData.developer.heroPhoto?.badgeRightText || "9 Core Pillars"}
+                    </div>
+
+                    <div className="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-slate-800/80 space-y-0.5 text-left">
+                      <span className="text-xs font-bold text-white block">
+                        {formData.developer.name_en || "Kazi Zaman"}
+                      </span>
+                      <span className="text-[11px] text-indigo-300 font-medium block">
+                        {formData.developer.heroPhoto?.subtitle || "Multidisciplinary Professional"}
+                      </span>
+                      {formData.developer.heroPhoto?.degreeText && (
+                        <span className="text-[10px] text-amber-300 font-mono block">
+                          {formData.developer.heroPhoto.degreeText}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Position & Scale Sliders */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-950 p-5 rounded-2xl border border-slate-800">
                 <div>
