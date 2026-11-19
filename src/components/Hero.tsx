@@ -62,13 +62,6 @@ export default function Hero() {
               {developer.shortBio || "BSS (Honours) graduate in Social Work, Web Developer, Software Developer, Video Creator, Content Creator—blending keen observation, investigative analysis, and creative ideation as a Digital Marketer to build innovative products and scale impactful digital solutions."}
             </p>
 
-            {/* Bio Description - Full Paragraphs */}
-            <div className="space-y-3 text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed mx-auto lg:mx-0 text-left">
-              {developer.bio.split("\n\n").map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
-            </div>
-
             {/* 9 Pillars Badges Showcase */}
             <div className="space-y-2 pt-2">
               <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5 justify-center lg:justify-start">
