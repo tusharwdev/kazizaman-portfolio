@@ -28,10 +28,10 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "About", href: "/#about" },
-    { name: "Skills", href: "/#skills" },
-    { name: "Projects", href: "/#projects" },
-    { name: "Experience", href: "/#experience" },
     { name: "Education", href: "/#education" },
+    { name: "Skills", href: "/#skills" },
+    { name: "Experience", href: "/#experience" },
+    { name: "Projects", href: "/#projects" },
     { name: "Services", href: "/#services" },
     { name: "Gallery", href: "/photo-gallery" },
     { name: "Contact", href: "/#contact" },
