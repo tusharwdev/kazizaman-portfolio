@@ -758,9 +758,9 @@ export default function AdminPage() {
                       alt="Hero Preview"
                       style={{
                         objectPosition: `${formData.developer.heroPhoto?.positionX ?? 50}% ${formData.developer.heroPhoto?.positionY ?? 20}%`,
-                        transform: `scale(${formData.developer.heroPhoto?.scale ?? 1.05})`,
+                        transform: `scale(${formData.developer.heroPhoto?.scale ?? 1.05}) translate(${((formData.developer.heroPhoto?.positionX ?? 50) - 50) * 1.2}%, ${((formData.developer.heroPhoto?.positionY ?? 20) - 50) * 1.2}%)`,
                       }}
-                      className="w-full h-full object-cover transition-all duration-100 ease-out"
+                      className="w-full h-full object-cover transition-transform duration-75 ease-out"
                     />
 
                     {/* Badges Overlay */}
