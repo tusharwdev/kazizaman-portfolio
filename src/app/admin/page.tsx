@@ -954,11 +954,10 @@ export default function AdminPage() {
                         <img
                           src={heroPhoto.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
                           alt="Hero Preview"
-                          className="w-full h-full object-cover transition-all duration-300"
+                          className="w-full h-full object-cover transition-transform duration-100"
                           style={{
                             objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY}%`,
-                            transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 0.5}%, ${(heroPhoto.positionY - 50) * 0.5}%)`,
-                            transformOrigin: `${heroPhoto.positionX}% ${heroPhoto.positionY}%`,
+                            transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 1.2}%, ${(heroPhoto.positionY - 50) * 1.2}%)`,
                           }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
@@ -982,7 +981,7 @@ export default function AdminPage() {
                               className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
                               style={{
                                 objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY * 0.8}%`,
-                                transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 0.3}%, ${(heroPhoto.positionY - 50) * 0.3}%)`,
+                                transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 0.5}%, ${(heroPhoto.positionY - 50) * 0.5}%)`,
                               }}
                             />
                             <div>
