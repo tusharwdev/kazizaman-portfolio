@@ -84,6 +84,11 @@ export default function About() {
               </span>
             </h3>
 
+            {/* Short Highlight Summary */}
+            <p className="text-sm sm:text-base font-semibold text-indigo-300 border-l-4 border-indigo-500 pl-4 py-1 leading-relaxed bg-indigo-950/30 rounded-r-xl">
+              {developer.shortBio || "BSS (Honours) graduate in Social Work, Web Developer, Software Developer, Video Creator, Content Creator—blending keen observation, investigative analysis, and creative ideation as a Digital Marketer to build innovative products and scale impactful digital solutions."}
+            </p>
+
             <div className="space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base bg-slate-950/70 p-6 rounded-2xl border border-slate-800 shadow-xl">
               {developer.bio.split("\n\n").map((paragraph, idx) => (
                 <p key={idx}>{paragraph}</p>

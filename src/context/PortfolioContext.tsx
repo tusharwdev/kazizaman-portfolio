@@ -83,6 +83,7 @@ export const initialPortfolioData: PortfolioData = {
     fiverr: "https://www.fiverr.com/kazitushar1",
     github: "https://github.com/tusharwdev",
     whatsapp: "https://wa.me/8801786242046",
+    shortBio: "BSS (Honours) graduate in Social Work, Web Developer, Software Developer, Video Creator, Content Creator—blending keen observation, investigative analysis, and creative ideation as a Digital Marketer to build innovative products and scale impactful digital solutions.",
     bio: "BSS (Honours) graduate in Social Work, Web Developer, Software Developer, Video Creator, Content Creator—with proven expertise in building high-performing websites, custom software solutions, and scalable digital platforms.\n\nHaving produced a diverse portfolio of visual content ranging from captivating nature videos and lifestyle vlogs to strategic brand stories, I bring practical creativity to every project.\n\nAlongside technical execution, I possess a natural aptitude for keen observation, investigative analysis, and creative ideation—enabling me to conceptualize innovative products, smart tech gadgets, and viable business models with laser focus.\n\nAs an experienced Digital Marketer bridging human-centric insights, analytical precision, and practical innovation, I help brands, businesses, and digital platforms build, optimize, and scale impactful solutions.",
     statusBadge: "BSS (Honours) Social Work | Multidisciplinary Specialist & Digital Innovator",
     heroPhoto: {
@@ -348,7 +349,7 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v7";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v8";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);

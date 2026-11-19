@@ -26,6 +26,7 @@ export interface DeveloperInfo {
   fiverr: string;
   github: string;
   whatsapp: string;
+  shortBio?: string;
   bio: string;
   statusBadge: string;
   heroPhoto?: HeroPhotoConfig;

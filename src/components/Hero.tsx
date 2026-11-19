@@ -57,10 +57,17 @@ export default function Hero() {
               <span className="text-pink-400">Video Creator &amp; Digital Marketer</span>
             </p>
 
-            {/* Bio Description */}
-            <p className="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed mx-auto lg:mx-0">
-              {developer.bio}
+            {/* Short Highlight Summary */}
+            <p className="text-sm sm:text-base font-medium text-indigo-200/90 leading-relaxed max-w-3xl border-l-2 border-indigo-500/60 pl-3.5 text-left mx-auto lg:mx-0">
+              {developer.shortBio || "BSS (Honours) graduate in Social Work, Web Developer, Software Developer, Video Creator, Content Creator—blending keen observation, investigative analysis, and creative ideation as a Digital Marketer to build innovative products and scale impactful digital solutions."}
             </p>
+
+            {/* Bio Description - Full Paragraphs */}
+            <div className="space-y-3 text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed mx-auto lg:mx-0 text-left">
+              {developer.bio.split("\n\n").map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
 
             {/* 9 Pillars Badges Showcase */}
             <div className="space-y-2 pt-2">
