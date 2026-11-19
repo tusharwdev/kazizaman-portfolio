@@ -152,7 +152,8 @@ export default function Hero() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                     style={{
                       objectPosition: `${developer.heroPhoto?.positionX ?? 50}% ${developer.heroPhoto?.positionY ?? 20}%`,
-                      transform: `scale(${developer.heroPhoto?.scale ?? 1.05})`,
+                      transform: `scale(${developer.heroPhoto?.scale ?? 1.05}) translate(${((developer.heroPhoto?.positionX ?? 50) - 50) * 0.5}%, ${((developer.heroPhoto?.positionY ?? 20) - 50) * 0.5}%)`,
+                      transformOrigin: `${developer.heroPhoto?.positionX ?? 50}% ${developer.heroPhoto?.positionY ?? 20}%`,
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
@@ -176,6 +177,7 @@ export default function Hero() {
                         className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
                         style={{
                           objectPosition: `${developer.heroPhoto?.positionX ?? 50}% ${(developer.heroPhoto?.positionY ?? 20) * 0.8}%`,
+                          transform: `scale(${developer.heroPhoto?.scale ?? 1.05}) translate(${((developer.heroPhoto?.positionX ?? 50) - 50) * 0.3}%, ${((developer.heroPhoto?.positionY ?? 20) - 50) * 0.3}%)`,
                         }}
                       />
                       <div>
