@@ -115,9 +115,9 @@ export default function Hero() {
                 {/* Main Photo Frame */}
                 <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group">
                   <img
-                    src="/gallery/photo-1.jpg"
+                    src="/gallery/hero-bike.jpg?v=20261119"
                     alt={displayName}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
@@ -134,7 +134,7 @@ export default function Hero() {
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-3">
                     <img
-                      src="/gallery/photo-3.jpg"
+                      src="/gallery/hero-bike.jpg?v=20261119"
                       alt={displayName}
                       className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
                     />
