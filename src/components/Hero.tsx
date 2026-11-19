@@ -142,20 +142,26 @@ export default function Hero() {
                 </div>
 
                 {/* Main Photo Frame */}
-                <div className="relative h-72 sm:h-80 w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group">
+                <div
+                  className="relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group"
+                  style={{ height: `${developer.heroPhoto?.frameHeight || 320}px` }}
+                >
                   <img
-                    src="/gallery/hero-bike.jpg?v=20261119_v3"
+                    src={developer.heroPhoto?.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
                     alt={displayName}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    style={{ objectPosition: "35% 62%" }}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
+                    style={{
+                      objectPosition: `${developer.heroPhoto?.positionX ?? 50}% ${developer.heroPhoto?.positionY ?? 20}%`,
+                      transform: `scale(${developer.heroPhoto?.scale ?? 1.05})`,
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-950/90 text-emerald-400 border border-emerald-800/80 font-bold backdrop-blur-sm">
-                      ● Official Portfolio
+                      {developer.heroPhoto?.badgeLeftText || "● Official Portfolio"}
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 text-indigo-300 border border-slate-700 font-bold backdrop-blur-sm">
-                      9 Core Pillars
+                      {developer.heroPhoto?.badgeRightText || "9 Core Pillars"}
                     </span>
                   </div>
                 </div>
@@ -165,18 +171,20 @@ export default function Hero() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <img
-                        src="/gallery/hero-bike.jpg?v=20261119_v3"
+                        src={developer.heroPhoto?.avatarUrl || developer.heroPhoto?.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
                         alt={displayName}
                         className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
-                        style={{ objectPosition: "35% 30%" }}
+                        style={{
+                          objectPosition: `${developer.heroPhoto?.positionX ?? 50}% ${(developer.heroPhoto?.positionY ?? 20) * 0.8}%`,
+                        }}
                       />
                       <div>
                         <h3 className="font-bold text-white text-sm leading-tight">{displayName}</h3>
-                        <p className="text-[11px] text-indigo-400 font-mono">Multidisciplinary Professional</p>
+                        <p className="text-[11px] text-indigo-400 font-mono">{developer.heroPhoto?.subtitle || "Multidisciplinary Professional"}</p>
                       </div>
                     </div>
 
-                    <span className="text-xs text-slate-400 font-mono">Bangladesh</span>
+                    <span className="text-xs text-slate-400 font-mono">{developer.heroPhoto?.locationText || developer.location || "Bangladesh"}</span>
                   </div>
 
                   {/* Verification Seal & Education Badge for Job Applications */}
@@ -184,8 +192,8 @@ export default function Hero() {
                     <div className="bg-indigo-950/80 border border-indigo-800/60 p-3 rounded-xl flex items-center gap-2.5 text-xs text-indigo-200 font-bengali shadow-md">
                       <Award className="w-4 h-4 text-yellow-400 shrink-0" />
                       <div>
-                        <span className="font-bold block text-white text-xs">শিক্ষা (Academic Degree):</span>
-                        <span className="text-indigo-300 font-semibold text-[11px]">B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়</span>
+                        <span className="font-bold block text-white text-xs">{developer.heroPhoto?.degreeTitle || "শিক্ষা (Academic Degree):"}</span>
+                        <span className="text-indigo-300 font-semibold text-[11px]">{developer.heroPhoto?.degreeText || "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়"}</span>
                       </div>
                     </div>
                   </div>

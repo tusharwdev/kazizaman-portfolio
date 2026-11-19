@@ -28,6 +28,9 @@ import {
   Key,
   Camera,
   Image as ImageIcon,
+  Sliders,
+  Upload,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -49,7 +52,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [activeTab, setActiveTab] = useState<
-    "developer" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "gallery" | "raw"
+    "developer" | "hero_card" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "gallery" | "raw"
   >("developer");
 
   const [formData, setFormData] = useState<PortfolioData>(portfolioData);
@@ -101,6 +104,43 @@ export default function AdminPage() {
     if (window.confirm("আপনি কি নিশ্চিত যে সকল ডেটা রিসেট করে ডিফল্ট অবস্থায় ফিরিয়ে আনবেন?")) {
       resetPortfolioData();
       showToast("তথ্য ডিফল্ট অবস্থায় রিসেট করা হয়েছে!");
+    }
+  };
+
+  const handleHeroPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("ইমেজের সাইজ সর্বোচ্চ 5MB হতে পারবে!");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        if (result) {
+          setFormData((prev) => ({
+            ...prev,
+            developer: {
+              ...prev.developer,
+              heroPhoto: {
+                url: result,
+                positionX: prev.developer.heroPhoto?.positionX ?? 50,
+                positionY: prev.developer.heroPhoto?.positionY ?? 20,
+                scale: prev.developer.heroPhoto?.scale ?? 1.05,
+                frameHeight: prev.developer.heroPhoto?.frameHeight ?? 320,
+                badgeLeftText: prev.developer.heroPhoto?.badgeLeftText ?? "● Official Portfolio",
+                badgeRightText: prev.developer.heroPhoto?.badgeRightText ?? "9 Core Pillars",
+                subtitle: prev.developer.heroPhoto?.subtitle ?? "Multidisciplinary Professional",
+                locationText: prev.developer.heroPhoto?.locationText ?? "Bangladesh",
+                degreeTitle: prev.developer.heroPhoto?.degreeTitle ?? "শিক্ষা (Academic Degree):",
+                degreeText: prev.developer.heroPhoto?.degreeText ?? "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়",
+              },
+            },
+          }));
+          showToast("নতুন হিরো ছবি আপলোড করা হয়েছে!");
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -271,6 +311,7 @@ export default function AdminPage() {
 
             {[
               { id: "developer", label: "👤 পরিচিতি ও সাধারণ তথ্য", icon: User },
+              { id: "hero_card", label: "🖼️ পোর্টফোলিও কার্ড ও ছবি", icon: ImageIcon },
               { id: "stats", label: "📊 পরিসংখ্যান (Stats)", icon: Award },
               { id: "jibon", label: "📜 জীবন বৃত্তান্ত (Bio)", icon: FileText },
               { id: "skills", label: "🛠️ দক্ষতা (Skills)", icon: Wrench },
@@ -527,6 +568,463 @@ export default function AdminPage() {
               </div>
             </div>
           )}
+
+          {/* TAB: HERO CARD & IMAGE CROP/POSITION */}
+          {activeTab === "hero_card" && (() => {
+            const heroPhoto = formData.developer.heroPhoto || {
+              url: "/gallery/hero-bike.jpg?v=20261119_v5",
+              avatarUrl: "",
+              positionX: 50,
+              positionY: 20,
+              scale: 1.05,
+              frameHeight: 320,
+              badgeLeftText: "● Official Portfolio",
+              badgeRightText: "9 Core Pillars",
+              subtitle: "Multidisciplinary Professional",
+              locationText: "Bangladesh",
+              degreeTitle: "শিক্ষা (Academic Degree):",
+              degreeText: "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়",
+            };
+
+            const updateHeroPhoto = (updates: Partial<typeof heroPhoto>) => {
+              setFormData((prev) => ({
+                ...prev,
+                developer: {
+                  ...prev.developer,
+                  heroPhoto: {
+                    ...(prev.developer.heroPhoto || heroPhoto),
+                    ...updates,
+                  },
+                },
+              }));
+            };
+
+            return (
+              <div className="space-y-6">
+                <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-indigo-400" />
+                      <span>🖼️ পোর্টফোলিও কার্ড ও ইমেজ ক্রপ/পজিশন এডিটর</span>
+                    </h2>
+                    <p className="text-xs text-slate-400">
+                      হিরো সেকশনের ডানপাশের পোর্টফোলিও কার্ডটির ছবি আপলোড, ক্রপ, পজিশন, জুম ও টেক্সট সরাসরি পরিবর্তন করুন
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleSaveAll}
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-md shadow-emerald-600/30 transition-all"
+                  >
+                    <Save className="w-3.5 h-3.5" /> সেভ করুন
+                  </button>
+                </div>
+
+                {/* Two Column Layout: Left Controls, Right Live Preview */}
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+                  {/* Left Controls Column */}
+                  <div className="xl:col-span-7 space-y-6">
+
+                    {/* 1. Image Selection & Upload */}
+                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4">
+                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Upload className="w-4 h-4 text-indigo-400" />
+                        <span>১. ছবি আপলোড ও ইমেজ ইউআরএল (Main Image)</span>
+                      </h3>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-slate-300 block">
+                          নতুন ছবি আপলোড করুন (Upload Image File)
+                        </label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleHeroPhotoUpload}
+                          className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer bg-slate-900 border border-slate-800 rounded-xl p-1"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300 block">
+                          অথবা গ্যালারি থেকে পছন্দের ছবি সিলেক্ট করুন
+                        </label>
+                        <select
+                          value={heroPhoto.url}
+                          onChange={(e) => updateHeroPhoto({ url: e.target.value })}
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 font-mono"
+                        >
+                          <option value="/gallery/hero-bike.jpg?v=20261119_v5">মেইন মোটরবাইক হিরো ছবি (/gallery/hero-bike.jpg)</option>
+                          <option value="/gallery/photo-1.jpg">বাইক ও প্রকৃতি ১ (/gallery/photo-1.jpg)</option>
+                          <option value="/gallery/photo-2.jpg">গ্রামের রাস্তা ২ (/gallery/photo-2.jpg)</option>
+                          <option value="/gallery/photo-3.jpg">এক্সিকিউটিভ ফরমাল ৩ (/gallery/photo-3.jpg)</option>
+                          <option value="/gallery/photo-4.jpg">ঘড়ি ও পোজ ৪ (/gallery/photo-4.jpg)</option>
+                          <option value="/gallery/photo-5.jpg">সাইন পোস্ট ৫ (/gallery/photo-5.jpg)</option>
+                          <option value="/gallery/photo-6.jpg">বাইক রাইডিং ৬ (/gallery/photo-6.jpg)</option>
+                          <option value="/gallery/photo-7.jpg">বাইক পোজ ৭ (/gallery/photo-7.jpg)</option>
+                          <option value="/gallery/photo-8.jpg">হুগি ও বাইক ৮ (/gallery/photo-8.jpg)</option>
+                          <option value="/gallery/photo-9.jpg">কর্পোরেট ফরমাল ৯ (/gallery/photo-9.jpg)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300 block">
+                          অথবা সরাসরি ছবির ইউআরএল (Image URL)
+                        </label>
+                        <input
+                          type="text"
+                          value={heroPhoto.url}
+                          onChange={(e) => updateHeroPhoto({ url: e.target.value })}
+                          placeholder="https://... or /gallery/..."
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 2. Crop, Position & Scale Controls */}
+                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-5">
+                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Sliders className="w-4 h-4 text-emerald-400" />
+                        <span>২. ইমেজের পজিশনিং ও ক্রপিং টিউনিং (Crop & Position)</span>
+                      </h3>
+
+                      {/* Position X Slider */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-semibold text-slate-300">
+                            ডানে-বামে পজিশন (Position X): <strong className="text-indigo-400">{heroPhoto.positionX}%</strong>
+                          </span>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionX: 0 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              0% (বাম)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionX: 50 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              50% (মাঝখানে)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionX: 100 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              100% (ডান)
+                            </button>
+                          </div>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={heroPhoto.positionX}
+                          onChange={(e) => updateHeroPhoto({ positionX: Number(e.target.value) })}
+                          className="w-full accent-indigo-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Position Y Slider */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-semibold text-slate-300">
+                            উপরে-নিচে পজিশন (Position Y): <strong className="text-emerald-400">{heroPhoto.positionY}%</strong>
+                          </span>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionY: 0 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              0% (টপ)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionY: 20 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              20% (ডিফল্ট)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionY: 50 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              50% (মাঝখানে)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateHeroPhoto({ positionY: 100 })}
+                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                            >
+                              100% (নিচে)
+                            </button>
+                          </div>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={heroPhoto.positionY}
+                          onChange={(e) => updateHeroPhoto({ positionY: Number(e.target.value) })}
+                          className="w-full accent-emerald-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Scale / Zoom Slider */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-semibold text-slate-300">
+                            জুমিং লেভেল (Zoom / Scale): <strong className="text-purple-400">{heroPhoto.scale.toFixed(2)}x</strong>
+                          </span>
+                          <div className="flex gap-1">
+                            {[1.0, 1.05, 1.2, 1.5, 2.0].map((sc) => (
+                              <button
+                                key={sc}
+                                type="button"
+                                onClick={() => updateHeroPhoto({ scale: sc })}
+                                className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                              >
+                                {sc}x
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <input
+                          type="range"
+                          min="1.0"
+                          max="2.5"
+                          step="0.05"
+                          value={heroPhoto.scale}
+                          onChange={(e) => updateHeroPhoto({ scale: Number(e.target.value) })}
+                          className="w-full accent-purple-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Frame Height Slider */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-semibold text-slate-300">
+                            কার্ডের উচ্চতা (Frame Height): <strong className="text-pink-400">{heroPhoto.frameHeight}px</strong>
+                          </span>
+                          <div className="flex gap-1">
+                            {[250, 320, 380, 450].map((fh) => (
+                              <button
+                                key={fh}
+                                type="button"
+                                onClick={() => updateHeroPhoto({ frameHeight: fh })}
+                                className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
+                              >
+                                {fh}px
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <input
+                          type="range"
+                          min="220"
+                          max="500"
+                          step="10"
+                          value={heroPhoto.frameHeight}
+                          onChange={(e) => updateHeroPhoto({ frameHeight: Number(e.target.value) })}
+                          className="w-full accent-pink-500 cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 3. Text & Overlay Badges Customization */}
+                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4">
+                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span>৩. টেক্সট, ব্যাজ ও ডিগ্রির তথ্য (Text & Badges)</span>
+                      </h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-slate-300 block">
+                            বামপাশের ব্যাজ (Left Overlay Badge)
+                          </label>
+                          <input
+                            type="text"
+                            value={heroPhoto.badgeLeftText || "● Official Portfolio"}
+                            onChange={(e) => updateHeroPhoto({ badgeLeftText: e.target.value })}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400 font-mono font-bold"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-slate-300 block">
+                            ডানপাশের ব্যাজ (Right Overlay Badge)
+                          </label>
+                          <input
+                            type="text"
+                            value={heroPhoto.badgeRightText || "9 Core Pillars"}
+                            onChange={(e) => updateHeroPhoto({ badgeRightText: e.target.value })}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 font-mono font-bold"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-slate-300 block">
+                            প্রোফাইল সাবটাইটেল (Subtitle)
+                          </label>
+                          <input
+                            type="text"
+                            value={heroPhoto.subtitle || "Multidisciplinary Professional"}
+                            onChange={(e) => updateHeroPhoto({ subtitle: e.target.value })}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-400 font-mono"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-slate-300 block">
+                            অবস্থান / দেশ (Location)
+                          </label>
+                          <input
+                            type="text"
+                            value={heroPhoto.locationText || "Bangladesh"}
+                            onChange={(e) => updateHeroPhoto({ locationText: e.target.value })}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300 block">
+                          শিক্ষা / ডিগ্রি হেডিং (Education Degree Title)
+                        </label>
+                        <input
+                          type="text"
+                          value={heroPhoto.degreeTitle || "শিক্ষা (Academic Degree):"}
+                          onChange={(e) => updateHeroPhoto({ degreeTitle: e.target.value })}
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white font-bold"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300 block">
+                          শিক্ষাগত যোগ্যতার বিস্তারিত (Degree Details)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={heroPhoto.degreeText || "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়"}
+                          onChange={(e) => updateHeroPhoto({ degreeText: e.target.value })}
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 resize-none font-medium"
+                        />
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Right Column: Live Interactive Card Preview */}
+                  <div className="xl:col-span-5 space-y-4 sticky top-24">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                        <Eye className="w-4 h-4 text-emerald-400" />
+                        <span>লাইভ প্রিভিউ (Live Card Preview)</span>
+                      </h3>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">
+                        ● Realtime
+                      </span>
+                    </div>
+
+                    {/* Card Container exact mirror of Hero.tsx */}
+                    <div className="relative w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4 overflow-hidden">
+                      {/* Top Bar */}
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-rose-500" />
+                          <span className="w-3 h-3 rounded-full bg-amber-500" />
+                          <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                        </div>
+                        <span className="text-xs font-mono text-indigo-400 font-bold">
+                          {formData.developer.domain || "kazizaman.online"}
+                        </span>
+                      </div>
+
+                      {/* Main Photo Frame */}
+                      <div
+                        className="relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group"
+                        style={{ height: `${heroPhoto.frameHeight}px` }}
+                      >
+                        <img
+                          src={heroPhoto.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
+                          alt="Hero Preview"
+                          className="w-full h-full object-cover transition-all duration-300"
+                          style={{
+                            objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY}%`,
+                            transform: `scale(${heroPhoto.scale})`,
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
+                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
+                          <span className="px-2.5 py-1 rounded-lg bg-emerald-950/90 text-emerald-400 border border-emerald-800/80 font-bold backdrop-blur-sm">
+                            {heroPhoto.badgeLeftText || "● Official Portfolio"}
+                          </span>
+                          <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 text-indigo-300 border border-slate-700 font-bold backdrop-blur-sm">
+                            {heroPhoto.badgeRightText || "9 Core Pillars"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* User Info Footer */}
+                      <div className="pt-2 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={heroPhoto.avatarUrl || heroPhoto.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
+                              alt="Avatar Preview"
+                              className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
+                              style={{
+                                objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY * 0.8}%`,
+                              }}
+                            />
+                            <div>
+                              <h3 className="font-bold text-white text-sm leading-tight">
+                                {formData.developer.name_en || formData.developer.name || "Kazi Zaman"}
+                              </h3>
+                              <p className="text-[11px] text-indigo-400 font-mono">
+                                {heroPhoto.subtitle || "Multidisciplinary Professional"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="text-xs text-slate-400 font-mono">
+                            {heroPhoto.locationText || formData.developer.location || "Bangladesh"}
+                          </span>
+                        </div>
+
+                        {/* Verification Seal & Education Badge */}
+                        <div className="space-y-2">
+                          <div className="bg-indigo-950/80 border border-indigo-800/60 p-3 rounded-xl flex items-center gap-2.5 text-xs text-indigo-200 font-bengali shadow-md">
+                            <Award className="w-4 h-4 text-yellow-400 shrink-0" />
+                            <div>
+                              <span className="font-bold block text-white text-xs">
+                                {heroPhoto.degreeTitle || "শিক্ষা (Academic Degree):"}
+                              </span>
+                              <span className="text-indigo-300 font-semibold text-[11px]">
+                                {heroPhoto.degreeText || "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 space-y-1">
+                      <p className="font-bold text-slate-200">💡 টিপস:</p>
+                      <p>১. ইমেজের ডানে-বামে এবং উপরে-নিচে পজিশন বাড়িয়ে/কমিয়ে ছবিকে ফ্রেমের সঠিক স্থানে সেট করুন।</p>
+                      <p>২. জুম এবং হাইট টিউন করার পর <span className="text-emerald-400 font-bold">"সেভ করুন"</span> বাটন চাপ দিন।</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* TAB 2: STATS */}
           {activeTab === "stats" && (

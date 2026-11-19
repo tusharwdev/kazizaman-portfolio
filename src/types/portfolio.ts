@@ -1,3 +1,18 @@
+export interface HeroPhotoConfig {
+  url: string;
+  avatarUrl?: string;
+  positionX: number; // 0% (left) to 100% (right)
+  positionY: number; // 0% (top) to 100% (bottom)
+  scale: number;     // 1.0 to 2.5 (zoom level)
+  frameHeight: number; // height in px
+  badgeLeftText?: string;
+  badgeRightText?: string;
+  subtitle?: string;
+  locationText?: string;
+  degreeTitle?: string;
+  degreeText?: string;
+}
+
 export interface DeveloperInfo {
   name: string;
   name_en: string;
@@ -13,6 +28,7 @@ export interface DeveloperInfo {
   whatsapp: string;
   bio: string;
   statusBadge: string;
+  heroPhoto?: HeroPhotoConfig;
 }
 
 export interface Stats {
