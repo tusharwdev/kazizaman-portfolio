@@ -363,7 +363,7 @@ interface PortfolioContextType {
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v9";
+const LOCAL_STORAGE_KEY = "kazizaman_portfolio_data_v10";
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialPortfolioData);
