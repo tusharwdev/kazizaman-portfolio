@@ -49,17 +49,17 @@ export default function Hero() {
             </h1>
 
             {/* Role Title */}
-            <p className="text-lg sm:text-xl font-bold text-slate-200 flex items-center justify-center lg:justify-start gap-2 flex-wrap">
-              <span className="text-indigo-400">Website &amp; Software Specialist</span>
+            <p className="text-base sm:text-lg font-bold text-slate-200 flex items-center justify-center lg:justify-start gap-2 flex-wrap">
+              <span className="text-indigo-400">BSS (Honours) Social Work</span>
               <span className="text-slate-600">•</span>
-              <span className="text-purple-400">Journalist &amp; Video Creator</span>
+              <span className="text-purple-400">Web &amp; Software Developer</span>
               <span className="text-slate-600">•</span>
-              <span className="text-pink-400">Strategic Researcher</span>
+              <span className="text-pink-400">Video Creator &amp; Digital Marketer</span>
             </p>
 
             {/* Bio Description */}
-            <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-bengali">
-              প্রযুক্তিগত দক্ষতা, সাংবাদিকতা, সৃজনশীল ধারণা, গবেষণা এবং সম-গুরুত্ব সম্পন্ন ৯টি মূল যোগ্যতায় সমৃদ্ধ পেশাদার প্রোফাইল। সরকারি ও বেসরকারি চাকরি, সিভি এবং সোশ্যাল মিডিয়া উপস্থাপনার জন্য তৈরি।
+            <p className="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed mx-auto lg:mx-0">
+              {developer.bio}
             </p>
 
             {/* 9 Pillars Badges Showcase */}

@@ -84,12 +84,8 @@ export default function About() {
               </span>
             </h3>
 
-            <p className="text-slate-300 leading-relaxed text-base sm:text-lg font-bengali">
-              আমি ওয়েবসাইট স্পেশালিস্ট, ফুল-স্ট্যাক সফটওয়্যার ডেভেলপার, সাংবাদিক, ভিডিও ক্রিয়েটর এবং অনুসন্ধানী গবেষক। আমার কাজের মূল শক্তি হলো যেকোনো জটিল সমস্যাকে ক্রিটিক্যাল থিংকিং ও সূক্ষ্ম পর্যবেক্ষণের মাধ্যমে বিশ্লেষণ করা এবং তা শতভাগ মনোযোগ দিয়ে বাস্তবায়ন করা।
-            </p>
-
-            <p className="text-slate-400 leading-relaxed text-sm sm:text-base">
-              Whether architecting robust Android/web applications, conducting investigative reporting for news media, producing visual video stories, or executing strategic organizational initiatives — I apply the highest standards of analytical rigor, ethical integrity, and technical perfection.
+            <p className="text-slate-300 leading-relaxed text-sm sm:text-base bg-slate-950/70 p-5 rounded-2xl border border-slate-800">
+              {developer.bio}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
