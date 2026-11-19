@@ -204,5 +204,19 @@
       "location": "Bangladesh",
       "description": "Specializing in Social Research Methodology, Human Behavior, Social Welfare, Community Development, Analytical Inquiry, and Investigative Social Field Work."
     }
-  ]
+  ],
+  "theme": {
+    "primaryColor": "indigo",
+    "headlineGradient": "from-indigo-400 via-purple-400 to-pink-400",
+    "showCompetencies": true,
+    "showServices": true,
+    "showProjects": true,
+    "showExperience": true,
+    "showEducation": true,
+    "showCertificates": true,
+    "showPhotoGallery": true,
+    "showJibonBrittanto": true,
+    "showStats": true,
+    "footerText": "© 2026 Kazi Zaman · kazizaman.online · All Rights Reserved."
+  }
 }

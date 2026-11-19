@@ -5,6 +5,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Education() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showEducation === false) return null;
   const { education_list: education, jibon_brittanto: jb } = portfolioData;
 
   return (

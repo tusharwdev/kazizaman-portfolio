@@ -143,6 +143,22 @@ export interface CoreCompetencyItem {
   importance: string;
 }
 
+export interface ThemeSettings {
+  primaryColor?: string;
+  headlineGradient?: string;
+  showCompetencies?: boolean;
+  showServices?: boolean;
+  showProjects?: boolean;
+  showExperience?: boolean;
+  showEducation?: boolean;
+  showCertificates?: boolean;
+  showPhotoGallery?: boolean;
+  showJibonBrittanto?: boolean;
+  showStats?: boolean;
+  footerText?: string;
+  customCss?: string;
+}
+
 export interface PortfolioData {
   developer: DeveloperInfo;
   stats: Stats;
@@ -154,4 +170,5 @@ export interface PortfolioData {
   education_list: EducationItem[];
   services: ServiceItem[];
   photo_gallery?: PhotoGalleryItem[];
+  theme?: ThemeSettings;
 }

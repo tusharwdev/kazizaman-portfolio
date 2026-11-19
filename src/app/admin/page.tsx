@@ -2,7 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import { usePortfolio } from "@/context/PortfolioContext";
-import { PortfolioData, ProjectItem, SkillCategory, WorkExperienceItem, ServiceItem, PhotoGalleryItem } from "@/types/portfolio";
+import {
+  PortfolioData,
+  ProjectItem,
+  SkillCategory,
+  WorkExperienceItem,
+  EducationItem,
+  ServiceItem,
+  PhotoGalleryItem,
+  CertificateItem,
+  CoreCompetencyItem,
+  ThemeSettings,
+} from "@/types/portfolio";
 import {
   Lock,
   LogOut,
@@ -31,6 +42,12 @@ import {
   Sliders,
   Upload,
   Sparkles,
+  Palette,
+  GraduationCap,
+  Layers,
+  Settings,
+  ShieldCheck,
+  LayoutTemplate,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -51,9 +68,24 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const [activeTab, setActiveTab] = useState<
-    "developer" | "hero_card" | "stats" | "jibon" | "skills" | "projects" | "experience" | "services" | "gallery" | "raw"
-  >("developer");
+
+  type TabType =
+    | "developer"
+    | "hero_card"
+    | "theme_design"
+    | "competencies"
+    | "stats"
+    | "skills"
+    | "projects"
+    | "experience"
+    | "education"
+    | "services"
+    | "certificates"
+    | "jibon"
+    | "gallery"
+    | "raw";
+
+  const [activeTab, setActiveTab] = useState<TabType>("developer");
 
   const [formData, setFormData] = useState<PortfolioData>(portfolioData);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -97,11 +129,11 @@ export default function AdminPage() {
 
   const handleSaveAll = () => {
     savePortfolioData(formData);
-    showToast("সকল তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!");
+    showToast("সকল তথ্য ও ডিজাইন সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে!");
   };
 
   const handleReset = () => {
-    if (window.confirm("আপনি কি নিশ্চিত যে সকল ডেটা রিসেট করে ডিফল্ট অবস্থায় ফিরিয়ে আনবেন?")) {
+    if (window.confirm("আপনি কি নিশ্চিত যে সকল ডেটা ও ডিজাইন সেটিংস রিসেট করে ডিফল্ট অবস্থায় ফিরিয়ে আনবেন?")) {
       resetPortfolioData();
       showToast("তথ্য ডিফল্ট অবস্থায় রিসেট করা হয়েছে!");
     }
@@ -123,213 +155,232 @@ export default function AdminPage() {
             developer: {
               ...prev.developer,
               heroPhoto: {
+                ...prev.developer.heroPhoto,
                 url: result,
                 positionX: prev.developer.heroPhoto?.positionX ?? 50,
                 positionY: prev.developer.heroPhoto?.positionY ?? 20,
                 scale: prev.developer.heroPhoto?.scale ?? 1.05,
                 frameHeight: prev.developer.heroPhoto?.frameHeight ?? 320,
-                badgeLeftText: prev.developer.heroPhoto?.badgeLeftText ?? "● Official Portfolio",
-                badgeRightText: prev.developer.heroPhoto?.badgeRightText ?? "9 Core Pillars",
-                subtitle: prev.developer.heroPhoto?.subtitle ?? "Multidisciplinary Professional",
-                locationText: prev.developer.heroPhoto?.locationText ?? "Bangladesh",
-                degreeTitle: prev.developer.heroPhoto?.degreeTitle ?? "শিক্ষা (Academic Degree):",
-                degreeText: prev.developer.heroPhoto?.degreeText ?? "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়",
               },
             },
           }));
-          showToast("নতুন হিরো ছবি আপলোড করা হয়েছে!");
+          showToast("হিরো ফটো সফলভাবে আপলোড করা হয়েছে!");
         }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleRawJsonSave = () => {
-    const success = importPortfolioJson(rawJsonText);
-    if (success) {
-      showToast("JSON ডেটা সফলভাবে আপডেট করা হয়েছে!");
-    } else {
-      alert("অকার্যকর (Invalid) JSON ফরম্যাট! সঠিক JSON দিয়ে আবার চেষ্টা করুন।");
-    }
+  // Helper updates for nested data
+  const updateDeveloperField = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      developer: { ...prev.developer, [field]: value },
+    }));
+  };
+
+  const updateHeroPhotoField = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      developer: {
+        ...prev.developer,
+        heroPhoto: {
+          url: prev.developer.heroPhoto?.url || "/gallery/hero-bike.jpg",
+          positionX: prev.developer.heroPhoto?.positionX ?? 50,
+          positionY: prev.developer.heroPhoto?.positionY ?? 20,
+          scale: prev.developer.heroPhoto?.scale ?? 1.05,
+          frameHeight: prev.developer.heroPhoto?.frameHeight ?? 320,
+          ...prev.developer.heroPhoto,
+          [field]: value,
+        },
+      },
+    }));
+  };
+
+  const updateThemeField = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      theme: {
+        primaryColor: "indigo",
+        showCompetencies: true,
+        showServices: true,
+        showProjects: true,
+        showExperience: true,
+        showEducation: true,
+        showCertificates: true,
+        showPhotoGallery: true,
+        showJibonBrittanto: true,
+        showStats: true,
+        ...prev.theme,
+        [field]: value,
+      },
+    }));
   };
 
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
-        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
-          <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-indigo-600/30">
-              <Lock className="w-8 h-8" />
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
+        <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto text-white shadow-lg">
+              <Lock className="w-7 h-7" />
             </div>
-            <h1 className="text-2xl font-extrabold text-white">kazizaman.online এডমিন প্যানেল</h1>
-            <p className="text-xs text-slate-400 font-mono">
-              এডমিন হিসেবে লগইন করার জন্য আপনার ইমেইল ও পাসওয়ার্ড দিন।
-            </p>
+            <h1 className="text-2xl font-extrabold text-white">এডমিন লগইন (Kazizaman.online)</h1>
+            <p className="text-xs text-slate-400">সাইটের সকল কন্টেন্ট ও ডিজাইন নিয়ন্ত্রণ করার জন্য লগইন করুন</p>
           </div>
 
+          {loginError && (
+            <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">এডমিন ইমেইল (Email Address)</label>
+            <div>
+              <label className="text-xs text-slate-300 font-semibold block mb-1">ইমেইল (Email)</label>
               <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   type="email"
-                  required
-                  placeholder="admin@example.com"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                  placeholder="admin@kazizaman.online"
+                  required
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                 />
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">এডমিন পাসওয়ার্ড (Password)</label>
+            <div>
+              <label className="text-xs text-slate-300 font-semibold block mb-1">পাসওয়ার্ড (Password)</label>
               <div className="relative">
+                <Key className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  required
-                  placeholder="••••••••"
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                 />
-                <Key className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-3.5 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-white"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {loginError && (
-              <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{loginError}</span>
-              </div>
-            )}
-
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.01]"
+              className="w-full py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-90 text-white font-bold text-sm rounded-xl shadow-lg transition-all"
             >
-              <Lock className="w-4 h-4" />
-              <span>লগইন করুন (Admin Login)</span>
+              প্রবেশ করুন (Login)
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-800 text-center">
-            <Link href="/" className="text-xs text-indigo-400 hover:underline">
-              ← মেইন সাইটে ফিরে যান (kazizaman.online)
+          <div className="text-center pt-2 border-t border-slate-800/80">
+            <Link href="/" className="text-xs text-indigo-400 hover:underline inline-flex items-center gap-1">
+              <ExternalLink className="w-3 h-3" />
+              <span>মূল সাইটে ফিরে যান</span>
             </Link>
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 
+  const tabs: { id: TabType; label: string; icon: any }[] = [
+    { id: "developer", label: "প্রোফাইল তথ্য", icon: User },
+    { id: "hero_card", label: "হিরো ও ছবি", icon: Camera },
+    { id: "theme_design", label: "ডিজাইন ও লেআউট", icon: Palette },
+    { id: "competencies", label: "৯টি মূল স্তম্ভ", icon: ShieldCheck },
+    { id: "stats", label: "পরিসংখ্যান (Stats)", icon: Award },
+    { id: "skills", label: "দক্ষতা (Skills)", icon: Wrench },
+    { id: "projects", label: "প্রজেক্টসমূহ", icon: FolderGit2 },
+    { id: "experience", label: "অভিজ্ঞতা", icon: Briefcase },
+    { id: "education", label: "শিক্ষা (Education)", icon: GraduationCap },
+    { id: "services", label: "সার্ভিসসমূহ", icon: Zap },
+    { id: "certificates", label: "সার্টিফিকেট", icon: Sparkles },
+    { id: "jibon", label: "জীবন বৃত্তান্ত", icon: FileText },
+    { id: "gallery", label: "ছবি গ্যালারি", icon: ImageIcon },
+    { id: "raw", label: "JSON ব্যাকআপ", icon: Code2 },
+  ];
+
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-sm font-semibold animate-bounce">
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl font-semibold text-sm flex items-center gap-2 animate-bounce">
           <Check className="w-5 h-5" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Admin Top Header */}
+      {/* Top Navbar */}
       <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md">
-              <Code2 className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md">
+              <Lock className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="font-bold text-white text-lg">kazizaman.online এডমিন প্যানেল</h1>
-              <span className="text-xs text-indigo-400 font-mono">Logged in as: {ADMIN_EMAIL}</span>
+              <span className="font-extrabold text-white text-base block">Kazizaman.online Admin</span>
+              <span className="text-xs text-indigo-400 font-mono">ফুল কন্ট্রোল এডমিন প্যানেল</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-3">
             <Link
               href="/"
               target="_blank"
-              className="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-semibold flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-indigo-400" />
-              <span>লাইভ সাইট</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">লাইভ সাইট দেখুন</span>
             </Link>
 
             <button
               onClick={handleSaveAll}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all hover:scale-105"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg transition-all"
             >
               <Save className="w-4 h-4" />
-              <span>সেভ করুন</span>
-            </button>
-
-            <button
-              onClick={exportPortfolioJson}
-              className="px-3.5 py-2 rounded-xl bg-indigo-950 border border-indigo-800/80 text-indigo-300 hover:text-white text-xs font-semibold flex items-center gap-1.5"
-              title="portfolio_data.json ডাইনলোড করুন"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>JSON ডাউনলোড</span>
-            </button>
-
-            <button
-              onClick={handleReset}
-              className="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 hover:text-rose-400 text-xs font-semibold flex items-center gap-1.5"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>রিসেট</span>
+              <span>সেভ করুন (Save All)</span>
             </button>
 
             <button
               onClick={handleLogout}
-              className="px-3.5 py-2 rounded-xl bg-rose-950/80 border border-rose-900 text-rose-300 hover:bg-rose-900 text-xs font-semibold flex items-center gap-1.5"
+              className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-colors"
+              title="লগআউট"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>লগআউট</span>
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Layout Body */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Navigation Sidebar Tabs */}
-        <aside className="lg:col-span-3 space-y-2">
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Sidebar Tabs */}
+        <div className="lg:col-span-3 space-y-2">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-1">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-slate-500 px-3 py-1 block">
-              মেনু সেকশন
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 px-3 py-1.5 block font-semibold">
+              কন্ট্রোল ক্যাটাগরি
             </span>
-
-            {[
-              { id: "developer", label: "👤 পরিচিতি ও সাধারণ তথ্য", icon: User },
-              { id: "hero_card", label: "🖼️ পোর্টফোলিও কার্ড ও ছবি", icon: ImageIcon },
-              { id: "stats", label: "📊 পরিসংখ্যান (Stats)", icon: Award },
-              { id: "jibon", label: "📜 জীবন বৃত্তান্ত (Bio)", icon: FileText },
-              { id: "skills", label: "🛠️ দক্ষতা (Skills)", icon: Wrench },
-              { id: "projects", label: "💻 প্রজেক্টস (Projects)", icon: FolderGit2 },
-              { id: "experience", label: "💼 কাজের অভিজ্ঞতা", icon: Briefcase },
-              { id: "services", label: "⚡ সেবা (Services)", icon: Zap },
-              { id: "gallery", label: "📸 ফটো গ্যালারি (Gallery)", icon: Camera },
-              { id: "raw", label: "💾 Raw JSON এডিটর", icon: Code2 },
-            ].map((tab) => {
+            {tabs.map((tab) => {
               const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-xl font-medium text-xs sm:text-sm flex items-center gap-2.5 transition-all ${
-                    activeTab === tab.id
-                      ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
-                      : "text-slate-300 hover:bg-slate-950 hover:text-white"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                    isActive
+                      ? "bg-indigo-600 text-white shadow-md"
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -338,1067 +389,616 @@ export default function AdminPage() {
               );
             })}
           </div>
-        </aside>
+
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 space-y-3">
+            <span className="text-xs font-bold text-slate-300 block">কুইক অ্যাকশন (Quick Actions)</span>
+            <button
+              onClick={exportPortfolioJson}
+              className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-2 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <span>JSON ব্যাকআপ ডাউনলোড</span>
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium flex items-center justify-center gap-2 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>ডিফল্ট ডেটা রিসেট</span>
+            </button>
+          </div>
+        </div>
 
         {/* Content Area */}
-        <div className="lg:col-span-9 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+        <div className="lg:col-span-9 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-6">
           {/* TAB 1: DEVELOPER INFO */}
           {activeTab === "developer" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-white">👤 ডেভেলপার ও সাধারণ পরিচিতি তথ্য</h2>
-                  <p className="text-xs text-slate-400">Hero Section, Domain & Contact details</p>
-                </div>
-                <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                  <Save className="w-3.5 h-3.5" /> সেভ
-                </button>
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <User className="w-5 h-5 text-indigo-400" />
+                  <span>ডেভেলপার ও পার্সোনাল প্রোফাইল তথ্য</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">নাম, ইমেইল, মোবাইল, বায়োডাটা এবং সোশ্যাল মিডিয়া লিঙ্ক আপডেট করুন</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">নাম (বাংলা)</label>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">নাম (বাংলা)</label>
                   <input
                     type="text"
                     value={formData.developer.name}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, name: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
+                    onChange={(e) => updateDeveloperField("name", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Name (English)</label>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">Name (English)</label>
                   <input
                     type="text"
                     value={formData.developer.name_en}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, name_en: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Domain Name</label>
-                  <input
-                    type="text"
-                    value={formData.developer.domain}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, domain: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-indigo-400"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Professional Title</label>
-                  <input
-                    type="text"
-                    value={formData.developer.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, title: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">মোবাইল নম্বর / Phone</label>
-                  <input
-                    type="text"
-                    value={formData.developer.phone}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, phone: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">ইমেইল / Email</label>
-                  <input
-                    type="email"
-                    value={formData.developer.email}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, email: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">জন্ম তারিখ</label>
-                  <input
-                    type="text"
-                    value={formData.developer.birth_date}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, birth_date: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">উচ্চতা</label>
-                  <input
-                    type="text"
-                    value={formData.developer.height}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, height: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">অবস্থান / Location</label>
-                  <input
-                    type="text"
-                    value={formData.developer.location}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, location: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Status Badge Text</label>
-                  <input
-                    type="text"
-                    value={formData.developer.statusBadge || ""}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, statusBadge: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Fiverr Profile Link</label>
-                  <input
-                    type="text"
-                    value={formData.developer.fiverr}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, fiverr: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-emerald-400"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">GitHub Profile Link</label>
-                  <input
-                    type="text"
-                    value={formData.developer.github}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        developer: { ...formData.developer, github: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono"
+                    onChange={(e) => updateDeveloperField("name_en", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">WhatsApp Link</label>
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">প্রধান টাইটেল (Title / Subheading)</label>
                 <input
                   type="text"
-                  value={formData.developer.whatsapp}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      developer: { ...formData.developer, whatsapp: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono text-emerald-400"
+                  value={formData.developer.title}
+                  onChange={(e) => updateDeveloperField("title", e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">Bio / সংক্ষিপ্ত বিবরণ</label>
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">স্ট্যাটাস ব্যাজ (Status Badge Text)</label>
+                <input
+                  type="text"
+                  value={formData.developer.statusBadge}
+                  onChange={(e) => updateDeveloperField("statusBadge", e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">সংক্ষিপ্ত বায়ো (Short Bio / Highlight Summary)</label>
                 <textarea
-                  rows={4}
-                  value={formData.developer.bio}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      developer: { ...formData.developer, bio: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm resize-none"
+                  rows={3}
+                  value={formData.developer.shortBio || ""}
+                  onChange={(e) => updateDeveloperField("shortBio", e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                  placeholder="BSS (Honours) graduate in Social Work, Web Developer..."
                 />
               </div>
-            </div>
-          )}
 
-          {/* TAB: HERO CARD & IMAGE CROP/POSITION */}
-          {activeTab === "hero_card" && (() => {
-            const heroPhoto = formData.developer.heroPhoto || {
-              url: "/gallery/hero-bike.jpg?v=20261119_v5",
-              avatarUrl: "",
-              positionX: 50,
-              positionY: 20,
-              scale: 1.05,
-              frameHeight: 320,
-              badgeLeftText: "● Official Portfolio",
-              badgeRightText: "9 Core Pillars",
-              subtitle: "Multidisciplinary Professional",
-              locationText: "Bangladesh",
-              degreeTitle: "শিক্ষা (Academic Degree):",
-              degreeText: "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়",
-            };
-
-            const updateHeroPhoto = (updates: Partial<typeof heroPhoto>) => {
-              setFormData((prev) => ({
-                ...prev,
-                developer: {
-                  ...prev.developer,
-                  heroPhoto: {
-                    ...(prev.developer.heroPhoto || heroPhoto),
-                    ...updates,
-                  },
-                },
-              }));
-            };
-
-            return (
-              <div className="space-y-6">
-                <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <ImageIcon className="w-5 h-5 text-indigo-400" />
-                      <span>🖼️ পোর্টফোলিও কার্ড ও ইমেজ ক্রপ/পজিশন এডিটর</span>
-                    </h2>
-                    <p className="text-xs text-slate-400">
-                      হিরো সেকশনের ডানপাশের পোর্টফোলিও কার্ডটির ছবি আপলোড, ক্রপ, পজিশন, জুম ও টেক্সট সরাসরি পরিবর্তন করুন
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleSaveAll}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-md shadow-emerald-600/30 transition-all"
-                  >
-                    <Save className="w-3.5 h-3.5" /> সেভ করুন
-                  </button>
-                </div>
-
-                {/* Two Column Layout: Left Controls, Right Live Preview */}
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-                  {/* Left Controls Column */}
-                  <div className="xl:col-span-7 space-y-6">
-
-                    {/* 1. Image Selection & Upload */}
-                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <Upload className="w-4 h-4 text-indigo-400" />
-                        <span>১. ছবি আপলোড ও ইমেজ ইউআরএল (Main Image)</span>
-                      </h3>
-
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-slate-300 block">
-                          নতুন ছবি আপলোড করুন (Upload Image File)
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleHeroPhotoUpload}
-                          className="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer bg-slate-900 border border-slate-800 rounded-xl p-1"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-slate-300 block">
-                          অথবা গ্যালারি থেকে পছন্দের ছবি সিলেক্ট করুন
-                        </label>
-                        <select
-                          value={heroPhoto.url}
-                          onChange={(e) => updateHeroPhoto({ url: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 font-mono"
-                        >
-                          <option value="/gallery/hero-bike.jpg?v=20261119_v5">মেইন মোটরবাইক হিরো ছবি (/gallery/hero-bike.jpg)</option>
-                          <option value="/gallery/photo-1.jpg">বাইক ও প্রকৃতি ১ (/gallery/photo-1.jpg)</option>
-                          <option value="/gallery/photo-2.jpg">গ্রামের রাস্তা ২ (/gallery/photo-2.jpg)</option>
-                          <option value="/gallery/photo-3.jpg">এক্সিকিউটিভ ফরমাল ৩ (/gallery/photo-3.jpg)</option>
-                          <option value="/gallery/photo-4.jpg">ঘড়ি ও পোজ ৪ (/gallery/photo-4.jpg)</option>
-                          <option value="/gallery/photo-5.jpg">সাইন পোস্ট ৫ (/gallery/photo-5.jpg)</option>
-                          <option value="/gallery/photo-6.jpg">বাইক রাইডিং ৬ (/gallery/photo-6.jpg)</option>
-                          <option value="/gallery/photo-7.jpg">বাইক পোজ ৭ (/gallery/photo-7.jpg)</option>
-                          <option value="/gallery/photo-8.jpg">হুগি ও বাইক ৮ (/gallery/photo-8.jpg)</option>
-                          <option value="/gallery/photo-9.jpg">কর্পোরেট ফরমাল ৯ (/gallery/photo-9.jpg)</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-slate-300 block">
-                          অথবা সরাসরি ছবির ইউআরএল (Image URL)
-                        </label>
-                        <input
-                          type="text"
-                          value={heroPhoto.url}
-                          onChange={(e) => updateHeroPhoto({ url: e.target.value })}
-                          placeholder="https://... or /gallery/..."
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    {/* 2. Crop, Position & Scale Controls */}
-                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-5">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <Sliders className="w-4 h-4 text-emerald-400" />
-                        <span>২. ইমেজের পজিশনিং ও ক্রপিং টিউনিং (Crop & Position)</span>
-                      </h3>
-
-                      {/* Position X Slider */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-slate-300">
-                            ডানে-বামে পজিশন (Position X): <strong className="text-indigo-400">{heroPhoto.positionX}%</strong>
-                          </span>
-                          <div className="flex gap-1">
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionX: 0 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              0% (বাম)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionX: 50 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              50% (মাঝখানে)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionX: 100 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              100% (ডান)
-                            </button>
-                          </div>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={heroPhoto.positionX}
-                          onChange={(e) => updateHeroPhoto({ positionX: Number(e.target.value) })}
-                          className="w-full accent-indigo-500 cursor-pointer"
-                        />
-                      </div>
-
-                      {/* Position Y Slider */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-slate-300">
-                            উপরে-নিচে পজিশন (Position Y): <strong className="text-emerald-400">{heroPhoto.positionY}%</strong>
-                          </span>
-                          <div className="flex gap-1">
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionY: 0 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              0% (টপ)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionY: 20 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              20% (ডিফল্ট)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionY: 50 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              50% (মাঝখানে)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => updateHeroPhoto({ positionY: 100 })}
-                              className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                            >
-                              100% (নিচে)
-                            </button>
-                          </div>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={heroPhoto.positionY}
-                          onChange={(e) => updateHeroPhoto({ positionY: Number(e.target.value) })}
-                          className="w-full accent-emerald-500 cursor-pointer"
-                        />
-                      </div>
-
-                      {/* Scale / Zoom Slider */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-slate-300">
-                            জুমিং লেভেল (Zoom / Scale): <strong className="text-purple-400">{heroPhoto.scale.toFixed(2)}x</strong>
-                          </span>
-                          <div className="flex gap-1">
-                            {[1.0, 1.05, 1.2, 1.5, 2.0].map((sc) => (
-                              <button
-                                key={sc}
-                                type="button"
-                                onClick={() => updateHeroPhoto({ scale: sc })}
-                                className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                              >
-                                {sc}x
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <input
-                          type="range"
-                          min="1.0"
-                          max="2.5"
-                          step="0.05"
-                          value={heroPhoto.scale}
-                          onChange={(e) => updateHeroPhoto({ scale: Number(e.target.value) })}
-                          className="w-full accent-purple-500 cursor-pointer"
-                        />
-                      </div>
-
-                      {/* Frame Height Slider */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="font-semibold text-slate-300">
-                            কার্ডের উচ্চতা (Frame Height): <strong className="text-pink-400">{heroPhoto.frameHeight}px</strong>
-                          </span>
-                          <div className="flex gap-1">
-                            {[250, 320, 380, 450].map((fh) => (
-                              <button
-                                key={fh}
-                                type="button"
-                                onClick={() => updateHeroPhoto({ frameHeight: fh })}
-                                className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 hover:text-white"
-                              >
-                                {fh}px
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <input
-                          type="range"
-                          min="220"
-                          max="500"
-                          step="10"
-                          value={heroPhoto.frameHeight}
-                          onChange={(e) => updateHeroPhoto({ frameHeight: Number(e.target.value) })}
-                          className="w-full accent-pink-500 cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
-                    {/* 3. Text & Overlay Badges Customization */}
-                    <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-amber-400" />
-                        <span>৩. টেক্সট, ব্যাজ ও ডিগ্রির তথ্য (Text & Badges)</span>
-                      </h3>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <label className="text-xs font-semibold text-slate-300 block">
-                            বামপাশের ব্যাজ (Left Overlay Badge)
-                          </label>
-                          <input
-                            type="text"
-                            value={heroPhoto.badgeLeftText || "● Official Portfolio"}
-                            onChange={(e) => updateHeroPhoto({ badgeLeftText: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400 font-mono font-bold"
-                          />
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="text-xs font-semibold text-slate-300 block">
-                            ডানপাশের ব্যাজ (Right Overlay Badge)
-                          </label>
-                          <input
-                            type="text"
-                            value={heroPhoto.badgeRightText || "9 Core Pillars"}
-                            onChange={(e) => updateHeroPhoto({ badgeRightText: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 font-mono font-bold"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <label className="text-xs font-semibold text-slate-300 block">
-                            প্রোফাইল সাবটাইটেল (Subtitle)
-                          </label>
-                          <input
-                            type="text"
-                            value={heroPhoto.subtitle || "Multidisciplinary Professional"}
-                            onChange={(e) => updateHeroPhoto({ subtitle: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-400 font-mono"
-                          />
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="text-xs font-semibold text-slate-300 block">
-                            অবস্থান / দেশ (Location)
-                          </label>
-                          <input
-                            type="text"
-                            value={heroPhoto.locationText || "Bangladesh"}
-                            onChange={(e) => updateHeroPhoto({ locationText: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 font-mono"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-slate-300 block">
-                          শিক্ষা / ডিগ্রি হেডিং (Education Degree Title)
-                        </label>
-                        <input
-                          type="text"
-                          value={heroPhoto.degreeTitle || "শিক্ষা (Academic Degree):"}
-                          onChange={(e) => updateHeroPhoto({ degreeTitle: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white font-bold"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-slate-300 block">
-                          শিক্ষাগত যোগ্যতার বিস্তারিত (Degree Details)
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={heroPhoto.degreeText || "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়"}
-                          onChange={(e) => updateHeroPhoto({ degreeText: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-300 resize-none font-medium"
-                        />
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Right Column: Live Interactive Card Preview */}
-                  <div className="xl:col-span-5 space-y-4 sticky top-24">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                        <Eye className="w-4 h-4 text-emerald-400" />
-                        <span>লাইভ প্রিভিউ (Live Card Preview)</span>
-                      </h3>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">
-                        ● Realtime
-                      </span>
-                    </div>
-
-                    {/* Card Container exact mirror of Hero.tsx */}
-                    <div className="relative w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4 overflow-hidden">
-                      {/* Top Bar */}
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-rose-500" />
-                          <span className="w-3 h-3 rounded-full bg-amber-500" />
-                          <span className="w-3 h-3 rounded-full bg-emerald-500" />
-                        </div>
-                        <span className="text-xs font-mono text-indigo-400 font-bold">
-                          {formData.developer.domain || "kazizaman.online"}
-                        </span>
-                      </div>
-
-                      {/* Main Photo Frame */}
-                      <div
-                        className="relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group"
-                        style={{ height: `${heroPhoto.frameHeight}px` }}
-                      >
-                        <img
-                          src={heroPhoto.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
-                          alt="Hero Preview"
-                          className="w-full h-full object-cover transition-transform duration-100"
-                          style={{
-                            objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY}%`,
-                            transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 1.2}%, ${(heroPhoto.positionY - 50) * 1.2}%)`,
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
-                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
-                          <span className="px-2.5 py-1 rounded-lg bg-emerald-950/90 text-emerald-400 border border-emerald-800/80 font-bold backdrop-blur-sm">
-                            {heroPhoto.badgeLeftText || "● Official Portfolio"}
-                          </span>
-                          <span className="px-2.5 py-1 rounded-lg bg-slate-900/90 text-indigo-300 border border-slate-700 font-bold backdrop-blur-sm">
-                            {heroPhoto.badgeRightText || "9 Core Pillars"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* User Info Footer */}
-                      <div className="pt-2 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={heroPhoto.avatarUrl || heroPhoto.url || "/gallery/hero-bike.jpg?v=20261119_v5"}
-                              alt="Avatar Preview"
-                              className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
-                              style={{
-                                objectPosition: `${heroPhoto.positionX}% ${heroPhoto.positionY * 0.8}%`,
-                                transform: `scale(${heroPhoto.scale}) translate(${(heroPhoto.positionX - 50) * 0.5}%, ${(heroPhoto.positionY - 50) * 0.5}%)`,
-                              }}
-                            />
-                            <div>
-                              <h3 className="font-bold text-white text-sm leading-tight">
-                                {formData.developer.name_en || formData.developer.name || "Kazi Zaman"}
-                              </h3>
-                              <p className="text-[11px] text-indigo-400 font-mono">
-                                {heroPhoto.subtitle || "Multidisciplinary Professional"}
-                              </p>
-                            </div>
-                          </div>
-
-                          <span className="text-xs text-slate-400 font-mono">
-                            {heroPhoto.locationText || formData.developer.location || "Bangladesh"}
-                          </span>
-                        </div>
-
-                        {/* Verification Seal & Education Badge */}
-                        <div className="space-y-2">
-                          <div className="bg-indigo-950/80 border border-indigo-800/60 p-3 rounded-xl flex items-center gap-2.5 text-xs text-indigo-200 font-bengali shadow-md">
-                            <Award className="w-4 h-4 text-yellow-400 shrink-0" />
-                            <div>
-                              <span className="font-bold block text-white text-xs">
-                                {heroPhoto.degreeTitle || "শিক্ষা (Academic Degree):"}
-                              </span>
-                              <span className="text-indigo-300 font-semibold text-[11px]">
-                                {heroPhoto.degreeText || "B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়"}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 space-y-1">
-                      <p className="font-bold text-slate-200">💡 টিপস:</p>
-                      <p>১. ইমেজের ডানে-বামে এবং উপরে-নিচে পজিশন বাড়িয়ে/কমিয়ে ছবিকে ফ্রেমের সঠিক স্থানে সেট করুন।</p>
-                      <p>২. জুম এবং হাইট টিউন করার পর <span className="text-emerald-400 font-bold">"সেভ করুন"</span> বাটন চাপ দিন।</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* TAB 2: STATS */}
-          {activeTab === "stats" && (
-            <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-white">📊 পরিসংখ্যান (Stats & Key Highlights)</h2>
-                  <p className="text-xs text-slate-400">About section and Experience metrics</p>
-                </div>
-                <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                  <Save className="w-3.5 h-3.5" /> সেভ
-                </button>
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">বিস্তারিত বায়োডাটা (Full Bio - \n\n দিয়ে প্যারা আলাদা করুন)</label>
+                <textarea
+                  rows={6}
+                  value={formData.developer.bio}
+                  onChange={(e) => updateDeveloperField("bio", e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                  <label className="text-xs font-semibold text-slate-300 block">অভিজ্ঞতার বছর (Years Experience)</label>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">মোবাইল নম্বর</label>
                   <input
                     type="text"
-                    value={formData.stats.experience_years}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        stats: { ...formData.stats, experience_years: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xl font-bold text-indigo-400 text-center"
+                    value={formData.developer.phone}
+                    onChange={(e) => updateDeveloperField("phone", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
-
-                <div className="space-y-1 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                  <label className="text-xs font-semibold text-slate-300 block">সম্পন্নকৃত প্রজেক্ট (Completed Projects)</label>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">ইমেইল (Email)</label>
                   <input
-                    type="text"
-                    value={formData.stats.projects_completed}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        stats: { ...formData.stats, projects_completed: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xl font-bold text-purple-400 text-center"
+                    type="email"
+                    value={formData.developer.email}
+                    onChange={(e) => updateDeveloperField("email", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
-
-                <div className="space-y-1 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                  <label className="text-xs font-semibold text-slate-300 block">সন্তুষ্ট ক্লায়েন্ট (Satisfied Clients)</label>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">লোকেশন (Location)</label>
                   <input
                     type="text"
-                    value={formData.stats.satisfied_clients}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        stats: { ...formData.stats, satisfied_clients: e.target.value },
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xl font-bold text-emerald-400 text-center"
+                    value={formData.developer.location}
+                    onChange={(e) => updateDeveloperField("location", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">Fiverr URL</label>
+                  <input
+                    type="text"
+                    value={formData.developer.fiverr}
+                    onChange={(e) => updateDeveloperField("fiverr", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">GitHub URL</label>
+                  <input
+                    type="text"
+                    value={formData.developer.github}
+                    onChange={(e) => updateDeveloperField("github", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">WhatsApp URL</label>
+                  <input
+                    type="text"
+                    value={formData.developer.whatsapp}
+                    onChange={(e) => updateDeveloperField("whatsapp", e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 3: JIBON BRITTANTO */}
-          {activeTab === "jibon" && (
+          {/* TAB 2: HERO CARD & PHOTO */}
+          {activeTab === "hero_card" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Camera className="w-5 h-5 text-indigo-400" />
+                  <span>হিরো ফটো কাস্টমাইজেশন ও কার্ড সেটিংস</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">হিরো ব্যানারের ফটো, পজিশনিং, জুমিং, সাবটাইটেল ও ব্যাজ টেক্সট টিউন করুন</p>
+              </div>
+
+              {/* Photo Upload & URL */}
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <span className="text-xs font-bold text-slate-300 block">হিরো ছবি পরিবর্তন (Upload or Image URL)</span>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <label className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-colors">
+                    <Upload className="w-4 h-4" />
+                    <span>নতুন পিসি থেকে ছবি আপলোড করুন</span>
+                    <input type="file" accept="image/*" onChange={handleHeroPhotoUpload} className="hidden" />
+                  </label>
+
+                  <span className="text-xs text-slate-500">অথবা ছবির পাথ/URL দিন:</span>
+
+                  <input
+                    type="text"
+                    value={formData.developer.heroPhoto?.url || ""}
+                    onChange={(e) => updateHeroPhotoField("url", e.target.value)}
+                    placeholder="/gallery/photo-3.jpg"
+                    className="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Position & Scale Sliders */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-950 p-5 rounded-2xl border border-slate-800">
                 <div>
-                  <h2 className="text-xl font-bold text-white">📜 জীবন বৃত্তান্ত বিবরণী</h2>
-                  <p className="text-xs text-slate-400">Education, Family background & Training courses</p>
-                </div>
-                <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                  <Save className="w-3.5 h-3.5" /> সেভ
-                </button>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300">সর্বশেষ শিক্ষাগত যোগ্যতা</label>
-                <input
-                  type="text"
-                  value={formData.jibon_brittanto.education}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      jibon_brittanto: { ...formData.jibon_brittanto, education: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm font-semibold text-indigo-300"
-                />
-              </div>
-
-              {/* Family Section */}
-              <div className="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                <h3 className="text-sm font-bold text-white">👪 পারিবারিক তথ্য</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-400">পিতার নাম ও পরিচয়</label>
-                    <input
-                      type="text"
-                      value={formData.jibon_brittanto.family.father}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          jibon_brittanto: {
-                            ...formData.jibon_brittanto,
-                            family: { ...formData.jibon_brittanto.family, father: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white"
-                    />
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-300 mb-1">
+                    <span>Horizontal Position (X): {formData.developer.heroPhoto?.positionX ?? 50}%</span>
                   </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs text-slate-400">মাতার নাম</label>
-                    <input
-                      type="text"
-                      value={formData.jibon_brittanto.family.mother}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          jibon_brittanto: {
-                            ...formData.jibon_brittanto,
-                            family: { ...formData.jibon_brittanto.family, mother: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs text-slate-400">মামার তথ্য</label>
-                  <textarea
-                    rows={2}
-                    value={formData.jibon_brittanto.family.uncle}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        jibon_brittanto: {
-                          ...formData.jibon_brittanto,
-                          family: { ...formData.jibon_brittanto.family, uncle: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white resize-none"
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={formData.developer.heroPhoto?.positionX ?? 50}
+                    onChange={(e) => updateHeroPhotoField("positionX", Number(e.target.value))}
+                    className="w-full accent-indigo-500"
                   />
                 </div>
 
-                {/* Siblings List */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs text-slate-400">ভাই ও বোনসমূহের তালিকা</label>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData({
-                          ...formData,
-                          jibon_brittanto: {
-                            ...formData.jibon_brittanto,
-                            family: {
-                              ...formData.jibon_brittanto.family,
-                              siblings: [...formData.jibon_brittanto.family.siblings, "নতুন ভাই/বোন"],
-                            },
-                          },
-                        })
-                      }
-                      className="text-[11px] px-2.5 py-1 bg-indigo-950 text-indigo-300 rounded-lg border border-indigo-800 flex items-center gap-1"
-                    >
-                      <Plus className="w-3 h-3" /> যোগ করুন
-                    </button>
+                <div>
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-300 mb-1">
+                    <span>Vertical Position (Y): {formData.developer.heroPhoto?.positionY ?? 20}%</span>
                   </div>
-                  {formData.jibon_brittanto.family.siblings.map((sib, sIdx) => (
-                    <div key={sIdx} className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={sib}
-                        onChange={(e) => {
-                          const newSiblings = [...formData.jibon_brittanto.family.siblings];
-                          newSiblings[sIdx] = e.target.value;
-                          setFormData({
-                            ...formData,
-                            jibon_brittanto: {
-                              ...formData.jibon_brittanto,
-                              family: { ...formData.jibon_brittanto.family, siblings: newSiblings },
-                            },
-                          });
-                        }}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const newSiblings = formData.jibon_brittanto.family.siblings.filter((_, i) => i !== sIdx);
-                          setFormData({
-                            ...formData,
-                            jibon_brittanto: {
-                              ...formData.jibon_brittanto,
-                              family: { ...formData.jibon_brittanto.family, siblings: newSiblings },
-                            },
-                          });
-                        }}
-                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={formData.developer.heroPhoto?.positionY ?? 20}
+                    onChange={(e) => updateHeroPhotoField("positionY", Number(e.target.value))}
+                    className="w-full accent-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-300 mb-1">
+                    <span>Image Scale (Zoom): {formData.developer.heroPhoto?.scale ?? 1.05}x</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.8"
+                    max="2.5"
+                    step="0.05"
+                    value={formData.developer.heroPhoto?.scale ?? 1.05}
+                    onChange={(e) => updateHeroPhotoField("scale", Number(e.target.value))}
+                    className="w-full accent-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-300 mb-1">
+                    <span>Frame Height (px): {formData.developer.heroPhoto?.frameHeight ?? 320}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="200"
+                    max="600"
+                    step="10"
+                    value={formData.developer.heroPhoto?.frameHeight ?? 320}
+                    onChange={(e) => updateHeroPhotoField("frameHeight", Number(e.target.value))}
+                    className="w-full accent-indigo-500"
+                  />
+                </div>
+              </div>
+
+              {/* Subtitles and Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">বাম পাশের ব্যাজ টেক্সট (Left Badge)</label>
+                  <input
+                    type="text"
+                    value={formData.developer.heroPhoto?.badgeLeftText || ""}
+                    onChange={(e) => updateHeroPhotoField("badgeLeftText", e.target.value)}
+                    placeholder="● Official Portfolio"
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">ডান পাশের ব্যাজ টেক্সট (Right Badge)</label>
+                  <input
+                    type="text"
+                    value={formData.developer.heroPhoto?.badgeRightText || ""}
+                    onChange={(e) => updateHeroPhotoField("badgeRightText", e.target.value)}
+                    placeholder="9 Core Pillars"
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: THEME & DESIGN */}
+          {activeTab === "theme_design" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Palette className="w-5 h-5 text-indigo-400" />
+                  <span>ডিজাইন, কালার স্কিম ও সেকশন কন্ট্রোল</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">কোডিং ছাড়াই সাইটের যেকোনো সেকশন চালু/বন্ধ করুন এবং কাস্টম কালার ও থিম নির্বাচন করুন</p>
+              </div>
+
+              {/* Section Visibility Toggles */}
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <span className="text-xs font-bold text-white block flex items-center gap-2">
+                  <LayoutTemplate className="w-4 h-4 text-indigo-400" />
+                  <span>সেকশন হাইড/শো কন্ট্রোল (Show/Hide Sections)</span>
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {[
+                    { key: "showCompetencies", label: "৯টি মূল স্তম্ভ সেকশন" },
+                    { key: "showServices", label: "সার্ভিসসমূহ সেকশন" },
+                    { key: "showProjects", label: "প্রজেক্টসমূহ সেকশন" },
+                    { key: "showExperience", label: "অভিজ্ঞতা সেকশন" },
+                    { key: "showEducation", label: "শিক্ষা সেকশন" },
+                    { key: "showCertificates", label: "সার্টিফিকেট সেকশন" },
+                    { key: "showPhotoGallery", label: "ছবি গ্যালারি লিংক" },
+                    { key: "showJibonBrittanto", label: "জীবন বৃত্তান্ত লিংক" },
+                    { key: "showStats", label: "পরিসংখ্যান কার্ডসমূহ" },
+                  ].map((item) => {
+                    const isChecked = (formData.theme as any)?.[item.key] !== false;
+                    return (
+                      <label
+                        key={item.key}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                          isChecked
+                            ? "bg-indigo-950/40 border-indigo-800/60 text-white"
+                            : "bg-slate-900 border-slate-800 text-slate-400 opacity-60"
+                        }`}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                        <span className="text-xs font-semibold">{item.label}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => updateThemeField(item.key, e.target.checked)}
+                          className="w-4 h-4 accent-indigo-500 rounded cursor-pointer"
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Theme Color Schemes */}
+              <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+                <span className="text-xs font-bold text-slate-300 block">প্রাইমারি কালার স্কিম (Primary Theme Preset)</span>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { id: "indigo", name: "Royal Indigo", bg: "bg-indigo-600" },
+                    { id: "emerald", name: "Forest Emerald", bg: "bg-emerald-600" },
+                    { id: "purple", name: "Deep Purple", bg: "bg-purple-600" },
+                    { id: "rose", name: "Vibrant Rose", bg: "bg-rose-600" },
+                    { id: "cyan", name: "Ocean Cyan", bg: "bg-cyan-600" },
+                    { id: "amber", name: "Warm Amber", bg: "bg-amber-600" },
+                  ].map((color) => (
+                    <button
+                      key={color.id}
+                      type="button"
+                      onClick={() => updateThemeField("primaryColor", color.id)}
+                      className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border transition-all ${
+                        formData.theme?.primaryColor === color.id
+                          ? "border-white text-white shadow-lg bg-slate-900"
+                          : "border-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <span className={`w-3.5 h-3.5 rounded-full ${color.bg}`} />
+                      <span>{color.name}</span>
+                    </button>
                   ))}
                 </div>
               </div>
 
-              {/* Courses List */}
-              <div className="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white">🎓 প্রশিক্ষণ ও কোর্সসমূহ</h3>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        jibon_brittanto: {
-                          ...formData.jibon_brittanto,
-                          courses: [...formData.jibon_brittanto.courses, "নতুন কোর্স তথ্য"],
-                        },
-                      })
-                    }
-                    className="text-[11px] px-2.5 py-1 bg-indigo-950 text-indigo-300 rounded-lg border border-indigo-800 flex items-center gap-1"
-                  >
-                    <Plus className="w-3 h-3" /> কোর্স যোগ করুন
-                  </button>
+              {/* Footer Copyright Text */}
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">ফুটার কপিরাইট টেক্সট (Footer Text)</label>
+                <input
+                  type="text"
+                  value={formData.theme?.footerText || ""}
+                  onChange={(e) => updateThemeField("footerText", e.target.value)}
+                  placeholder="© 2026 Kazi Zaman · kazizaman.online"
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: 9 CORE COMPETENCIES */}
+          {activeTab === "competencies" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-indigo-400" />
+                    <span>৯টি সম-গুরুত্বসম্পন্ন মূল স্তম্ভ (Core Competencies)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">প্রোফাইলের ৯টি মূল স্তম্ভের টাইটেল, বাংলা বিবরণ ও হাইলাইটস এডিট করুন</p>
                 </div>
-                {formData.jibon_brittanto.courses.map((course, cIdx) => (
-                  <div key={cIdx} className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={course}
-                      onChange={(e) => {
-                        const newCourses = [...formData.jibon_brittanto.courses];
-                        newCourses[cIdx] = e.target.value;
-                        setFormData({
-                          ...formData,
-                          jibon_brittanto: { ...formData.jibon_brittanto, courses: newCourses },
-                        });
-                      }}
-                      className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newCourses = formData.jibon_brittanto.courses.filter((_, i) => i !== cIdx);
-                        setFormData({
-                          ...formData,
-                          jibon_brittanto: { ...formData.jibon_brittanto, courses: newCourses },
-                        });
-                      }}
-                      className="p-2 text-rose-400 hover:bg-rose-950 rounded-lg"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+              </div>
+
+              <div className="space-y-4">
+                {(formData.competencies || []).map((comp, idx) => (
+                  <div key={comp.id || idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+                      <span className="text-xs font-mono font-bold text-indigo-400">
+                        Pillar #{idx + 1}: {comp.title} ({comp.title_bn})
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">Title (English)</label>
+                        <input
+                          type="text"
+                          value={comp.title}
+                          onChange={(e) => {
+                            const updated = [...(formData.competencies || [])];
+                            updated[idx].title = e.target.value;
+                            setFormData((prev) => ({ ...prev, competencies: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">টাইটেল (বাংলা)</label>
+                        <input
+                          type="text"
+                          value={comp.title_bn}
+                          onChange={(e) => {
+                            const updated = [...(formData.competencies || [])];
+                            updated[idx].title_bn = e.target.value;
+                            setFormData((prev) => ({ ...prev, competencies: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">বিবরণ (বাংলা)</label>
+                      <textarea
+                        rows={2}
+                        value={comp.description_bn}
+                        onChange={(e) => {
+                          const updated = [...(formData.competencies || [])];
+                          updated[idx].description_bn = e.target.value;
+                          setFormData((prev) => ({ ...prev, competencies: updated }));
+                        }}
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* TAB 4: SKILLS */}
+          {/* TAB 5: STATS */}
+          {activeTab === "stats" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Award className="w-5 h-5 text-indigo-400" />
+                  <span>পরিসংখ্যান ও কী-ম্যাট্রিক্স (Stats)</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">অভিজ্ঞতা, প্রজেক্ট সংখ্যা এবং ক্লায়েন্ট সন্তুষ্টির সংখ্যা এডিট করুন</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">অভিজ্ঞতার বছর (Years Experience)</label>
+                  <input
+                    type="text"
+                    value={formData.stats.experience_years}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stats: { ...prev.stats, experience_years: e.target.value },
+                      }))
+                    }
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">সম্পন্ন প্রজেক্ট সংখ্যা</label>
+                  <input
+                    type="text"
+                    value={formData.stats.projects_completed}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stats: { ...prev.stats, projects_completed: e.target.value },
+                      }))
+                    }
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">সন্তুষ্ট ক্লায়েন্ট (Satisfaction)</label>
+                  <input
+                    type="text"
+                    value={formData.stats.satisfied_clients}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stats: { ...prev.stats, satisfied_clients: e.target.value },
+                      }))
+                    }
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: SKILLS */}
           {activeTab === "skills" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">🛠️ দক্ষতা ও টেক স্ট্যাক (Skills Management)</h2>
-                  <p className="text-xs text-slate-400">Add, edit, or remove skill categories & level metrics</p>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Wrench className="w-5 h-5 text-indigo-400" />
+                    <span>টেকনিক্যাল ও প্রফেশনাল দক্ষতা (Skills)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">ক্যাটাগরি অনুযায়ী দক্ষতা ও পার্সেন্টেজ লেভেল যোগ বা এডিট করুন</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      const newCat: SkillCategory = {
-                        category: "New Tech Category",
-                        items: [{ name: "Skill 1", level: 80 }],
-                      };
-                      setFormData({ ...formData, skills: [...formData.skills, newCat] });
-                    }}
-                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> ক্যাটাগরি যোগ
-                  </button>
-                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> সেভ
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newSkills = [
+                      ...formData.skills,
+                      { category: "নতুন ক্যাটাগরি", items: [{ name: "নতুন স্কিল", level: 80 }] },
+                    ];
+                    setFormData((prev) => ({ ...prev, skills: newSkills }));
+                  }}
+                  className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>ক্যাটাগরি যোগ করুন</span>
+                </button>
               </div>
 
               <div className="space-y-6">
-                {formData.skills.map((cat, catIdx) => (
-                  <div key={catIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
-                    <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                {formData.skills.map((cat, cIdx) => (
+                  <div key={cIdx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4">
+                    <div className="flex items-center justify-between">
                       <input
                         type="text"
                         value={cat.category}
                         onChange={(e) => {
-                          const newSkills = [...formData.skills];
-                          newSkills[catIdx].category = e.target.value;
-                          setFormData({ ...formData, skills: newSkills });
+                          const updated = [...formData.skills];
+                          updated[cIdx].category = e.target.value;
+                          setFormData((prev) => ({ ...prev, skills: updated }));
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white"
+                        className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm font-bold"
                       />
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newSkills = [...formData.skills];
-                            newSkills[catIdx].items.push({ name: "New Skill", level: 80 });
-                            setFormData({ ...formData, skills: newSkills });
-                          }}
-                          className="text-[11px] px-2.5 py-1 bg-indigo-900 text-indigo-200 rounded-lg flex items-center gap-1"
-                        >
-                          <Plus className="w-3 h-3" /> স্কিল যোগ
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newSkills = formData.skills.filter((_, i) => i !== catIdx);
-                            setFormData({ ...formData, skills: newSkills });
-                          }}
-                          className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = formData.skills.filter((_, idx) => idx !== cIdx);
+                          setFormData((prev) => ({ ...prev, skills: updated }));
+                        }}
+                        className="p-1.5 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 rounded-xl"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {cat.items.map((skill, itemIdx) => (
-                        <div key={itemIdx} className="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <input
-                              type="text"
-                              value={skill.name}
-                              onChange={(e) => {
-                                const newSkills = [...formData.skills];
-                                newSkills[catIdx].items[itemIdx].name = e.target.value;
-                                setFormData({ ...formData, skills: newSkills });
-                              }}
-                              className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs font-semibold text-white flex-1"
-                            />
-                            <span className="text-xs font-mono text-indigo-400">{skill.level}%</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newSkills = [...formData.skills];
-                                newSkills[catIdx].items = newSkills[catIdx].items.filter((_, i) => i !== itemIdx);
-                                setFormData({ ...formData, skills: newSkills });
-                              }}
-                              className="p-1 text-rose-400 hover:bg-rose-950 rounded"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                    <div className="space-y-2">
+                      {cat.items.map((item, sIdx) => (
+                        <div key={sIdx} className="flex items-center gap-3">
                           <input
-                            type="range"
-                            min="10"
-                            max="100"
-                            value={skill.level}
+                            type="text"
+                            value={item.name}
                             onChange={(e) => {
-                              const newSkills = [...formData.skills];
-                              newSkills[catIdx].items[itemIdx].level = parseInt(e.target.value);
-                              setFormData({ ...formData, skills: newSkills });
+                              const updated = [...formData.skills];
+                              updated[cIdx].items[sIdx].name = e.target.value;
+                              setFormData((prev) => ({ ...prev, skills: updated }));
                             }}
-                            className="w-full accent-indigo-500 h-1.5 bg-slate-950 rounded-lg cursor-pointer"
+                            className="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
                           />
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={item.level}
+                            onChange={(e) => {
+                              const updated = [...formData.skills];
+                              updated[cIdx].items[sIdx].level = Number(e.target.value);
+                              setFormData((prev) => ({ ...prev, skills: updated }));
+                            }}
+                            className="w-20 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs text-center font-mono font-bold"
+                          />
+                          <span className="text-xs text-slate-400 font-mono">%</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...formData.skills];
+                              updated[cIdx].items = updated[cIdx].items.filter((_, idx) => idx !== sIdx);
+                              setFormData((prev) => ({ ...prev, skills: updated }));
+                            }}
+                            className="p-1 text-slate-400 hover:text-rose-400"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       ))}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...formData.skills];
+                          updated[cIdx].items.push({ name: "নতুন স্কিল", level: 85 });
+                          setFormData((prev) => ({ ...prev, skills: updated }));
+                        }}
+                        className="text-xs text-indigo-400 hover:underline inline-flex items-center gap-1 mt-2 font-semibold"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>স্কিল যোগ করুন</span>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -1406,148 +1006,122 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 5: PROJECTS */}
+          {/* TAB 7: PROJECTS */}
           {activeTab === "projects" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">💻 প্রজেক্টস অ্যাড ও এডিটর (Projects)</h2>
-                  <p className="text-xs text-slate-400">Featured Mobile & Web applications list</p>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <FolderGit2 className="w-5 h-5 text-indigo-400" />
+                    <span>প্রজেক্ট পোর্টফোলিও (Projects)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">মোবাইল অ্যাপস ও ওয়েব সফটওয়্যার প্রজেক্ট এডিট বা যোগ করুন</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      const newProj: ProjectItem = {
-                        id: "proj-" + Date.now(),
-                        title: "নতুন প্রজেক্ট",
-                        category: "mobile",
-                        description: "প্রজেক্টের বিবরণ লিখুন...",
-                        tags: ["Kotlin", "React"],
-                        liveUrl: "#",
-                        githubUrl: "https://github.com",
-                        image: "📱",
-                      };
-                      setFormData({ ...formData, projects: [newProj, ...formData.projects] });
-                    }}
-                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> নতুন প্রজেক্ট যোগ
-                  </button>
-                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> সেভ
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newProj: ProjectItem = {
+                      id: "project-" + Date.now(),
+                      title: "নতুন প্রজেক্ট",
+                      category: "web",
+                      description: "প্রজেক্টের বিবরণ লিখুন...",
+                      tags: ["React", "Laravel"],
+                      liveUrl: "#",
+                      githubUrl: "#",
+                    };
+                    setFormData((prev) => ({ ...prev, projects: [newProj, ...prev.projects] }));
+                  }}
+                  className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>নতুন প্রজেক্ট</span>
+                </button>
               </div>
 
-              <div className="space-y-6">
-                {formData.projects.map((proj, pIdx) => (
-                  <div key={proj.id || pIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
-                    <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                      <div className="flex items-center gap-2 flex-1">
-                        <input
-                          type="text"
-                          value={proj.image || "📱"}
-                          onChange={(e) => {
-                            const newProjs = [...formData.projects];
-                            newProjs[pIdx].image = e.target.value;
-                            setFormData({ ...formData, projects: newProjs });
-                          }}
-                          className="w-10 text-center py-1 rounded-lg bg-slate-900 border border-slate-800 text-lg"
-                        />
-                        <input
-                          type="text"
-                          value={proj.title}
-                          onChange={(e) => {
-                            const newProjs = [...formData.projects];
-                            newProjs[pIdx].title = e.target.value;
-                            setFormData({ ...formData, projects: newProjs });
-                          }}
-                          className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white"
-                        />
-                      </div>
+              <div className="space-y-4">
+                {formData.projects.map((proj, idx) => (
+                  <div key={proj.id || idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <input
+                        type="text"
+                        value={proj.title}
+                        onChange={(e) => {
+                          const updated = [...formData.projects];
+                          updated[idx].title = e.target.value;
+                          setFormData((prev) => ({ ...prev, projects: updated }));
+                        }}
+                        className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm font-bold"
+                      />
                       <button
                         type="button"
                         onClick={() => {
-                          const newProjs = formData.projects.filter((_, i) => i !== pIdx);
-                          setFormData({ ...formData, projects: newProjs });
+                          const updated = formData.projects.filter((_, i) => i !== idx);
+                          setFormData((prev) => ({ ...prev, projects: updated }));
                         }}
-                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
+                        className="p-1.5 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 rounded-xl"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-xs text-slate-400">ক্যাটাগরি</label>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">ক্যাটাগরি</label>
                         <select
                           value={proj.category}
                           onChange={(e) => {
-                            const newProjs = [...formData.projects];
-                            newProjs[pIdx].category = e.target.value as "mobile" | "web";
-                            setFormData({ ...formData, projects: newProjs });
+                            const updated = [...formData.projects];
+                            updated[idx].category = e.target.value as any;
+                            setFormData((prev) => ({ ...prev, projects: updated }));
                           }}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-indigo-400 font-semibold"
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
                         >
-                          <option value="mobile">Mobile (Android)</option>
-                          <option value="web">Web Platform</option>
+                          <option value="web">Web Application</option>
+                          <option value="mobile">Mobile Application</option>
+                          <option value="all">All / Other</option>
                         </select>
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs text-slate-400">Live URL</label>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">Live URL</label>
                         <input
                           type="text"
                           value={proj.liveUrl}
                           onChange={(e) => {
-                            const newProjs = [...formData.projects];
-                            newProjs[pIdx].liveUrl = e.target.value;
-                            setFormData({ ...formData, projects: newProjs });
+                            const updated = [...formData.projects];
+                            updated[idx].liveUrl = e.target.value;
+                            setFormData((prev) => ({ ...prev, projects: updated }));
                           }}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono"
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs text-slate-400">GitHub Repo URL</label>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">GitHub URL</label>
                         <input
                           type="text"
                           value={proj.githubUrl}
                           onChange={(e) => {
-                            const newProjs = [...formData.projects];
-                            newProjs[pIdx].githubUrl = e.target.value;
-                            setFormData({ ...formData, projects: newProjs });
+                            const updated = [...formData.projects];
+                            updated[idx].githubUrl = e.target.value;
+                            setFormData((prev) => ({ ...prev, projects: updated }));
                           }}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono"
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs text-slate-400">বিবরণ (Description)</label>
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">বিবরণ</label>
                       <textarea
                         rows={2}
                         value={proj.description}
                         onChange={(e) => {
-                          const newProjs = [...formData.projects];
-                          newProjs[pIdx].description = e.target.value;
-                          setFormData({ ...formData, projects: newProjs });
+                          const updated = [...formData.projects];
+                          updated[idx].description = e.target.value;
+                          setFormData((prev) => ({ ...prev, projects: updated }));
                         }}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs resize-none"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs text-slate-400">ট্যাগস (কমা দিয়ে আলাদা করুন, e.g. Kotlin, Compose, Firebase)</label>
-                      <input
-                        type="text"
-                        value={proj.tags.join(", ")}
-                        onChange={(e) => {
-                          const newProjs = [...formData.projects];
-                          newProjs[pIdx].tags = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
-                          setFormData({ ...formData, projects: newProjs });
-                        }}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-purple-300"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
                       />
                     </div>
                   </div>
@@ -1556,280 +1130,466 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 6: EXPERIENCE */}
+          {/* TAB 8: EXPERIENCE */}
           {activeTab === "experience" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">💼 কাজের অভিজ্ঞতা (Work Experience)</h2>
-                  <p className="text-xs text-slate-400">Manage work timeline items</p>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Briefcase className="w-5 h-5 text-indigo-400" />
+                    <span>কর্মসংস্থান ও অভিজ্ঞতা (Work Experience)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">চাকরি ও ফ্রিল্যান্স কাজের অভিজ্ঞতা টাইমলাইন টাইপ এডিট করুন</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      const newExp: WorkExperienceItem = {
-                        role: "Software Developer",
-                        company: "Company Name",
-                        period: "2024 - Present",
-                        location: "Bangladesh",
-                        description: "বিবরণ...",
-                        highlights: ["Highlight 1"],
-                      };
-                      setFormData({ ...formData, work_experiences: [newExp, ...formData.work_experiences] });
-                    }}
-                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> অভিজ্ঞতা যোগ
-                  </button>
-                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> সেভ
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newExp: WorkExperienceItem = {
+                      role: "নতুন রোল / পদবী",
+                      company: "কোম্পানির নাম",
+                      period: "2024 - Present",
+                      location: "ঢাকা, বাংলাদেশ",
+                      description: "কাজের সংক্ষিপ্ত বিবরণ...",
+                      highlights: ["মূল কাজ ১", "মূল কাজ ২"],
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      work_experiences: [newExp, ...prev.work_experiences],
+                    }));
+                  }}
+                  className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>নতুন অভিজ্ঞতা</span>
+                </button>
               </div>
 
-              <div className="space-y-6">
-                {formData.work_experiences.map((exp, eIdx) => (
-                  <div key={eIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
-                    <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-2">
+              <div className="space-y-4">
+                {formData.work_experiences.map((exp, idx) => (
+                  <div key={idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
                       <input
                         type="text"
                         value={exp.role}
                         onChange={(e) => {
-                          const newExp = [...formData.work_experiences];
-                          newExp[eIdx].role = e.target.value;
-                          setFormData({ ...formData, work_experiences: newExp });
+                          const updated = [...formData.work_experiences];
+                          updated[idx].role = e.target.value;
+                          setFormData((prev) => ({ ...prev, work_experiences: updated }));
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white"
+                        className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm font-bold"
                       />
                       <button
                         type="button"
                         onClick={() => {
-                          const newExp = formData.work_experiences.filter((_, i) => i !== eIdx);
-                          setFormData({ ...formData, work_experiences: newExp });
+                          const updated = formData.work_experiences.filter((_, i) => i !== idx);
+                          setFormData((prev) => ({ ...prev, work_experiences: updated }));
                         }}
-                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
+                        className="p-1.5 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 rounded-xl"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <input
-                        type="text"
-                        placeholder="Company"
-                        value={exp.company}
-                        onChange={(e) => {
-                          const newExp = [...formData.work_experiences];
-                          newExp[eIdx].company = e.target.value;
-                          setFormData({ ...formData, work_experiences: newExp });
-                        }}
-                        className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Period"
-                        value={exp.period}
-                        onChange={(e) => {
-                          const newExp = [...formData.work_experiences];
-                          newExp[eIdx].period = e.target.value;
-                          setFormData({ ...formData, work_experiences: newExp });
-                        }}
-                        className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Location"
-                        value={exp.location}
-                        onChange={(e) => {
-                          const newExp = [...formData.work_experiences];
-                          newExp[eIdx].location = e.target.value;
-                          setFormData({ ...formData, work_experiences: newExp });
-                        }}
-                        className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs"
-                      />
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">কোম্পানি / প্রতিষ্ঠান</label>
+                        <input
+                          type="text"
+                          value={exp.company}
+                          onChange={(e) => {
+                            const updated = [...formData.work_experiences];
+                            updated[idx].company = e.target.value;
+                            setFormData((prev) => ({ ...prev, work_experiences: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">সময়কাল (Period)</label>
+                        <input
+                          type="text"
+                          value={exp.period}
+                          onChange={(e) => {
+                            const updated = [...formData.work_experiences];
+                            updated[idx].period = e.target.value;
+                            setFormData((prev) => ({ ...prev, work_experiences: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">স্থান (Location)</label>
+                        <input
+                          type="text"
+                          value={exp.location}
+                          onChange={(e) => {
+                            const updated = [...formData.work_experiences];
+                            updated[idx].location = e.target.value;
+                            setFormData((prev) => ({ ...prev, work_experiences: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
                     </div>
 
-                    <textarea
-                      rows={2}
-                      value={exp.description}
-                      onChange={(e) => {
-                        const newExp = [...formData.work_experiences];
-                        newExp[eIdx].description = e.target.value;
-                        setFormData({ ...formData, work_experiences: newExp });
-                      }}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs resize-none"
-                    />
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">বিবরণ</label>
+                      <textarea
+                        rows={2}
+                        value={exp.description}
+                        onChange={(e) => {
+                          const updated = [...formData.work_experiences];
+                          updated[idx].description = e.target.value;
+                          setFormData((prev) => ({ ...prev, work_experiences: updated }));
+                        }}
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* TAB 7: SERVICES */}
+          {/* TAB 9: EDUCATION */}
+          {activeTab === "education" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-indigo-400" />
+                    <span>শিক্ষা ও প্রাতিষ্ঠানিক ডিগ্রি (Education)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">ডিগ্রি, বিশ্ববিদ্যালয় এবং একাডেমিক তথ্য এডিট করুন</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {formData.education_list.map((edu, idx) => (
+                  <div key={idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">ডিগ্রির নাম</label>
+                      <input
+                        type="text"
+                        value={edu.degree}
+                        onChange={(e) => {
+                          const updated = [...formData.education_list];
+                          updated[idx].degree = e.target.value;
+                          setFormData((prev) => ({ ...prev, education_list: updated }));
+                        }}
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-bold"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">ইনস্টিটিউশন / বিশ্ববিদ্যালয়</label>
+                        <input
+                          type="text"
+                          value={edu.institution}
+                          onChange={(e) => {
+                            const updated = [...formData.education_list];
+                            updated[idx].institution = e.target.value;
+                            setFormData((prev) => ({ ...prev, education_list: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">সময়কাল (Period)</label>
+                        <input
+                          type="text"
+                          value={edu.period}
+                          onChange={(e) => {
+                            const updated = [...formData.education_list];
+                            updated[idx].period = e.target.value;
+                            setFormData((prev) => ({ ...prev, education_list: updated }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">বিবরণ</label>
+                      <textarea
+                        rows={2}
+                        value={edu.description}
+                        onChange={(e) => {
+                          const updated = [...formData.education_list];
+                          updated[idx].description = e.target.value;
+                          setFormData((prev) => ({ ...prev, education_list: updated }));
+                        }}
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 10: SERVICES */}
           {activeTab === "services" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">⚡ সেবা প্রদান (Services Offered)</h2>
-                  <p className="text-xs text-slate-400">Services & Solutions list</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      const newServ: ServiceItem = {
-                        title: "নতুন সেবা",
-                        description: "সেবার বিবরণ...",
-                      };
-                      setFormData({ ...formData, services: [...formData.services, newServ] });
-                    }}
-                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> সেবা যোগ
-                  </button>
-                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> সেভ
-                  </button>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-indigo-400" />
+                    <span>প্রদেয় সেবাসমূহ (Services)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">গ্রাহকদের প্রদানকৃত সার্ভিসের শিরোনাম ও বিবরণ এডিট করুন</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {formData.services.map((serv, sIdx) => (
-                  <div key={sIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+              <div className="space-y-4">
+                {formData.services.map((srv, idx) => (
+                  <div key={idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">সার্ভিস টাইটেল</label>
                       <input
                         type="text"
-                        value={serv.title}
+                        value={srv.title}
                         onChange={(e) => {
-                          const newServs = [...formData.services];
-                          newServs[sIdx].title = e.target.value;
-                          setFormData({ ...formData, services: newServs });
+                          const updated = [...formData.services];
+                          updated[idx].title = e.target.value;
+                          setFormData((prev) => ({ ...prev, services: updated }));
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white flex-1"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-bold"
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const newServs = formData.services.filter((_, i) => i !== sIdx);
-                          setFormData({ ...formData, services: newServs });
-                        }}
-                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
 
-                    <textarea
-                      rows={3}
-                      value={serv.description}
-                      onChange={(e) => {
-                        const newServs = [...formData.services];
-                        newServs[sIdx].description = e.target.value;
-                        setFormData({ ...formData, services: newServs });
-                      }}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs resize-none"
-                    />
+                    <div>
+                      <label className="text-[11px] text-slate-400 font-semibold block mb-1">বিবরণ</label>
+                      <textarea
+                        rows={2}
+                        value={srv.description}
+                        onChange={(e) => {
+                          const updated = [...formData.services];
+                          updated[idx].description = e.target.value;
+                          setFormData((prev) => ({ ...prev, services: updated }));
+                        }}
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* TAB 8: PHOTO GALLERY MANAGER */}
-          {activeTab === "gallery" && (
+          {/* TAB 11: CERTIFICATES */}
+          {activeTab === "certificates" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">📸 ফটো গ্যালারি ম্যানেজমেন্ট (Photo Gallery)</h2>
-                  <p className="text-xs text-slate-400">Formal & Casual photo gallery items</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => {
-                      const newPhoto: PhotoGalleryItem = {
-                        id: "gal-" + Date.now(),
-                        title: "New Photo Title",
-                        category: "formal",
-                        description: "Photo description...",
-                        imageUrl: "/gallery/photo-1.jpg",
-                      };
-                      setFormData({
-                        ...formData,
-                        photo_gallery: [newPhoto, ...(formData.photo_gallery || [])],
-                      });
-                    }}
-                    className="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> নতুন ছবি যোগ
-                  </button>
-                  <button onClick={handleSaveAll} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> সেভ
-                  </button>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-indigo-400" />
+                    <span>সার্টিফিকেট ও সনদপত্র (Certificates)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">স্কাউট ও অন্যান্য প্রাতিষ্ঠানিক সনদের তথ্য ও ছবি লিংক এডিট করুন</p>
                 </div>
               </div>
 
+              <div className="space-y-4">
+                {(formData.jibon_brittanto.certificates || []).map((cert, idx) => (
+                  <div key={cert.id || idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">সার্টিফিকেট টাইটেল</label>
+                        <input
+                          type="text"
+                          value={cert.title}
+                          onChange={(e) => {
+                            const updated = [...(formData.jibon_brittanto.certificates || [])];
+                            updated[idx].title = e.target.value;
+                            setFormData((prev) => ({
+                              ...prev,
+                              jibon_brittanto: { ...prev.jibon_brittanto, certificates: updated },
+                            }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-bold"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-semibold block mb-1">ছবি URL / Path</label>
+                        <input
+                          type="text"
+                          value={cert.imageUrl}
+                          onChange={(e) => {
+                            const updated = [...(formData.jibon_brittanto.certificates || [])];
+                            updated[idx].imageUrl = e.target.value;
+                            setFormData((prev) => ({
+                              ...prev,
+                              jibon_brittanto: { ...prev.jibon_brittanto, certificates: updated },
+                            }));
+                          }}
+                          className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 12: JIBON BRITTANTO */}
+          {activeTab === "jibon" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <span>জীবন বৃত্তান্ত ও পারিবারিক তথ্য</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">জীবন বৃত্তান্ত পেজের অভিভাবক, ঠিকানা, কোর্স ও পোর্টফোলিও তথ্য এডিট করুন</p>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {(formData.photo_gallery || []).map((photo, gIdx) => (
-                  <div key={photo.id || gIdx} className="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">পিতার নাম ও পদবী</label>
+                  <input
+                    type="text"
+                    value={formData.jibon_brittanto.family.father}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        jibon_brittanto: {
+                          ...prev.jibon_brittanto,
+                          family: { ...prev.jibon_brittanto.family, father: e.target.value },
+                        },
+                      }))
+                    }
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-300 font-semibold block mb-1">মাতার নাম</label>
+                  <input
+                    type="text"
+                    value={formData.jibon_brittanto.family.mother}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        jibon_brittanto: {
+                          ...prev.jibon_brittanto,
+                          family: { ...prev.jibon_brittanto.family, mother: e.target.value },
+                        },
+                      }))
+                    }
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">চাচার বিবরণ</label>
+                <textarea
+                  rows={2}
+                  value={formData.jibon_brittanto.family.uncle}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      jibon_brittanto: {
+                        ...prev.jibon_brittanto,
+                        family: { ...prev.jibon_brittanto.family, uncle: e.target.value },
+                      },
+                    }))
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-300 font-semibold block mb-1">স্থায়ী ঠিকানা (Permanent Address)</label>
+                <input
+                  type="text"
+                  value={formData.jibon_brittanto.family.permanent_address || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      jibon_brittanto: {
+                        ...prev.jibon_brittanto,
+                        family: { ...prev.jibon_brittanto.family, permanent_address: e.target.value },
+                      },
+                    }))
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 13: GALLERY */}
+          {activeTab === "gallery" && (
+            <div className="space-y-6">
+              <div className="border-b border-slate-800 pb-4 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <ImageIcon className="w-5 h-5 text-indigo-400" />
+                    <span>ছবি গ্যালারি (Photo Gallery)</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">গ্যালারি পেজের ছবি ও বিবরণ যোগ বা মুছে ফেলুন</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newPhoto: PhotoGalleryItem = {
+                      id: "gal-" + Date.now(),
+                      title: "নতুন ফটো",
+                      category: "casual",
+                      description: "ফটোর বিবরণ...",
+                      imageUrl: "/gallery/photo-1.jpg",
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      photo_gallery: [newPhoto, ...(prev.photo_gallery || [])],
+                    }));
+                  }}
+                  className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>নতুন ছবি</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {(formData.photo_gallery || []).map((photo, idx) => (
+                  <div key={photo.id || idx} className="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
                       <input
                         type="text"
                         value={photo.title}
                         onChange={(e) => {
-                          const newGallery = [...(formData.photo_gallery || [])];
-                          newGallery[gIdx].title = e.target.value;
-                          setFormData({ ...formData, photo_gallery: newGallery });
+                          const updated = [...(formData.photo_gallery || [])];
+                          updated[idx].title = e.target.value;
+                          setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-sm font-bold text-white flex-1"
+                        className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-bold"
                       />
-                      <select
-                        value={photo.category}
-                        onChange={(e) => {
-                          const newGallery = [...(formData.photo_gallery || [])];
-                          newGallery[gIdx].category = e.target.value as "formal" | "casual";
-                          setFormData({ ...formData, photo_gallery: newGallery });
-                        }}
-                        className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-indigo-400 capitalize"
-                      >
-                        <option value="formal">Formal</option>
-                        <option value="casual">Casual</option>
-                      </select>
                       <button
                         type="button"
                         onClick={() => {
-                          const newGallery = (formData.photo_gallery || []).filter((_, i) => i !== gIdx);
-                          setFormData({ ...formData, photo_gallery: newGallery });
+                          const updated = (formData.photo_gallery || []).filter((_, i) => i !== idx);
+                          setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
-                        className="p-1.5 text-rose-400 hover:bg-rose-950 rounded-lg"
+                        className="p-1 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 rounded-lg"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-[11px] text-slate-400">Image Path / URL</label>
+                    <div>
+                      <label className="text-[10px] text-slate-400 font-semibold block mb-0.5">Image URL</label>
                       <input
                         type="text"
                         value={photo.imageUrl}
                         onChange={(e) => {
-                          const newGallery = [...(formData.photo_gallery || [])];
-                          newGallery[gIdx].imageUrl = e.target.value;
-                          setFormData({ ...formData, photo_gallery: newGallery });
+                          const updated = [...(formData.photo_gallery || [])];
+                          updated[idx].imageUrl = e.target.value;
+                          setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-purple-300"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[11px] text-slate-400">Description (Optional)</label>
-                      <input
-                        type="text"
-                        value={photo.description || ""}
-                        onChange={(e) => {
-                          const newGallery = [...(formData.photo_gallery || [])];
-                          newGallery[gIdx].description = e.target.value;
-                          setFormData({ ...formData, photo_gallery: newGallery });
-                        }}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300"
+                        className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs font-mono"
                       />
                     </div>
                   </div>
@@ -1838,39 +1598,54 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 9: RAW JSON EDITOR & BACKUP */}
+          {/* TAB 14: RAW JSON BACKUP */}
           {activeTab === "raw" && (
             <div className="space-y-6">
-              <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-white">💾 Raw JSON ব্যাকআপ ও এডিটর</h2>
-                  <p className="text-xs text-slate-400">View or update full portfolio_data.json</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={exportPortfolioJson}
-                    className="px-3.5 py-2 bg-indigo-950 text-indigo-300 border border-indigo-800 rounded-xl text-xs font-semibold flex items-center gap-1.5"
-                  >
-                    <Download className="w-3.5 h-3.5" /> JSON ব্যাকআপ ফাইল নামান
-                  </button>
-                  <button onClick={handleRawJsonSave} className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5" /> JSON অ্যাপ্লাই করুন
-                  </button>
-                </div>
+              <div className="border-b border-slate-800 pb-4">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Code2 className="w-5 h-5 text-indigo-400" />
+                  <span>RAW JSON ব্যাকআপ, ইমপোর্ট ও এডিটর</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">সমগ্র পোর্টফোলিওর র-ডাটা সরাসরি ইমপোর্ট/এক্সপোর্ট ও ফরম্যাট করুন</p>
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <textarea
-                  rows={18}
+                  rows={16}
                   value={rawJsonText}
                   onChange={(e) => setRawJsonText(e.target.value)}
-                  className="w-full p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-400 leading-relaxed focus:outline-none focus:border-indigo-500"
+                  className="w-full p-4 bg-slate-950 border border-slate-800 rounded-2xl text-emerald-400 font-mono text-xs focus:outline-none focus:border-indigo-500"
                 />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const success = importPortfolioJson(rawJsonText);
+                    if (success) {
+                      showToast("JSON ডাটা সফলভাবে ইমপোর্ট করা হয়েছে!");
+                    } else {
+                      alert("ত্রুটি: অকার্যকর JSON ডাটা!");
+                    }
+                  }}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold"
+                >
+                  JSON ইমপোর্ট করুন
+                </button>
+
+                <button
+                  type="button"
+                  onClick={exportPortfolioJson}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold"
+                >
+                  JSON ফাইল ডাউনলোড
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

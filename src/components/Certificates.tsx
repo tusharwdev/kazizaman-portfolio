@@ -6,6 +6,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Certificates() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showCertificates === false) return null;
   const { jibon_brittanto } = portfolioData;
 
   const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);

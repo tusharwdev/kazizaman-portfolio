@@ -5,6 +5,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Services() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showServices === false) return null;
   const { services: customServices } = portfolioData;
 
   const defaultMultidisciplinaryServices = [

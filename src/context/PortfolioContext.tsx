@@ -334,7 +334,21 @@ export const initialPortfolioData: PortfolioData = {
       color: "from-blue-500 to-indigo-600",
     },
   ],
-  photo_gallery: initialPhotoGalleryList
+  photo_gallery: initialPhotoGalleryList,
+  theme: {
+    primaryColor: "indigo",
+    headlineGradient: "from-indigo-400 via-purple-400 to-pink-400",
+    showCompetencies: true,
+    showServices: true,
+    showProjects: true,
+    showExperience: true,
+    showEducation: true,
+    showCertificates: true,
+    showPhotoGallery: true,
+    showJibonBrittanto: true,
+    showStats: true,
+    footerText: "© 2026 Kazi Zaman · kazizaman.online · All Rights Reserved."
+  }
 };
 
 interface PortfolioContextType {

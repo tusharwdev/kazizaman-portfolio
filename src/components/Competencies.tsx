@@ -20,6 +20,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Competencies() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showCompetencies === false) return null;
   const { competencies: customCompetencies } = portfolioData;
 
   const defaultCompetencies = [

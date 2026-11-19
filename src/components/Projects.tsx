@@ -7,6 +7,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Projects() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showProjects === false) return null;
   const { projects } = portfolioData;
 
   const [filter, setFilter] = useState<"all" | "mobile" | "web">("all");

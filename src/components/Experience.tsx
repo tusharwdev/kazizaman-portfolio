@@ -5,6 +5,7 @@ import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Experience() {
   const { portfolioData } = usePortfolio();
+  if (portfolioData.theme?.showExperience === false) return null;
   const { work_experiences: experiences } = portfolioData;
 
   return (
