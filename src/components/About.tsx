@@ -84,9 +84,11 @@ export default function About() {
               </span>
             </h3>
 
-            <p className="text-slate-300 leading-relaxed text-sm sm:text-base bg-slate-950/70 p-5 rounded-2xl border border-slate-800">
-              {developer.bio}
-            </p>
+            <div className="space-y-4 text-slate-300 leading-relaxed text-sm sm:text-base bg-slate-950/70 p-6 rounded-2xl border border-slate-800 shadow-xl">
+              {developer.bio.split("\n\n").map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
               <div>
