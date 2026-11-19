@@ -177,10 +177,15 @@ export default function Hero() {
                     <span className="text-xs text-slate-400 font-mono">Bangladesh</span>
                   </div>
 
-                  {/* Verification Seal for Job Applications */}
-                  <div className="bg-indigo-950/60 border border-indigo-800/50 p-2.5 rounded-xl flex items-center gap-2 text-xs text-indigo-300 font-bengali">
-                    <Award className="w-4 h-4 text-yellow-400 shrink-0" />
-                    <span>সরকারী ও বেসরকারি চাকরির আবেদন এবং সিভি-সংযুক্ত অফিসিয়াল ওয়েবসাইট।</span>
+                  {/* Verification Seal & Education Badge for Job Applications */}
+                  <div className="space-y-2">
+                    <div className="bg-indigo-950/80 border border-indigo-800/60 p-3 rounded-xl flex items-center gap-2.5 text-xs text-indigo-200 font-bengali shadow-md">
+                      <Award className="w-4 h-4 text-yellow-400 shrink-0" />
+                      <div>
+                        <span className="font-bold block text-white text-xs">শিক্ষা (Academic Degree):</span>
+                        <span className="text-indigo-300 font-semibold text-[11px]">B.S.S. Honours in Social Work (৩য় বর্ষ), জাতীয় বিশ্ববিদ্যালয়</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

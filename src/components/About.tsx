@@ -92,17 +92,21 @@ export default function About() {
               Whether architecting robust Android/web applications, conducting investigative reporting for news media, producing visual video stories, or executing strategic organizational initiatives — I apply the highest standards of analytical rigor, ethical integrity, and technical perfection.
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
               <div>
-                <span className="text-xs text-slate-400 font-mono block font-semibold">Official Domain:</span>
-                <span className="text-sm font-semibold text-indigo-300">{developer.domain || "kazizaman.online"}</span>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Degree (শিক্ষা):</span>
+                <span className="text-sm font-semibold text-amber-300">B.S.S. Honours (Social Work)</span>
               </div>
               <div>
-                <span className="text-xs text-slate-400 font-mono block font-semibold">Tech &amp; Media Scope:</span>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">University:</span>
+                <span className="text-sm font-semibold text-indigo-300">National University (৩য় বর্ষ)</span>
+              </div>
+              <div>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Scope:</span>
                 <span className="text-sm font-semibold text-purple-300">Software + Journalism</span>
               </div>
               <div>
-                <span className="text-xs text-slate-400 font-mono block font-semibold">Profile Purpose:</span>
+                <span className="text-xs text-slate-400 font-mono block font-semibold">Purpose:</span>
                 <span className="text-sm font-semibold text-emerald-300">Govt/Private Job &amp; CV</span>
               </div>
             </div>
