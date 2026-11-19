@@ -142,11 +142,12 @@ export default function Hero() {
                 </div>
 
                 {/* Main Photo Frame */}
-                <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group">
+                <div className="relative h-72 sm:h-80 w-full rounded-2xl overflow-hidden border border-slate-800 shadow-xl group">
                   <img
-                    src="/gallery/hero-bike.jpg?v=20261119"
+                    src="/gallery/hero-bike.jpg?v=20261119_v3"
                     alt={displayName}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    style={{ objectPosition: "35% 62%" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
@@ -164,9 +165,10 @@ export default function Hero() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <img
-                        src="/gallery/hero-bike.jpg?v=20261119"
+                        src="/gallery/hero-bike.jpg?v=20261119_v3"
                         alt={displayName}
                         className="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500 shadow-md"
+                        style={{ objectPosition: "35% 30%" }}
                       />
                       <div>
                         <h3 className="font-bold text-white text-sm leading-tight">{displayName}</h3>
