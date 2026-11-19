@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { usePortfolio } from "@/context/PortfolioContext";
+import { usePortfolio, initialPhotoGalleryList } from "@/context/PortfolioContext";
 import {
   PortfolioData,
   ProjectItem,
@@ -44,8 +44,6 @@ import {
   Sparkles,
   Palette,
   GraduationCap,
-  Layers,
-  Settings,
   ShieldCheck,
   LayoutTemplate,
 } from "lucide-react";
@@ -53,6 +51,138 @@ import Link from "next/link";
 
 const ADMIN_EMAIL = "tusharwdev@gmail.com";
 const ADMIN_PASSWORD = "Tuu9900--";
+
+const defaultCompetenciesList: CoreCompetencyItem[] = [
+  {
+    id: "website-specialist",
+    title: "Website Specialist",
+    title_bn: "ওয়েবসাইট স্পেশালিস্ট",
+    category: "tech",
+    description: "Expertise in crafting modern, high-performance web systems, responsive portals, UI/UX optimization, and domain deployment tailored for enterprise & personal branding.",
+    description_bn: "আধুনিক, উচ্চগতিসম্পন্ন ও রেসপন্সিভ ওয়েবসাইট তৈরি, এসইও-বান্ধব আর্কিটেকচার এবং সরকারি ও কর্পোরেট ব্রান্ডিং উপযোগী পোর্টাল নির্মাণে বিশেষ দক্ষতা।",
+    iconName: "Globe",
+    highlights: ["Modern Responsive Web Architecture", "High Performance & SEO Optimization", "Enterprise Portal & Domain Deployment"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "fullstack-developer",
+    title: "Full-Stack Software Developer",
+    title_bn: "ফুল-স্ট্যাক সফটওয়্যার ডেভেলপার",
+    category: "tech",
+    description: "End-to-end native Android apps (Kotlin, Jetpack Compose), full-stack web platforms (Next.js, React), and secure RESTful backend APIs (Laravel, MySQL).",
+    description_bn: "নেটিভ অ্যান্ড্রয়েড মোবাইল অ্যাপ (Kotlin, Jetpack Compose) এবং আধুনিক ব্যাকএন্ড ও ফ্রন্টএন্ড ওয়েবসাইটের (Next.js, Laravel) এন্ড-টু-এন্ড সফটওয়্যার সমাধান।",
+    iconName: "Code2",
+    highlights: ["Native Android Mobile Apps (Kotlin)", "Next.js, React & Tailwind Web Apps", "REST API, Database & Security Engineering"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "journalist",
+    title: "Journalist",
+    title_bn: "সাংবাদিক ও সম্পাদকীয় বিশ্লেষক",
+    category: "media",
+    description: "Professional news writing, editorial curation, ethical journalism, public communication, and objective reporting for mainstream online media.",
+    description_bn: "বস্তুনিষ্ঠ সংবাদ পরিবেশন, মিডিয়া এথিক্স, সম্পাদনা, পাবলিক ডিজিটাল কমিউনিকেশন এবং দায়িত্বশীল সাংবাদিকতায় অভিজ্ঞতা।",
+    iconName: "Newspaper",
+    highlights: ["Professional News & Editorial Writing", "Media Ethics & Public Communication", "Mainstream Online News Management"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "video-creator",
+    title: "Video Creator",
+    title_bn: "ভিডিও ক্রিয়েটর ও কন্টেন্ট প্রডিউসার",
+    category: "media",
+    description: "Conceptualizing, scripting, video editing, storytelling, and broadcasting visual media content across digital platforms and social networks.",
+    description_bn: "ভিজ্যুয়াল স্টোরিটেলিং, ভিডিও স্ক্রিপ্টিং, এডিটিং এবং ডিজিটাল প্ল্যাটফর্ম ও সোশ্যাল মিডিয়ার জন্য আকর্ষণীয় ভিডিও কন্টেন্ট প্রযোজনা।",
+    iconName: "Video",
+    highlights: ["Visual Storytelling & Video Editing", "Scriptwriting & Content Strategy", "Multi-platform Digital Content Creation"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "creative-ideation",
+    title: "Creative Ideation",
+    title_bn: "সৃজনশীল ধারণায়ন ও প্রবলেম সলভিং",
+    category: "cognitive",
+    description: "Generating innovative project concepts, out-of-the-box product strategies, and creative solutions to solve complex organizational & technical challenges.",
+    description_bn: "নতুন প্রজেক্টের সৃষ্টিশীল কনসেপ্ট তৈরি, অভিনব আইডিয়া জেনারেশন এবং জটিল চ্যালেঞ্জের উদ্ভাবনী সমাধান তৈরি।",
+    iconName: "Lightbulb",
+    highlights: ["Innovative Product Concept Design", "Out-of-the-Box Problem Solving", "Strategic Campaign & Project Planning"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "keen-observation",
+    title: "Keen Observation",
+    title_bn: "সূক্ষ্ম পর্যবেক্ষণ ক্ষমতা",
+    category: "cognitive",
+    description: "Sharp attention to detail, identifying underlying operational patterns, field realities, subtle UI/UX inconsistencies, and system anomalies.",
+    description_bn: "যেকোনো প্রজেক্ট, ক্ষেত্র বা সিস্টেমে সূক্ষ্ম বিষয় ও ত্রুটিগুলো নিবিড়ভাবে পর্যবেক্ষণ ও মূল্যায়ন করার বিশেষ সামর্থ্য।",
+    iconName: "Eye",
+    highlights: ["High Attention to Detail & Quality", "Identifying System & Operational Flaws", "Field Reality & User Pattern Analysis"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "critical-thinking",
+    title: "Critical Thinking",
+    title_bn: "ক্রিটিক্যাল থিংকিং ও নিরপেক্ষ মূল্যায়ন",
+    category: "cognitive",
+    description: "Rigorous logical analysis, objective data synthesis, evaluating risks unbiasedly, and arriving at data-backed strategic decisions.",
+    description_bn: "যুক্তিযুক্ত চিন্তা, অবজেক্টিভ তথ্য বিশ্লেষণ, ঝুঁকি পর্যালোচনা এবং তথ্য-ভিত্তিক কৌশলগত সিদ্ধান্ত গ্রহণ।",
+    iconName: "BrainCircuit",
+    highlights: ["Data-Driven Objective Analysis", "Root Cause Identification", "Strategic Risk Evaluation"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "investigative-research",
+    title: "Investigative Research",
+    title_bn: "অনুসন্ধানী গবেষণা ও তথ্য যাচাই",
+    category: "media",
+    description: "Deep-dive primary research, fact-checking, evidence gathering, cross-verification, and crafting authoritative investigative reports.",
+    description_bn: "তথ্য অনুসন্ধান, সত্যতা যাচাই (Fact-checking), মূল উৎস থেকে ডেটা সংগ্রহ এবং নির্ভরযোগ্য অনুসন্ধানী গবেষণা প্রতিবেদন প্রস্তুত।",
+    iconName: "SearchCheck",
+    highlights: ["Deep-Dive Primary & Secondary Research", "Rigorous Fact-Checking & Verification", "Comprehensive Report Curation"],
+    importance: "Primary Core Competency"
+  },
+  {
+    id: "highfocus-execution",
+    title: "High-Focus Execution",
+    title_bn: "উচ্চ-মনোযোগ নির্ভর বাস্তবায়ন",
+    category: "execution",
+    description: "Laser-focused execution discipline, meeting strict deadlines, driving projects from initial draft to complete high-quality execution without distraction.",
+    description_bn: "একগ্র মনোযোগে কাজ সম্পাদন, নির্ধারিত সময়ের মধ্যে শতভাগ লক্ষ্য অর্জন এবং অত্যন্ত সুসংগঠিতভাবে কাজ সম্পন্ন করার দৃঢ়তা।",
+    iconName: "Target",
+    highlights: ["Laser-Focused Task Completion", "Strict Deadline Discipline", "High Quality Standards & Reliability"],
+    importance: "Primary Core Competency"
+  }
+];
+
+const defaultCertificatesList: CertificateItem[] = [
+  {
+    id: "scout-1",
+    title: "বাংলাদেশ স্কাউটস - বিদ্যুত স্কাউট ক্যাম্প ২০১১",
+    category: "scouts",
+    issueDate: "২০১১",
+    issuer: "বাংলাদেশ স্কাউটস",
+    description: "জাতীয় স্কাউটস ক্যাম্প অংশগ্রহণ ও সনদপত্র",
+    imageUrl: "/certificates/bidduth-scout-camp-2011.jpg"
+  },
+  {
+    id: "scout-2",
+    title: "বাংলাদেশ স্কাউটস - স্কাউট জাম্বুরী ২০১০",
+    category: "scouts",
+    issueDate: "২০১০",
+    issuer: "বাংলাদেশ স্কাউটস",
+    description: "স্কাউট জাম্বুরী দক্ষতা অর্জন সনদপত্র",
+    imageUrl: "/certificates/scout-jamboree-2010.jpg"
+  },
+  {
+    id: "scout-3",
+    title: "ইউনিয়ন পরিষদ চেয়ারম্যান প্রশংশাপত্র ২০১৬",
+    category: "civic",
+    issueDate: "২০১৬",
+    issuer: "রাজা চাপিতলা ইউনিয়ন পরিষদ",
+    description: "সামাজিক সেবামূলক কাজে অবদান সনদপত্র",
+    imageUrl: "/certificates/union-parishad-certificate-2016.jpg"
+  }
+];
 
 export default function AdminPage() {
   const {
@@ -99,8 +229,23 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    setFormData(portfolioData);
-    setRawJsonText(JSON.stringify(portfolioData, null, 2));
+    const preparedData = {
+      ...portfolioData,
+      competencies: (portfolioData.competencies && portfolioData.competencies.length > 0)
+        ? portfolioData.competencies
+        : defaultCompetenciesList,
+      photo_gallery: (portfolioData.photo_gallery && portfolioData.photo_gallery.length > 0)
+        ? portfolioData.photo_gallery
+        : initialPhotoGalleryList,
+      jibon_brittanto: {
+        ...portfolioData.jibon_brittanto,
+        certificates: (portfolioData.jibon_brittanto?.certificates && portfolioData.jibon_brittanto.certificates.length > 0)
+          ? portfolioData.jibon_brittanto.certificates
+          : defaultCertificatesList,
+      }
+    };
+    setFormData(preparedData);
+    setRawJsonText(JSON.stringify(preparedData, null, 2));
   }, [portfolioData]);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -171,7 +316,6 @@ export default function AdminPage() {
     }
   };
 
-  // Helper updates for nested data
   const updateDeveloperField = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -310,6 +454,18 @@ export default function AdminPage() {
     { id: "raw", label: "JSON ব্যাকআপ", icon: Code2 },
   ];
 
+  const currentCompetencies = (formData.competencies && formData.competencies.length > 0)
+    ? formData.competencies
+    : defaultCompetenciesList;
+
+  const currentCertificates = (formData.jibon_brittanto?.certificates && formData.jibon_brittanto.certificates.length > 0)
+    ? formData.jibon_brittanto.certificates
+    : defaultCertificatesList;
+
+  const currentGallery = (formData.photo_gallery && formData.photo_gallery.length > 0)
+    ? formData.photo_gallery
+    : initialPhotoGalleryList;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
       {/* Toast Notification */}
@@ -420,7 +576,7 @@ export default function AdminPage() {
                   <User className="w-5 h-5 text-indigo-400" />
                   <span>ডেভেলপার ও পার্সোনাল প্রোফাইল তথ্য</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">নাম, ইমেইল, মোবাইল, বায়োডাটা এবং সোশ্যাল মিডিয়া লিঙ্ক আপডেট করুন</p>
+                <p className="text-xs text-slate-400 mt-1">নাম, ইমেইল, মোবাইল, বায়োডাটা এবং সোশ্যাল মিডিয়া লিংক আপডেট করুন</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -777,7 +933,7 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-4">
-                {(formData.competencies || []).map((comp, idx) => (
+                {currentCompetencies.map((comp, idx) => (
                   <div key={comp.id || idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
                     <div className="flex items-center justify-between border-b border-slate-900 pb-2">
                       <span className="text-xs font-mono font-bold text-indigo-400">
@@ -792,7 +948,7 @@ export default function AdminPage() {
                           type="text"
                           value={comp.title}
                           onChange={(e) => {
-                            const updated = [...(formData.competencies || [])];
+                            const updated = [...currentCompetencies];
                             updated[idx].title = e.target.value;
                             setFormData((prev) => ({ ...prev, competencies: updated }));
                           }}
@@ -805,7 +961,7 @@ export default function AdminPage() {
                           type="text"
                           value={comp.title_bn}
                           onChange={(e) => {
-                            const updated = [...(formData.competencies || [])];
+                            const updated = [...currentCompetencies];
                             updated[idx].title_bn = e.target.value;
                             setFormData((prev) => ({ ...prev, competencies: updated }));
                           }}
@@ -820,7 +976,7 @@ export default function AdminPage() {
                         rows={2}
                         value={comp.description_bn}
                         onChange={(e) => {
-                          const updated = [...(formData.competencies || [])];
+                          const updated = [...currentCompetencies];
                           updated[idx].description_bn = e.target.value;
                           setFormData((prev) => ({ ...prev, competencies: updated }));
                         }}
@@ -1392,7 +1548,7 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-4">
-                {(formData.jibon_brittanto.certificates || []).map((cert, idx) => (
+                {currentCertificates.map((cert, idx) => (
                   <div key={cert.id || idx} className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
@@ -1401,7 +1557,7 @@ export default function AdminPage() {
                           type="text"
                           value={cert.title}
                           onChange={(e) => {
-                            const updated = [...(formData.jibon_brittanto.certificates || [])];
+                            const updated = [...currentCertificates];
                             updated[idx].title = e.target.value;
                             setFormData((prev) => ({
                               ...prev,
@@ -1417,7 +1573,7 @@ export default function AdminPage() {
                           type="text"
                           value={cert.imageUrl}
                           onChange={(e) => {
-                            const updated = [...(formData.jibon_brittanto.certificates || [])];
+                            const updated = [...currentCertificates];
                             updated[idx].imageUrl = e.target.value;
                             setFormData((prev) => ({
                               ...prev,
@@ -1543,7 +1699,7 @@ export default function AdminPage() {
                     };
                     setFormData((prev) => ({
                       ...prev,
-                      photo_gallery: [newPhoto, ...(prev.photo_gallery || [])],
+                      photo_gallery: [newPhoto, ...currentGallery],
                     }));
                   }}
                   className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
@@ -1554,14 +1710,14 @@ export default function AdminPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {(formData.photo_gallery || []).map((photo, idx) => (
+                {currentGallery.map((photo, idx) => (
                   <div key={photo.id || idx} className="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
                     <div className="flex items-center justify-between">
                       <input
                         type="text"
                         value={photo.title}
                         onChange={(e) => {
-                          const updated = [...(formData.photo_gallery || [])];
+                          const updated = [...currentGallery];
                           updated[idx].title = e.target.value;
                           setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
@@ -1570,7 +1726,7 @@ export default function AdminPage() {
                       <button
                         type="button"
                         onClick={() => {
-                          const updated = (formData.photo_gallery || []).filter((_, i) => i !== idx);
+                          const updated = currentGallery.filter((_, i) => i !== idx);
                           setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
                         className="p-1 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 rounded-lg"
@@ -1585,7 +1741,7 @@ export default function AdminPage() {
                         type="text"
                         value={photo.imageUrl}
                         onChange={(e) => {
-                          const updated = [...(formData.photo_gallery || [])];
+                          const updated = [...currentGallery];
                           updated[idx].imageUrl = e.target.value;
                           setFormData((prev) => ({ ...prev, photo_gallery: updated }));
                         }}
