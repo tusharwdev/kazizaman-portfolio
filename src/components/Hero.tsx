@@ -63,12 +63,8 @@ export default function Hero() {
             </p>
 
             {/* 9 Pillars Badges Showcase */}
-            <div className="space-y-2 pt-2">
-              <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5 justify-center lg:justify-start">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>৯টি সম-গুরুত্বসম্পন্ন মূল স্তম্ভ (9 Equal Core Competencies):</span>
-              </div>
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
+            <div className="pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
                 {corePillars.map((pillar, pIdx) => (
                   <span
                     key={pIdx}
